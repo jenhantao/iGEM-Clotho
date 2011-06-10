@@ -244,7 +244,6 @@ public class SequenceView {
             NucSeq ns = new NucSeq(new NucSeq(seq).revComp());
             temp = ns.findORFs(true, _multipleStartCodons);
             for (Integer i : temp.keySet()) {
-                System.out.println("(" + (seq.length() - i) + "," + (seq.length() - temp.get(i)));
                 _revORFs.put(seq.length() - i, seq.length() - temp.get(i));//key=orf end, value=orf start
             }
             _revORFsCalculated = true;
@@ -722,39 +721,45 @@ public class SequenceView {
      * Finds the next Open Reading Frame in the reverse of the SequenceView
      */
     public void findNextRevORF() {
-        
+
         JTextComponent textArea = _sequenceview.get_TextArea();
         _h = textArea.getHighlighter();
         HashMap<Integer, Integer> hm;
         checkRevORFs();
         hm = _revORFs;
         if (hm != null && !(hm.isEmpty())) {
+            ArrayList<Integer> endPositions = new ArrayList();
+
+            endPositions.addAll(hm.keySet());
             ArrayList<Integer> startPositions = new ArrayList();
-            startPositions.addAll(hm.keySet());
-            java.util.Collections.sort(startPositions);
-            if (startPositions.get(0) != 0) {
-                currentORFStart++;
+            for (Integer i : hm.keySet()) {
+                startPositions.add(hm.get(i));
             }
-            for (int i = 0; i < startPositions.size(); i++) {
-                int num = startPositions.get(i);
+            java.util.Collections.sort(endPositions);
+            if (!startPositions.contains(textArea.getCaretPosition())) {
+                currentORFStart = textArea.getCaretPosition();
+            }
+
+            for (int i = 0; i < endPositions.size(); i++) {
+                int num = endPositions.get(i);
                 if (currentORFStart <= num) {
                     currentORFStart = num;
                     break;
                 }
             }
-            if (currentORFStart > startPositions.get(startPositions.size() - 1)) {
-                currentORFStart = startPositions.get(0);
+            if (currentORFStart > endPositions.get(endPositions.size() - 1)) {
+                currentORFStart = endPositions.get(0);
             }
             if (hm.containsKey(currentORFStart) && hm.get(currentORFStart) <= textArea.getText().length()) {
                 try {
 
-                    if (startPositions.indexOf(currentORFStart) == startPositions.size() - 1) {
+                    if (endPositions.indexOf(currentORFStart) == endPositions.size() - 1) {
                         if (_circular && currentORFStart == textArea.getText().length()) {
                             this.removeUserSelectedHighlights();
                             String seq = textArea.getText();
                             _h.addHighlight(currentORFStart, seq.length(), new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
                             _h.addHighlight(0, Math.min(seq.toLowerCase().indexOf("cta"), Math.min(seq.toLowerCase().indexOf("tta"), seq.toLowerCase().indexOf("tca"))) + 3, new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
-                            currentORFStart = startPositions.get(0); //reset start to first ORF start to allow looping
+                            currentORFStart = endPositions.get(0); //reset start to first ORF start to allow looping
                             textArea.setCaretPosition(hm.get(currentORFStart));
                             currentORFStart++;
                         } else {
@@ -833,28 +838,36 @@ public class SequenceView {
         hm = _revORFs;
 
         if (hm != null && !(hm.isEmpty())) {
+            ArrayList<Integer> endPositions = new ArrayList();
+            endPositions.addAll(hm.keySet());
+            java.util.Collections.sort(endPositions);
             ArrayList<Integer> startPositions = new ArrayList();
-            startPositions.addAll(hm.keySet());
-            java.util.Collections.sort(startPositions);
-            for (int i = 0; i < startPositions.size(); i++) {
-                int num = startPositions.get(startPositions.size() - 1 - i);
+            for (Integer i : hm.keySet()) {
+                startPositions.add(hm.get(i));
+            }
+            java.util.Collections.sort(endPositions);
+            if (!startPositions.contains(textArea.getCaretPosition())) {
+                currentORFStart = textArea.getCaretPosition();
+            }
+            for (int i = 0; i < endPositions.size(); i++) {
+                int num = endPositions.get(endPositions.size() - 1 - i);
                 if (currentORFStart >= num) {
                     currentORFStart = num;
                     break;
                 }
             }
-            if (currentORFStart < startPositions.get(0)) {
-                currentORFStart = startPositions.get(startPositions.size() - 1);
+            if (currentORFStart < endPositions.get(0)) {
+                currentORFStart = endPositions.get(endPositions.size() - 1);
             }
             if (hm.containsKey(currentORFStart) && hm.get(currentORFStart) <= textArea.getText().length()) {
                 try {
-                    if (startPositions.indexOf(currentORFStart) == 0) {
+                    if (endPositions.indexOf(currentORFStart) == 0) {
                         if (_circular && currentORFStart == textArea.getText().length()) {
                             this.removeUserSelectedHighlights();
                             String seq = textArea.getText();
-                            _h.addHighlight(startPositions.get(startPositions.size() - 1), seq.length(), new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
+                            _h.addHighlight(endPositions.get(endPositions.size() - 1), seq.length(), new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
                             _h.addHighlight(0, Math.min(seq.toLowerCase().indexOf("cta"), Math.min(seq.toLowerCase().indexOf("tta"), seq.toLowerCase().indexOf("tca"))) + 3, new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
-                            currentORFStart = startPositions.get(startPositions.size() - 1); //reset start to first ORF start to allow looping
+                            currentORFStart = endPositions.get(endPositions.size() - 1); //reset start to first ORF start to allow looping
                             textArea.setCaretPosition(hm.get(currentORFStart));
                             currentORFStart--;
                         } else {
@@ -1887,40 +1900,40 @@ public class SequenceView {
         Integer location = new Integer(pos);
         //if _mouseoverData is already made, then the mousemoved event should
         // set the loc field as the name of the feature/enzyme.
-        if (_highlightDataMade == true) {
-            _mouseoverString = "";
-            _hasAtLeastOneHighlight = false;
-            for (int i = 0; i < _highlightData.size(); i++) {
-                //if location is between the start/end indices of the current
-                // _mouseoverDataIndividual, then append _mouseoverString
-                if ((location > (Integer) _highlightData.get(i).get(1))
-                        & (location < (Integer) _highlightData.get(i).get(2))) {
-                    //Searcher is used to prevent identical concatenations of mouseovers
-                    // (i.e., so we don't see something like "EcoR1, EcoR1, EcoR1, BamHI")
-                    //uncommented
-                    _searcher = new ClothoSearchUtil((String) _highlightData.get(i).get(0), _mouseoverString);
-                    //uncomment
-
-                    if (_searcher.getHitCount() == 0) {
-                        if (_hasAtLeastOneHighlight) {
-                            _mouseoverString = _mouseoverString.concat(", ");
-                        }
-
-                        _mouseoverString = _mouseoverString.concat((String) _highlightData.get(i).get(0));
-                        _hasAtLeastOneHighlight = true;
-                    }
-
-
-                }
-            }
-            if (_hasAtLeastOneHighlight) {
-                sequenceLabel.setVisible(true);
-                sequenceName.setText(_mouseoverString);
-            } else {
-                sequenceLabel.setVisible(false);
-                sequenceName.setText(" ");
-            }
-        }
+//        if (_highlightDataMade == true) {
+//            _mouseoverString = "";
+//            _hasAtLeastOneHighlight = false;
+//            for (int i = 0; i < _highlightData.size(); i++) {
+//                //if location is between the start/end indices of the current
+//                // _mouseoverDataIndividual, then append _mouseoverString
+//                if ((location > (Integer) _highlightData.get(i).get(1))
+//                        & (location < (Integer) _highlightData.get(i).get(2))) {
+//                    //Searcher is used to prevent identical concatenations of mouseovers
+//                    // (i.e., so we don't see something like "EcoR1, EcoR1, EcoR1, BamHI")
+//                    //uncommented
+//                    _searcher = new ClothoSearchUtil((String) _highlightData.get(i).get(0), _mouseoverString);
+//                    //uncomment
+//
+//                    if (_searcher.getHitCount() == 0) {
+//                        if (_hasAtLeastOneHighlight) {
+//                            _mouseoverString = _mouseoverString.concat(", ");
+//                        }
+//
+//                        _mouseoverString = _mouseoverString.concat((String) _highlightData.get(i).get(0));
+//                        _hasAtLeastOneHighlight = true;
+//                    }
+//
+//
+//                }
+//            }
+//            if (_hasAtLeastOneHighlight) {
+//                sequenceLabel.setVisible(true);
+//                sequenceName.setText(_mouseoverString);
+//            } else {
+//                sequenceLabel.setVisible(false);
+//                sequenceName.setText(" ");
+//            }
+//        }
 
         loc.setText(location.toString());
     }
