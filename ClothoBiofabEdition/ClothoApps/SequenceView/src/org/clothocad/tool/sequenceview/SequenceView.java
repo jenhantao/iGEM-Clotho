@@ -244,7 +244,8 @@ public class SequenceView {
             NucSeq ns = new NucSeq(new NucSeq(seq).revComp());
             temp = ns.findORFs(true, _multipleStartCodons);
             for (Integer i : temp.keySet()) {
-                _revORFs.put(seq.length() - temp.get(i), seq.length() - i);
+                System.out.println("(" + (seq.length() - i) + "," + (seq.length() - temp.get(i)));
+                _revORFs.put(seq.length() - i, seq.length() - temp.get(i));//key=orf end, value=orf start
             }
             _revORFsCalculated = true;
 
@@ -385,7 +386,7 @@ public class SequenceView {
                 //commented
                 /*
                 ClothoHighlightData highlighter;
-
+                
                 orfIndex[0][0] = start;
                 orfIndex[1][0] = end;
                 highlighter = new ClothoHighlightData(name + " " + start + " to " + end);
@@ -586,20 +587,16 @@ public class SequenceView {
     /**
      * Finds the next Open Reading Frame in the SequenceView
      */
-    public void findNextORF(Boolean findReverse) {
+    public void findNextORF() {
         JTextComponent textArea = _sequenceview.get_TextArea();
         _h = textArea.getHighlighter();
         HashMap<Integer, Integer> hm;
-        if (findReverse) {
-            checkRevORFs();
-            hm = _revORFs;
-        } else {
-            checkORFs();
-            hm = _ORFs;
-        }
+        checkORFs();
+        hm = _ORFs;
+
         if (hm != null && !(hm.isEmpty())) {
             ArrayList<Integer> startPositions = new ArrayList();
-            if (textArea.getSelectedText() != null) {
+            if (textArea.getSelectedText() != null && currentORFStart == 0) {
                 currentORFStart = textArea.getSelectionStart();
             } else {
                 currentORFStart = textArea.getCaretPosition();
@@ -627,24 +624,26 @@ public class SequenceView {
                 try {
 
                     if (startPositions.indexOf(currentORFStart) == startPositions.size() - 1) {
-                        if (_circular) {
+                        if (_circular && hm.get(startPositions.get(startPositions.size() - 1)) == textArea.getText().length()) {
                             this.removeUserSelectedHighlights();
                             String seq = textArea.getText();
                             _h.addHighlight(currentORFStart, seq.length(), new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
                             _h.addHighlight(0, Math.min(seq.toLowerCase().indexOf("tag"), Math.min(seq.toLowerCase().indexOf("taa"), seq.toLowerCase().indexOf("tga"))) + 3, new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
                             currentORFStart = startPositions.get(0); //reset start to first ORF start to allow looping
                             textArea.setCaretPosition(0);
+                            currentORFStart++;
                         } else {
                             this.removeUserSelectedHighlights();
                             lastORFHighlightTag = _h.addHighlight(currentORFStart, hm.get(currentORFStart), new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
-                            currentORFStart = startPositions.get(0) - 1; //reset start to first ORF start to allow looping
                             textArea.setCaretPosition(currentORFStart);
+                            currentORFStart++;
                         }
                     } else {
                         //default case
                         this.removeUserSelectedHighlights();
                         lastORFHighlightTag = _h.addHighlight(currentORFStart, hm.get(currentORFStart), new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
                         textArea.setCaretPosition(currentORFStart);
+                        currentORFStart++;
                     }
 
                 } catch (BadLocationException e) {
@@ -657,23 +656,19 @@ public class SequenceView {
     /**
      * Finds the previous Open Reading Frame in the SequenceView
      */
-    public void findPrevORF(boolean findReverse) {
+    public void findPrevORF() {
         JTextComponent textArea = _sequenceview.get_TextArea();
         if (textArea.getCaretPosition() == 0) {
             textArea.setCaretPosition(textArea.getText().length());
         }
         _h = textArea.getHighlighter();
         HashMap<Integer, Integer> hm;
-        if (findReverse) {
-            checkRevORFs();
-            hm = _revORFs;
-        } else {
-            checkORFs();
-            hm = _ORFs;
-        }
+        checkORFs();
+        hm = _ORFs;
+
         if (hm != null && !(hm.isEmpty())) {
             ArrayList<Integer> startPositions = new ArrayList();
-            if (textArea.getSelectedText() != null) {
+            if (textArea.getSelectedText() != null && currentORFStart == 0) {
                 currentORFStart = textArea.getSelectionStart();
             } else {
                 currentORFStart = textArea.getCaretPosition();
@@ -696,25 +691,26 @@ public class SequenceView {
             if (hm.containsKey(currentORFStart) && hm.get(currentORFStart) <= textArea.getText().length()) {
                 try {
                     if (startPositions.indexOf(currentORFStart) == 0) {
-                        if (_circular) {
+                        if (_circular && hm.get(startPositions.get(startPositions.size() - 1)) == textArea.getText().length()) {
                             this.removeUserSelectedHighlights();
                             String seq = textArea.getText();
                             _h.addHighlight(startPositions.get(startPositions.size() - 1), seq.length(), new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
                             _h.addHighlight(0, Math.min(seq.toLowerCase().indexOf("tag"), Math.min(seq.toLowerCase().indexOf("taa"), seq.toLowerCase().indexOf("tga"))) + 3, new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
                             currentORFStart = startPositions.get(startPositions.size() - 1); //reset start to first ORF start to allow looping
                             textArea.setCaretPosition(currentORFStart);
+                            currentORFStart--;
                         } else {
                             this.removeUserSelectedHighlights();
                             lastORFHighlightTag = _h.addHighlight(currentORFStart, hm.get(currentORFStart), new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
-                            currentORFStart = startPositions.get(startPositions.size() - 1) + 1; //reset start to first ORF start to allow looping
                             textArea.setCaretPosition(currentORFStart);
+                            currentORFStart--; //reset start to first ORF start to allow looping
                         }
                     } else {
                         this.removeUserSelectedHighlights();
                         lastORFHighlightTag = _h.addHighlight(currentORFStart, hm.get(currentORFStart), new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
                         textArea.setCaretPosition(currentORFStart);
+                        currentORFStart--;
                     }
-
                 } catch (BadLocationException e) {
                     e.printStackTrace();
                 }
@@ -725,48 +721,101 @@ public class SequenceView {
     /**
      * Finds the next Open Reading Frame in the reverse of the SequenceView
      */
-    @Deprecated
     public void findNextRevORF() {
+        
+        JTextComponent textArea = _sequenceview.get_TextArea();
+        _h = textArea.getHighlighter();
+        HashMap<Integer, Integer> hm;
         checkRevORFs();
-        this.removeUserSelectedHighlights();
-        if (_revORFs != null && !(_revORFs.isEmpty())) {
-            ArrayList<Integer> endPositions = new ArrayList();
-            int end = -1;
-            int start;
-
-            if (_sequenceview.get_TextArea().getSelectedText() != null) {
-                start = _sequenceview.get_TextArea().getSelectionStart() + 1;
-            } else {
-                start = _sequenceview.get_TextArea().getCaretPosition();
+        hm = _revORFs;
+        if (hm != null && !(hm.isEmpty())) {
+            ArrayList<Integer> startPositions = new ArrayList();
+            startPositions.addAll(hm.keySet());
+            java.util.Collections.sort(startPositions);
+            if (startPositions.get(0) != 0) {
+                currentORFStart++;
             }
-
-            endPositions.addAll(_revORFs.keySet());
-            java.util.Collections.sort(endPositions);
-
-            for (int i = 0; i < endPositions.size(); i++) {
-                int num = endPositions.get(i);
-                if (start <= num) {
-                    end = num;
+            for (int i = 0; i < startPositions.size(); i++) {
+                int num = startPositions.get(i);
+                if (currentORFStart <= num) {
+                    currentORFStart = num;
                     break;
                 }
             }
+            if (currentORFStart > startPositions.get(startPositions.size() - 1)) {
+                currentORFStart = startPositions.get(0);
+            }
+            if (hm.containsKey(currentORFStart) && hm.get(currentORFStart) <= textArea.getText().length()) {
+                try {
 
-            if (end >= 0 && _revORFs.containsKey(end) && end <= _sequenceview.get_TextArea().getText().length()) {
-                createORFHighlight(end, false);
-                if (end < _sequenceview.get_TextArea().getText().length()) {
-                    _sequenceview.get_TextArea().setCaretPosition(end + 1);
-                } else {
-                    _sequenceview.get_TextArea().setCaretPosition(0);
-                }
-            } else if (_circular) {
-                createORFHighlight(endPositions.get(0), false);
-                if ((endPositions.get(0) + 1) <= _sequenceview.get_TextArea().getText().length()) {
-                    _sequenceview.get_TextArea().setCaretPosition(endPositions.get(0) + 1);
-                } else {
-                    _sequenceview.get_TextArea().setCaretPosition(0);
+                    if (startPositions.indexOf(currentORFStart) == startPositions.size() - 1) {
+                        if (_circular && currentORFStart == textArea.getText().length()) {
+                            this.removeUserSelectedHighlights();
+                            String seq = textArea.getText();
+                            _h.addHighlight(currentORFStart, seq.length(), new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
+                            _h.addHighlight(0, Math.min(seq.toLowerCase().indexOf("cta"), Math.min(seq.toLowerCase().indexOf("tta"), seq.toLowerCase().indexOf("tca"))) + 3, new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
+                            currentORFStart = startPositions.get(0); //reset start to first ORF start to allow looping
+                            textArea.setCaretPosition(hm.get(currentORFStart));
+                            currentORFStart++;
+                        } else {
+                            this.removeUserSelectedHighlights();
+                            lastORFHighlightTag = _h.addHighlight(hm.get(currentORFStart), currentORFStart, new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
+                            textArea.setCaretPosition(hm.get(currentORFStart));
+                            currentORFStart++;
+                        }
+                    } else {
+
+                        this.removeUserSelectedHighlights();
+                        lastORFHighlightTag = _h.addHighlight(hm.get(currentORFStart), currentORFStart, new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
+                        textArea.setCaretPosition(hm.get(currentORFStart));
+                        currentORFStart++;
+                    }
+
+                } catch (BadLocationException e) {
+                    e.printStackTrace();
                 }
             }
         }
+//        checkRevORFs();
+//        this.removeUserSelectedHighlights();
+//        if (_revORFs != null && !(_revORFs.isEmpty())) {
+//            ArrayList<Integer> endPositions = new ArrayList();
+//            int end = -1;
+//            int start;
+//
+//            if (_sequenceview.get_TextArea().getSelectedText() != null) {
+//                start = _sequenceview.get_TextArea().getSelectionStart() + 1;
+//            } else {
+//                start = _sequenceview.get_TextArea().getCaretPosition();
+//            }
+//
+//            endPositions.addAll(_revORFs.keySet());
+//            java.util.Collections.sort(endPositions);
+//
+//            for (int i = 0; i < endPositions.size(); i++) {
+//                int num = endPositions.get(i);
+//                if (start <= num) {
+//                    end = num;
+//                    break;
+//                }
+//            }
+//
+//            if (end >= 0 && _revORFs.containsKey(end) && end <= _sequenceview.get_TextArea().getText().length()) {
+//                createORFHighlight(end, false);
+//                if (end < _sequenceview.get_TextArea().getText().length()) {
+//                    _sequenceview.get_TextArea().setCaretPosition(end + 1);
+//                } else {
+//                    _sequenceview.get_TextArea().setCaretPosition(0);
+//                }
+//            } else if (_circular) {
+//                createORFHighlight(endPositions.get(0), false);
+//                if ((endPositions.get(0) + 1) <= _sequenceview.get_TextArea().getText().length()) {
+//                    _sequenceview.get_TextArea().setCaretPosition(endPositions.get(0) + 1);
+//                } else {
+//                    _sequenceview.get_TextArea().setCaretPosition(0);
+//                }
+//            }
+//        }
     }
 
     /**
@@ -774,47 +823,98 @@ public class SequenceView {
      */
     @Deprecated
     public void findPrevRevORF() {
+        JTextComponent textArea = _sequenceview.get_TextArea();
+        if (textArea.getCaretPosition() == 0) {
+            textArea.setCaretPosition(textArea.getText().length());
+        }
+        _h = textArea.getHighlighter();
+        HashMap<Integer, Integer> hm;
         checkRevORFs();
-        if (_revORFs != null && !(_revORFs.isEmpty())) {
-            ArrayList<Integer> endPositions = new ArrayList();
-            int len;
-            int start;
-            int end = -1;
+        hm = _revORFs;
 
-            if (_sequenceview.get_TextArea().getSelectedText() != null) {
-                start = _sequenceview.get_TextArea().getSelectionStart() - 1;
-            } else {
-                start = _sequenceview.get_TextArea().getCaretPosition();
-            }
-
-            endPositions.addAll(_revORFs.keySet());
-            java.util.Collections.sort(endPositions);
-            len = endPositions.size();
-
-            for (int i = 0; i < len; i++) {
-                int num = endPositions.get(len - 1 - i);
-                if (start >= num) {
-                    end = num;
+        if (hm != null && !(hm.isEmpty())) {
+            ArrayList<Integer> startPositions = new ArrayList();
+            startPositions.addAll(hm.keySet());
+            java.util.Collections.sort(startPositions);
+            for (int i = 0; i < startPositions.size(); i++) {
+                int num = startPositions.get(startPositions.size() - 1 - i);
+                if (currentORFStart >= num) {
+                    currentORFStart = num;
                     break;
                 }
             }
-
-            if (_revORFs.containsKey(end) && end <= _sequenceview.get_TextArea().getText().length()) {
-                createORFHighlight(end, false);
-                if (end > 0) {
-                    _sequenceview.get_TextArea().setCaretPosition(end - 1);
-                } else {
-                    _sequenceview.get_TextArea().setCaretPosition(len - 1);
-                }
-            } else if (_circular) {
-                createORFHighlight(endPositions.get(len - 1), false);
-                if (endPositions.get(len - 1) > 0) {
-                    _sequenceview.get_TextArea().setCaretPosition(endPositions.get(len - 1) - 1);
-                } else {
-                    _sequenceview.get_TextArea().setCaretPosition(len - 1);
+            if (currentORFStart < startPositions.get(0)) {
+                currentORFStart = startPositions.get(startPositions.size() - 1);
+            }
+            if (hm.containsKey(currentORFStart) && hm.get(currentORFStart) <= textArea.getText().length()) {
+                try {
+                    if (startPositions.indexOf(currentORFStart) == 0) {
+                        if (_circular && currentORFStart == textArea.getText().length()) {
+                            this.removeUserSelectedHighlights();
+                            String seq = textArea.getText();
+                            _h.addHighlight(startPositions.get(startPositions.size() - 1), seq.length(), new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
+                            _h.addHighlight(0, Math.min(seq.toLowerCase().indexOf("cta"), Math.min(seq.toLowerCase().indexOf("tta"), seq.toLowerCase().indexOf("tca"))) + 3, new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
+                            currentORFStart = startPositions.get(startPositions.size() - 1); //reset start to first ORF start to allow looping
+                            textArea.setCaretPosition(hm.get(currentORFStart));
+                            currentORFStart--;
+                        } else {
+                            this.removeUserSelectedHighlights();
+                            lastORFHighlightTag = _h.addHighlight(hm.get(currentORFStart), currentORFStart, new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
+                            textArea.setCaretPosition(hm.get(currentORFStart));
+                            currentORFStart--; //reset start to first ORF start to allow looping
+                        }
+                    } else {
+                        this.removeUserSelectedHighlights();
+                        lastORFHighlightTag = _h.addHighlight(hm.get(currentORFStart), currentORFStart, new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
+                        textArea.setCaretPosition(hm.get(currentORFStart));
+                        currentORFStart--;
+                    }
+                } catch (BadLocationException e) {
+                    e.printStackTrace();
                 }
             }
         }
+//        checkRevORFs();
+//        if (_revORFs != null && !(_revORFs.isEmpty())) {
+//            ArrayList<Integer> endPositions = new ArrayList();
+//            int len;
+//            int start;
+//            int end = -1;
+//
+//            if (_sequenceview.get_TextArea().getSelectedText() != null) {
+//                start = _sequenceview.get_TextArea().getSelectionStart() - 1;
+//            } else {
+//                start = _sequenceview.get_TextArea().getCaretPosition();
+//            }
+//
+//            endPositions.addAll(_revORFs.keySet());
+//            java.util.Collections.sort(endPositions);
+//            len = endPositions.size();
+//
+//            for (int i = 0; i < len; i++) {
+//                int num = endPositions.get(len - 1 - i);
+//                if (start >= num) {
+//                    end = num;
+//                    break;
+//                }
+//            }
+//
+//            if (_revORFs.containsKey(end) && end <= _sequenceview.get_TextArea().getText().length()) {
+//                createORFHighlight(end, false);
+//                if (end > 0) {
+//                    _sequenceview.get_TextArea().setCaretPosition(end - 1);
+//                } else {
+//                    _sequenceview.get_TextArea().setCaretPosition(len - 1);
+//                }
+//            } else if (_circular) {
+//                createORFHighlight(endPositions.get(len - 1), false);
+//                if (endPositions.get(len - 1) > 0) {
+//                    _sequenceview.get_TextArea().setCaretPosition(endPositions.get(len - 1) - 1);
+//                } else {
+//                    _sequenceview.get_TextArea().setCaretPosition(len - 1);
+//                }
+//            }
+//        }
     }
 
     /**
@@ -1108,19 +1208,19 @@ public class SequenceView {
         sequence = data.getFieldAsString("sequence");
         circular = data.getFieldAsBoolean("iscircular");
         }
-
+        
         if(level.equals("DNA")){
         sequence = data.getFieldAsDatum("insert").getFieldAsString("sequence");
         sequence = sequence + data.getFieldAsDatum("vector").getFieldAsString("sequence");
         circular = data.getFieldAsDatum("insert").getFieldAsBoolean("iscircular") || data.getFieldAsDatum("vector").getFieldAsBoolean("iscircular");
         }
-
+        
         if(level.equals("Sample")){
         sequence = data.getFieldAsDatum("dna").getFieldAsDatum("insert").getFieldAsString("sequence");
         sequence = sequence + data.getFieldAsDatum("dna").getFieldAsDatum("vector").getFieldAsString("sequence");
         circular = data.getFieldAsDatum("dna").getFieldAsDatum("insert").getFieldAsBoolean("iscircular") || data.getFieldAsDatum("dna").getFieldAsDatum("vector").getFieldAsBoolean("iscircular");
         }
-
+        
         _sequenceview.get_TextArea().setText(sequence);
         if (!circular) {
         _circular = false;
@@ -1132,7 +1232,7 @@ public class SequenceView {
         }
         
         title = name;
-
+        
         setTitle("Clotho: Sequence View (Address: " + _myIndex + " ) " + title);
         sequenceChanged();
          *
@@ -1366,7 +1466,7 @@ public class SequenceView {
     }
     _highlightDataMade = true;
     }
-
+    
      *
      *
      */
@@ -1506,24 +1606,24 @@ public class SequenceView {
         d.set_use_code(ClothoDataUseEnum.communicationData);
         d.set_sender(this.get_description());
         d.set_recipient("Parts Navigator");
-
-
-
+        
+        
+        
         ClothomySQLDataObject info = new ClothomySQLDataObject();
         info.setName("packagedPart"); //was mySQLConnection
-
+        
         //database name
         info.setDb(_database);
         //table name
         info.setTable(_table);
-
+        
         //the hash key
         info.setStatementKey(svpe.getLibraries().getSelectedItem().toString());
-
+        
         d.set_payloadInfo(info);
-
+        
         ArrayList payload_arrays = new ArrayList(0);
-
+        
         //need the table field names
         ArrayList fieldnames = new ArrayList(0);
         for(int i = 0; i<svpe.getFields().getItemCount(); i++){
@@ -1531,7 +1631,7 @@ public class SequenceView {
         //System.out.print("Adding field " + svpe.getFields().getItemAt(i).toString() + "\n");
         }
         payload_arrays.add(fieldnames);
-
+        
         //need the data to add to the table
         //System.out.print("Number of fields " + svpe.getFields().getItemCount() + "\n");
         ArrayList payload_array_data = new ArrayList();
@@ -1548,12 +1648,12 @@ public class SequenceView {
         }
         }
         payload_arrays.add(payload_array_data);
-
+        
         d.set_payload(payload_arrays);
         this.get_hub().get_core().process_data_in_connection(d.get_recipient(), d);
         svpe.dispose();
         }
-
+        
         else
         {
         ClothoDialogBox db = new ClothoDialogBox("Clotho: Packager", "Select a connection!");
@@ -1833,32 +1933,32 @@ public class SequenceView {
     //public void process_data(ClothoData d) {
        /*
     if(d.get_use_code() == ClothoDataUseEnum.triggerData){
-
+    
     // Creates a new Sequence View and returns its address to the
     // connection it was called from
     if (d.get_op() == ClothoOperationEnum.operationNewWindow) {
     int address = createNewWindow();
-
+    
     ClothoData pm = new ClothoData();
     pm.set_payload(address);
     pm.set_sender(get_description());
     pm.set_recipient(d.get_sender());
     pm.set_use_code(ClothoDataUseEnum.communicationData);
     pm.set_operation(ClothoOperationEnum.operationPopulateView);
-
+    
     this.get_hub().get_core().process_data_in_connection(pm.get_recipient(), pm);
-
+    
     }
-
+    
     else {
     openWindow();
-
+    
     //populate the export connections drop down
     setup_export_connections();
     }
-
+    
     }
-
+    
     if(d.get_use_code() == ClothoDataUseEnum.exportData)
     {
     String importdata = (String) d.get_payload();
@@ -1873,7 +1973,7 @@ public class SequenceView {
     _sequenceview.get_TextArea().replaceSelection(importdata);
     refreshHighlightData(0);
     refreshHighlightData(1);
-
+    
     }
     else if (chosen == 1) {
     _sequenceview.get_TextArea().setCaretPosition(0);
@@ -1897,15 +1997,15 @@ public class SequenceView {
     refreshHighlightData(2);
     _sequenceview.get_TextArea().setText(importdata);
     }
-
+    
     }
-
+    
     else if (d.get_op() == ClothoOperationEnum.operationClearHighlight) {
     resetHighlight(_sequenceview.get_TextArea());
     _highlightData = new ArrayList();
     }
-
-
+    
+    
     else if(d.get_op() == ClothoOperationEnum.operationGetConnections)
     {
     ClothomySQLDataObject dataObj = (ClothomySQLDataObject)d.get_payloadInfo();
@@ -1918,7 +2018,7 @@ public class SequenceView {
     svpe.getLibraries().addItem((String) connection.getElementAt(i));
     }
     if(connection.getSize() > 1)
-
+    
     {
     svpe.setVisibleFlag(true);
     svpe.setVisible(true);
@@ -1929,7 +2029,7 @@ public class SequenceView {
     db.show_Dialog(javax.swing.JOptionPane.ERROR_MESSAGE);
     }
     }
-
+    
     else if(d.get_op() == ClothoOperationEnum.operationGetFields)
     {
     ClothomySQLDataObject info = (ClothomySQLDataObject) d.get_payloadInfo();
@@ -1937,31 +2037,31 @@ public class SequenceView {
     _database = info.getDb();
     _table = info.getTable();
     svpe.getFields().removeAllItems();
-
-
-
+    
+    
+    
     ArrayList fields = (ArrayList) d.get_payload();
     for (int i = 0; i < fields.size(); i++)
     {
     svpe.getFields().addItem((String) fields.get(i));
     }
     }
-
+    
     else if (d.get_op() == ClothoOperationEnum.operationGetHashRef) {
     _PoBoLHashRef = (java.util.Hashtable) d.get_payload();
     }
-
+    
     else if (d.get_op() == ClothoOperationEnum.operationDispose) {
     _sequenceview.dispose();
     }
     }
-
+    
     if (d.get_use_code() == ClothoDataUseEnum.stringSeqViewData) {
     String outputText = (String) d.get_payload();
     clearOutputWindow();
     writeToOutput(outputText);
     }
-
+    
     }
      */
     public void callPlugIns() {
@@ -3094,7 +3194,7 @@ public class SequenceView {
             try{
             _h.addHighlight(search[0][i], search[1][i], _underlinePainter);
             }
-
+            
             catch (javax.swing.text.BadLocationException ble) {
             ClothoCore.getCore().log(ble.toString(), LogLevel.ERROR);
             }
@@ -3140,7 +3240,7 @@ public class SequenceView {
         }
         /*if (evt.getStateChange() == ItemEvent.DESELECTED) {
         //commented
-
+        
         //ClothoCore.getCore().log("Circular Deselected\n", LogLevel.MESSAGE);
         _circular = false;
         } else {
@@ -3216,12 +3316,12 @@ public class SequenceView {
             d.set_recipient("Connect to mySQL");
             d.set_operation(ClothoOperationEnum.operationGetFields);
             d.set_use_code(ClothoDataUseEnum.communicationData);
-
+            
             ClothomySQLDataObject dataObj = new ClothomySQLDataObject();
             dataObj.setMisc(svpe);
-
-
-
+            
+            
+            
             ArrayList payload_array = new ArrayList(0);
             //sets the string to use in a hashable
             if(svpe.getLibraries().getItemCount() > 0)
@@ -3230,7 +3330,7 @@ public class SequenceView {
             d.set_payload(payload_array);
             dataObj.setStatementKey(svpe.getLibraries().getSelectedItem().toString());
             d.set_payloadInfo(dataObj);
-
+            
             this.get_hub().get_core().process_data_in_connection(d.get_recipient(), d);
              * */
             //}

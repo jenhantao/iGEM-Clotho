@@ -328,7 +328,6 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         removeFeatureEnzymeHighlightMenuItem = new javax.swing.JMenuItem();
         removeUserSelectedHighlightMenuItem = new javax.swing.JMenuItem();
         jSeparator4 = new javax.swing.JSeparator();
-        featureLibMenuItem = new javax.swing.JMenuItem();
         editFeatureLibraryMenuItem = new javax.swing.JMenuItem();
         highlightFeaturesMenuItem = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JSeparator();
@@ -756,7 +755,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
                     .addContainerGap(22, Short.MAX_VALUE)))
         );
 
-        SequenceTextPane.setFont(new java.awt.Font("Courier New", 0, 11));
+        SequenceTextPane.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
         SequenceTextPane.setDragEnabled(true);
         SequenceTextPane.setMargin(new java.awt.Insets(0, 0, 0, 0));
         SequenceTextPane.addCaretListener(new javax.swing.event.CaretListener() {
@@ -1192,15 +1191,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         HighlightMenu.add(removeUserSelectedHighlightMenuItem);
         HighlightMenu.add(jSeparator4);
 
-        featureLibMenuItem.setText("Open Feature Library Collection"); // NOI18N
-        featureLibMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                featureLibMenuItemActionPerformed(evt);
-            }
-        });
-        HighlightMenu.add(featureLibMenuItem);
-
-        editFeatureLibraryMenuItem.setText("Edit Feature Library Collection");
+        editFeatureLibraryMenuItem.setText("Open Feature Library");
         editFeatureLibraryMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editFeatureLibraryMenuItemActionPerformed(evt);
@@ -1373,11 +1364,11 @@ private void TranslateMenuItemActionPerformed(java.awt.event.ActionEvent evt) {/
 }//GEN-LAST:event_TranslateMenuItemActionPerformed
 
 private void NextORFMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NextORFMenuItemActionPerformed
-    _sv.findNextORF(false);
+    _sv.findNextORF();
 }//GEN-LAST:event_NextORFMenuItemActionPerformed
 
 private void PrevORFMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PrevORFMenuItemActionPerformed
-    _sv.findPrevORF(false);
+    _sv.findPrevORF();
 }//GEN-LAST:event_PrevORFMenuItemActionPerformed
 
 private void MapORFMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MapORFMenuItemActionPerformed
@@ -1399,11 +1390,11 @@ private void packageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 }//GEN-LAST:event_packageButtonActionPerformed
 
 private void RevNextORFMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RevNextORFMenuItemActionPerformed
-    _sv.findNextORF(true);
+    _sv.findNextRevORF();
 }//GEN-LAST:event_RevNextORFMenuItemActionPerformed
 
 private void RevPrevORFMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RevPrevORFMenuItemActionPerformed
-    _sv.findPrevORF(true);
+    _sv.findPrevRevORF();
 }//GEN-LAST:event_RevPrevORFMenuItemActionPerformed
 
 private void uppperCaseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uppperCaseButtonActionPerformed
@@ -1423,10 +1414,6 @@ private void highlightFeaturesEnzymesMenuItemActionPerformed(java.awt.event.Acti
     _sv.hightlightRestrictionSites();
     _sv.hightLightFeatures();
 }//GEN-LAST:event_highlightFeaturesEnzymesMenuItemActionPerformed
-
-private void featureLibMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_featureLibMenuItemActionPerformed
-    _sv.openFeatureLibrary();
-}//GEN-LAST:event_featureLibMenuItemActionPerformed
 
 private void highlightFeaturesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_highlightFeaturesMenuItemActionPerformed
     _sv.processSearchToolAction(evt, "Highlight Features");
@@ -1674,7 +1661,6 @@ private void HighlightMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JCheckBox degeneracyCheckBox;
     private javax.swing.JMenuItem editFeatureLibraryMenuItem;
     private javax.swing.JMenuItem enzymeLibMenuItem;
-    private javax.swing.JMenuItem featureLibMenuItem;
     private javax.swing.JButton featuresButton;
     private javax.swing.JMenuItem findMenuItem;
     private javax.swing.JMenuItem helpMenuItem;

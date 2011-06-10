@@ -396,17 +396,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JSeparator" name="jSeparator4">
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="featureLibMenuItem">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Open Feature Library Collection" noResource="true"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="featureLibMenuItemActionPerformed"/>
-              </Events>
-            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="editFeatureLibraryMenuItem">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Edit Feature Library Collection"/>
+                <Property name="text" type="java.lang.String" value="Open Feature Library"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="editFeatureLibraryMenuItemActionPerformed"/>
