@@ -33,12 +33,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.StringTokenizer;
 import java.util.prefs.Preferences;
-import javax.swing.ComboBoxModel;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
@@ -57,8 +55,8 @@ import javax.swing.JOptionPane;
 //import org.clothocad.core.ClothoCore;
 //import org.clothocad.core.ClothoCore.LogLevel;
 //import org.clothocad.databaseio.Datum;
-import javax.swing.plaf.synth.Region;
-import javax.swing.text.Highlighter;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
 import javax.swing.text.JTextComponent;
 import org.clothocore.api.data.NucSeq;
 import org.clothocore.util.dialog.ClothoDialogBox;
@@ -86,10 +84,7 @@ import org.clothocore.util.chooser.ClothoSaveChooser;
 //import tool.partsmanager.PartsManagerEnums;
 import org.clothocad.tool.sequenceview.ClothoSearchUtil;
 import org.clothocore.api.core.Collator;
-import org.clothocore.api.core.Collector;
 import org.clothocore.api.core.wrapper.ToolWrapper;
-import org.clothocore.api.data.ObjLink;
-import org.clothocore.api.data.ObjType;
 
 /**
  * The sequence view of the design. An editable view for raw DNA data.
@@ -121,7 +116,7 @@ public class SequenceView {
         _logicalCol = width_offset / charwidth;
         _logicalLineCnt = 1;
         _selectedHit = -1;
-
+        _painter = new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
         _backspaceKeyPressed = false;
         _deleteKeyPressed = false;
         _dnaType = true;
@@ -150,8 +145,11 @@ public class SequenceView {
 
         //mechanisms for undo
         _undo = new UndoManager();
+        undoAction = new UndoAction();
+        redoAction = new RedoAction();
 
         Document doc = _sequenceview.get_TextArea().getDocument();
+        doc.addUndoableEditListener(new SequenceUndoableEditListener());
 //commented
         //_sequenceUtils = new SequenceUtils(_dnaType);
 
@@ -165,8 +163,82 @@ public class SequenceView {
         //c.registry.registerProvider(this, "sequence");
     }
 
+    class SequenceUndoableEditListener
+            implements UndoableEditListener {
+
+        @Override
+        public void undoableEditHappened(UndoableEditEvent e) {
+            //Remember the edit and update the menus.
+            _undo.addEdit(e.getEdit());
+            undoAction.updateUndoState();
+            redoAction.updateRedoState();
+        }
+    }
+
+    class UndoAction extends AbstractAction {
+
+        public UndoAction() {
+            super("Undo");
+            setEnabled(false);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                _undo.undo();
+            } catch (CannotUndoException ex) {
+                System.out.println("Unable to undo: " + ex);
+                ex.printStackTrace();
+            }
+            updateUndoState();
+            redoAction.updateRedoState();
+        }
+
+        protected void updateUndoState() {
+            if (_undo.canUndo()) {
+                setEnabled(true);
+                putValue(Action.NAME, _undo.getUndoPresentationName());
+            } else {
+                setEnabled(false);
+                putValue(Action.NAME, "Undo");
+            }
+        }
+    }
+
+    class RedoAction extends AbstractAction {
+
+        public RedoAction() {
+            super("Redo");
+            setEnabled(false);
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            try {
+                _undo.redo();
+            } catch (CannotRedoException ex) {
+                System.out.println("Unable to redo: " + ex);
+                ex.printStackTrace();
+            }
+            updateRedoState();
+            undoAction.updateUndoState();
+        }
+
+        protected void updateRedoState() {
+            if (_undo.canRedo()) {
+                setEnabled(true);
+                putValue(Action.NAME, _undo.getRedoPresentationName());
+            } else {
+                setEnabled(false);
+                putValue(Action.NAME, "Redo");
+            }
+        }
+    }
     ///////////////////////////////////////////////////////////////////
     ////                         public methods                    ////
+
+    
+    //highlights all nonrestriction related features
+  
     public static int getNumberOfSequenceViews() {
         return numOfSeqViews;
     }
@@ -229,6 +301,10 @@ public class SequenceView {
             NucSeq ns = new NucSeq(_sequenceview.get_TextArea().getText());
             _ORFs = ns.findORFs(true, _multipleStartCodons);
             _ORFsCalculated = true;
+
+        }
+        if (_ORFs.size() == 0) {
+            System.out.println("No ORFs in this sequence");
         }
     }
 
@@ -247,7 +323,9 @@ public class SequenceView {
                 _revORFs.put(seq.length() - i, seq.length() - temp.get(i));//key=orf end, value=orf start
             }
             _revORFsCalculated = true;
-
+        }
+        if (_revORFs.size() == 0) {
+            System.out.println("No ORFs in this sequence");
         }
     }
 
@@ -459,7 +537,7 @@ public class SequenceView {
         _manager.setMainSequenceView(seqView);
         seqView.run();
         seqView.openWindow();
-
+        _saved = true; //empty windows do not need to be saved
         return seqView.getIndex();
     }
 
@@ -467,14 +545,7 @@ public class SequenceView {
      * Opens the SequenceViewPartPackager window
      */
     public void createPart() {
-        String seq = _sequenceview.get_TextArea().getSelectedText();
-        if (seq == null) {
-            //commented
-            // ClothoCore.getCore().sendData(ClothoPartsManagerTool.class, SequenceViewManager.class, "", "", _sequenceview.get_TextArea().getText(), PartsManagerEnums.packageBioBrick.ordinal());
-        } else {
-            //commented
-            // ClothoCore.getCore().sendData(ClothoPartsManagerTool.class, SequenceViewManager.class, "", "", seq, PartsManagerEnums.packageBioBrick.ordinal());
-        }
+        new SequenceViewPartExport(this, _sequenceview.get_TextArea());
     }
 
     /**
@@ -626,21 +697,21 @@ public class SequenceView {
                         if (_circular && hm.get(startPositions.get(startPositions.size() - 1)) == textArea.getText().length()) {
                             this.removeUserSelectedHighlights();
                             String seq = textArea.getText();
-                            _h.addHighlight(currentORFStart, seq.length(), new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
-                            _h.addHighlight(0, Math.min(seq.toLowerCase().indexOf("tag"), Math.min(seq.toLowerCase().indexOf("taa"), seq.toLowerCase().indexOf("tga"))) + 3, new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
+                            _h.addHighlight(currentORFStart, seq.length(), _painter);
+                            _h.addHighlight(0, Math.min(seq.toLowerCase().indexOf("tag"), Math.min(seq.toLowerCase().indexOf("taa"), seq.toLowerCase().indexOf("tga"))) + 3, _painter);
                             currentORFStart = startPositions.get(0); //reset start to first ORF start to allow looping
                             textArea.setCaretPosition(0);
                             currentORFStart++;
                         } else {
                             this.removeUserSelectedHighlights();
-                            lastORFHighlightTag = _h.addHighlight(currentORFStart, hm.get(currentORFStart), new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
+                            lastORFHighlightTag = _h.addHighlight(currentORFStart, hm.get(currentORFStart), _painter);
                             textArea.setCaretPosition(currentORFStart);
                             currentORFStart++;
                         }
                     } else {
                         //default case
                         this.removeUserSelectedHighlights();
-                        lastORFHighlightTag = _h.addHighlight(currentORFStart, hm.get(currentORFStart), new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
+                        lastORFHighlightTag = _h.addHighlight(currentORFStart, hm.get(currentORFStart), _painter);
                         textArea.setCaretPosition(currentORFStart);
                         currentORFStart++;
                     }
@@ -693,20 +764,20 @@ public class SequenceView {
                         if (_circular && hm.get(startPositions.get(startPositions.size() - 1)) == textArea.getText().length()) {
                             this.removeUserSelectedHighlights();
                             String seq = textArea.getText();
-                            _h.addHighlight(startPositions.get(startPositions.size() - 1), seq.length(), new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
-                            _h.addHighlight(0, Math.min(seq.toLowerCase().indexOf("tag"), Math.min(seq.toLowerCase().indexOf("taa"), seq.toLowerCase().indexOf("tga"))) + 3, new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
+                            _h.addHighlight(startPositions.get(startPositions.size() - 1), seq.length(), _painter);
+                            _h.addHighlight(0, Math.min(seq.toLowerCase().indexOf("tag"), Math.min(seq.toLowerCase().indexOf("taa"), seq.toLowerCase().indexOf("tga"))) + 3, _painter);
                             currentORFStart = startPositions.get(startPositions.size() - 1); //reset start to first ORF start to allow looping
                             textArea.setCaretPosition(currentORFStart);
                             currentORFStart--;
                         } else {
                             this.removeUserSelectedHighlights();
-                            lastORFHighlightTag = _h.addHighlight(currentORFStart, hm.get(currentORFStart), new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
+                            lastORFHighlightTag = _h.addHighlight(currentORFStart, hm.get(currentORFStart), _painter);
                             textArea.setCaretPosition(currentORFStart);
                             currentORFStart--; //reset start to first ORF start to allow looping
                         }
                     } else {
                         this.removeUserSelectedHighlights();
-                        lastORFHighlightTag = _h.addHighlight(currentORFStart, hm.get(currentORFStart), new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
+                        lastORFHighlightTag = _h.addHighlight(currentORFStart, hm.get(currentORFStart), _painter);
                         textArea.setCaretPosition(currentORFStart);
                         currentORFStart--;
                     }
@@ -757,21 +828,21 @@ public class SequenceView {
                         if (_circular && currentORFStart == textArea.getText().length()) {
                             this.removeUserSelectedHighlights();
                             String seq = textArea.getText();
-                            _h.addHighlight(currentORFStart, seq.length(), new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
-                            _h.addHighlight(0, Math.min(seq.toLowerCase().indexOf("cta"), Math.min(seq.toLowerCase().indexOf("tta"), seq.toLowerCase().indexOf("tca"))) + 3, new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
+                            _h.addHighlight(currentORFStart, seq.length(), _painter);
+                            _h.addHighlight(0, Math.min(seq.toLowerCase().indexOf("cta"), Math.min(seq.toLowerCase().indexOf("tta"), seq.toLowerCase().indexOf("tca"))) + 3, _painter);
                             currentORFStart = endPositions.get(0); //reset start to first ORF start to allow looping
                             textArea.setCaretPosition(hm.get(currentORFStart));
                             currentORFStart++;
                         } else {
                             this.removeUserSelectedHighlights();
-                            lastORFHighlightTag = _h.addHighlight(hm.get(currentORFStart), currentORFStart, new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
+                            lastORFHighlightTag = _h.addHighlight(hm.get(currentORFStart), currentORFStart, _painter);
                             textArea.setCaretPosition(hm.get(currentORFStart));
                             currentORFStart++;
                         }
                     } else {
 
                         this.removeUserSelectedHighlights();
-                        lastORFHighlightTag = _h.addHighlight(hm.get(currentORFStart), currentORFStart, new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
+                        lastORFHighlightTag = _h.addHighlight(hm.get(currentORFStart), currentORFStart, _painter);
                         textArea.setCaretPosition(hm.get(currentORFStart));
                         currentORFStart++;
                     }
@@ -865,20 +936,20 @@ public class SequenceView {
                         if (_circular && currentORFStart == textArea.getText().length()) {
                             this.removeUserSelectedHighlights();
                             String seq = textArea.getText();
-                            _h.addHighlight(endPositions.get(endPositions.size() - 1), seq.length(), new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
-                            _h.addHighlight(0, Math.min(seq.toLowerCase().indexOf("cta"), Math.min(seq.toLowerCase().indexOf("tta"), seq.toLowerCase().indexOf("tca"))) + 3, new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
+                            _h.addHighlight(endPositions.get(endPositions.size() - 1), seq.length(), _painter);
+                            _h.addHighlight(0, Math.min(seq.toLowerCase().indexOf("cta"), Math.min(seq.toLowerCase().indexOf("tta"), seq.toLowerCase().indexOf("tca"))) + 3, _painter);
                             currentORFStart = endPositions.get(endPositions.size() - 1); //reset start to first ORF start to allow looping
                             textArea.setCaretPosition(hm.get(currentORFStart));
                             currentORFStart--;
                         } else {
                             this.removeUserSelectedHighlights();
-                            lastORFHighlightTag = _h.addHighlight(hm.get(currentORFStart), currentORFStart, new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
+                            lastORFHighlightTag = _h.addHighlight(hm.get(currentORFStart), currentORFStart, _painter);
                             textArea.setCaretPosition(hm.get(currentORFStart));
                             currentORFStart--; //reset start to first ORF start to allow looping
                         }
                     } else {
                         this.removeUserSelectedHighlights();
-                        lastORFHighlightTag = _h.addHighlight(hm.get(currentORFStart), currentORFStart, new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
+                        lastORFHighlightTag = _h.addHighlight(hm.get(currentORFStart), currentORFStart, _painter);
                         textArea.setCaretPosition(hm.get(currentORFStart));
                         currentORFStart--;
                     }
@@ -1127,42 +1198,41 @@ public class SequenceView {
         }
     }
 
+    @Deprecated
     public void importData(SequenceViewPartExport svpe) {
-
-        if (svpe.wholeSeqSel()) {
-            svpe.getDataPane().setText(_sequenceview.get_TextArea().getText());
-        } else if (svpe.highlightSeqSel()) {
-            svpe.getDataPane().setText(_sequenceview.get_TextArea().getSelectedText());
-        } else if (svpe.intervalSeqSel()) {
-            int beginIndex, endIndex;
-            try {
-                beginIndex = Integer.parseInt(svpe.getBeginIndex());
-            } catch (NumberFormatException e) {
-                ClothoDialogBox db = new ClothoDialogBox("Clotho: Packager", "Begin interval must be an integer!");
-                db.show_Dialog(javax.swing.JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            try {
-                endIndex = Integer.parseInt(svpe.getEndIndex());
-            } catch (NumberFormatException e) {
-                ClothoDialogBox db = new ClothoDialogBox("Clotho: Packager", "End interval must be an integer!");
-                db.show_Dialog(javax.swing.JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            //Integer beginIndex = new Integer (svpe.getBeginIndex());
-            //Integer endIndex =  new Integer (svpe.getEndIndex());
-            if ((endIndex <= beginIndex) || endIndex < 0 || beginIndex < 0 || endIndex > _sequenceview.get_TextArea().getText().length() || beginIndex > _sequenceview.get_TextArea().getText().length()) {
-                ClothoDialogBox db = new ClothoDialogBox("Clotho: Packager", "Sequence interval is incorrect!\nCheck the ordering, length, and make sure it is positive.");
-                db.show_Dialog(javax.swing.JOptionPane.ERROR_MESSAGE);
-            } else {
-                svpe.getDataPane().setText(_sequenceview.get_TextArea().getText().substring(beginIndex, endIndex));
-            }
-        } else {
-            ClothoDialogBox db = new ClothoDialogBox("Clotho: Packager", "Select an import method!");
-            db.show_Dialog(javax.swing.JOptionPane.ERROR_MESSAGE);
-        }
-
+//        if (svpe.wholeSeqSel()) {
+//            svpe.getDataPane().setText(_sequenceview.get_TextArea().getText());
+//        } else if (svpe.highlightSeqSel()) {
+//            svpe.getDataPane().setText(_sequenceview.get_TextArea().getSelectedText());
+//        } else if (svpe.intervalSeqSel()) {
+//            int beginIndex, endIndex;
+//            try {
+//                beginIndex = Integer.parseInt(svpe.getBeginIndex());
+//            } catch (NumberFormatException e) {
+//                ClothoDialogBox db = new ClothoDialogBox("Clotho: Packager", "Begin interval must be an integer!");
+//                db.show_Dialog(javax.swing.JOptionPane.ERROR_MESSAGE);
+//                return;
+//            }
+//
+//            try {
+//                endIndex = Integer.parseInt(svpe.getEndIndex());
+//            } catch (NumberFormatException e) {
+//                ClothoDialogBox db = new ClothoDialogBox("Clotho: Packager", "End interval must be an integer!");
+//                db.show_Dialog(javax.swing.JOptionPane.ERROR_MESSAGE);
+//                return;
+//            }
+//            //Integer beginIndex = new Integer (svpe.getBeginIndex());
+//            //Integer endIndex =  new Integer (svpe.getEndIndex());
+//            if ((endIndex <= beginIndex) || endIndex < 0 || beginIndex < 0 || endIndex > _sequenceview.get_TextArea().getText().length() || beginIndex > _sequenceview.get_TextArea().getText().length()) {
+//                ClothoDialogBox db = new ClothoDialogBox("Clotho: Packager", "Sequence interval is incorrect!\nCheck the ordering, length, and make sure it is positive.");
+//                db.show_Dialog(javax.swing.JOptionPane.ERROR_MESSAGE);
+//            } else {
+//                svpe.getDataPane().setText(_sequenceview.get_TextArea().getText().substring(beginIndex, endIndex));
+//            }
+//        } else {
+//            ClothoDialogBox db = new ClothoDialogBox("Clotho: Packager", "Select an import method!");
+//            db.show_Dialog(javax.swing.JOptionPane.ERROR_MESSAGE);
+//        }
     }
 
     public void load_preferences() {
@@ -1403,6 +1473,7 @@ public class SequenceView {
 
         if (_fileOpener.fileSelected) {
             loadSequence(_fileOpener.getFile());
+            _saved = true; //newly loaded sequences have no changes and thus, do not need to be saved
         }
     }
 
@@ -1934,7 +2005,8 @@ public class SequenceView {
 //                sequenceName.setText(" ");
 //            }
 //        }
-
+        sequenceLabel.setVisible(true);
+        sequenceName.setText(location.toString() + "moo");
         loc.setText(location.toString());
     }
 
@@ -2580,6 +2652,9 @@ public class SequenceView {
      */
     public void redoActionPerformed(ActionEvent evt) {
 //comment        _redoAction.actionPerformed(evt);
+        if (_undo.canRedo()) {
+            _undo.redo();
+        }
     }
 
     /**
@@ -3222,6 +3297,9 @@ public class SequenceView {
      */
     public void undoActionPerformed(ActionEvent evt) {
 //        _undoAction.actionPerformed(evt);
+        if (_undo.canUndo()) {
+            _undo.undo();
+        }
     }
 
     /**
@@ -3319,37 +3397,36 @@ public class SequenceView {
         _highlightDataMade = false;
     }
 
-    public void updateFields(SequenceViewPartExport svpe) {
-        //System.out.print("Update Fields\n");
-        if (svpe.visible()) {
-            //System.out.print("Update Fields Visible\n");
-            //set the connections to the currently available connections
+//    public void updateFields(SequenceViewPartExport svpe) {
+    //System.out.print("Update Fields\n");
+//        if (svpe.visible()) {
+    //System.out.print("Update Fields Visible\n");
+    //set the connections to the currently available connections
         /* FIXME ClothoData d = new ClothoData();
-            d.set_sender(this.get_description());
-            d.set_recipient("Connect to mySQL");
-            d.set_operation(ClothoOperationEnum.operationGetFields);
-            d.set_use_code(ClothoDataUseEnum.communicationData);
-            
-            ClothomySQLDataObject dataObj = new ClothomySQLDataObject();
-            dataObj.setMisc(svpe);
-            
-            
-            
-            ArrayList payload_array = new ArrayList(0);
-            //sets the string to use in a hashable
-            if(svpe.getLibraries().getItemCount() > 0)
-            {
-            payload_array.add(svpe.getLibraries().getSelectedItem().toString());
-            d.set_payload(payload_array);
-            dataObj.setStatementKey(svpe.getLibraries().getSelectedItem().toString());
-            d.set_payloadInfo(dataObj);
-            
-            this.get_hub().get_core().process_data_in_connection(d.get_recipient(), d);
-             * */
-            //}
-        }
-    }
-
+    d.set_sender(this.get_description());
+    d.set_recipient("Connect to mySQL");
+    d.set_operation(ClothoOperationEnum.operationGetFields);
+    d.set_use_code(ClothoDataUseEnum.communicationData);
+    
+    ClothomySQLDataObject dataObj = new ClothomySQLDataObject();
+    dataObj.setMisc(svpe);
+    
+    
+    
+    ArrayList payload_array = new ArrayList(0);
+    //sets the string to use in a hashable
+    if(svpe.getLibraries().getItemCount() > 0)
+    {
+    payload_array.add(svpe.getLibraries().getSelectedItem().toString());
+    d.set_payload(payload_array);
+    dataObj.setStatementKey(svpe.getLibraries().getSelectedItem().toString());
+    d.set_payloadInfo(dataObj);
+    
+    this.get_hub().get_core().process_data_in_connection(d.get_recipient(), d);
+     * */
+    //}
+//        }
+//    }
     /**
      * Updates the JLabel with the number of characters in the sequence view.
      * @param sequenceValue
@@ -3569,11 +3646,11 @@ public class SequenceView {
         return (ns.toString());
     }
 
-    void hightlightRestrictionSites() {
+    public void highlightRestrictionSites() {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    void hightLightFeatures() {
+    public void highlightFeatures() {
         throw new UnsupportedOperationException("Not yet implemented");
     }
     ///////////////////////////////////////////////////////////////////
@@ -3656,6 +3733,8 @@ public class SequenceView {
     private HighlightPainter _painter;
     private boolean _highlightStored;
     private UndoManager _undo;
+    private UndoAction undoAction;
+    private RedoAction redoAction;
 //    private ClothoUndoAction _undoAction;
 //    private ClothoRedoAction _redoAction;
 //    private SequenceUtils _sequenceUtils;

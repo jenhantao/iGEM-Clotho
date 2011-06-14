@@ -100,7 +100,6 @@ public class ClothoDialogBox{
     
     public int show_optionDialog(int option_type, int message_type, Object[] options, Object initialValue)
     {
-        
         int n =  javax.swing.JOptionPane.showOptionDialog(
 			    _of,
 			    _message,

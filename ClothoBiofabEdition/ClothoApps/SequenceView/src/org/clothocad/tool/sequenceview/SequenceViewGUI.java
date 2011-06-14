@@ -263,7 +263,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         jLabel28 = new javax.swing.JLabel();
         mouseLocationJLabel = new javax.swing.JLabel();
         jLabel30 = new javax.swing.JLabel();
-        jLabel31 = new javax.swing.JLabel();
+        featureNameJLabel = new javax.swing.JLabel();
         degeneracyCheckBox = new javax.swing.JCheckBox();
         CircularCheckBox = new javax.swing.JCheckBox();
         MethCheckBox = new javax.swing.JCheckBox();
@@ -550,8 +550,8 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         jLabel30.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel30.setText("Feature"); // NOI18N
 
-        jLabel31.setText(" "); // NOI18N
-        jLabel31.setToolTipText(jLabel31.getText());
+        featureNameJLabel.setText(" "); // NOI18N
+        featureNameJLabel.setToolTipText(featureNameJLabel.getText());
 
         degeneracyCheckBox.setText("Allow Degeneracy"); // NOI18N
         degeneracyCheckBox.setToolTipText("Enables or disables the use of degenerate IUPAC codes"); // NOI18N
@@ -676,7 +676,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(CircularCheckBox))
                         .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addComponent(jLabel31, javax.swing.GroupLayout.DEFAULT_SIZE, 557, Short.MAX_VALUE)
+                            .addComponent(featureNameJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 557, Short.MAX_VALUE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jLabel2)))
                     .addContainerGap()))
@@ -739,7 +739,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
                                                 .addGap(4, 4, 4)
                                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                     .addComponent(jLabel28)
-                                                    .addComponent(jLabel31)
+                                                    .addComponent(featureNameJLabel)
                                                     .addComponent(jLabel26)))))
                                     .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addComponent(jLabel19)
@@ -1027,7 +1027,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         ToolMenu.add(jSeparator17);
 
         revCompMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SLASH, java.awt.event.InputEvent.CTRL_MASK));
-        revCompMenuItem.setText("Reverse Comnplement"); // NOI18N
+        revCompMenuItem.setText("Reverse Complement"); // NOI18N
         revCompMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 revCompMenuItemActionPerformed1(evt);
@@ -1063,7 +1063,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         });
         ToolMenu.add(analyzeMenuItem);
 
-        createPartMenuItem.setText("Create Part..."); // NOI18N
+        createPartMenuItem.setText("Create New Clotho Object"); // NOI18N
         createPartMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 createPartMenuItemActionPerformed(evt);
@@ -1322,9 +1322,19 @@ private void SaveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
 private void ExitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitMenuItemActionPerformed
     if (!(_sv.getSaved())) {
-        ClothoDialogBox db = new ClothoDialogBox("Warning!", "Sequence View contains unsaved data!  Close without saving?");
+//        ClothoDialogBox db = new ClothoDialogBox("Warning!", "Sequence View contains unsaved data!  Close without saving?");
         String[] options = {"Yes Close", "No", "Save", "Hide"};
-        int chosen = db.show_optionDialog(javax.swing.JOptionPane.YES_NO_CANCEL_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, options, options[2]);
+//        int chosen = db.show_optionDialog(javax.swing.JOptionPane.YES_NO_CANCEL_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, options, options[2]);
+        int chosen =javax.swing.JOptionPane.showOptionDialog(
+			    null,
+			    "Sequence View contains unsaved data!  Close without saving?",
+                            "Warning!",
+			    javax.swing.JOptionPane.YES_NO_CANCEL_OPTION,
+                            javax.swing.JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            options,
+                            options[2]);//FIXME replace with ClothoDialogBox
+        
         if (chosen == javax.swing.JOptionPane.YES_OPTION) {
             // No longer clears data on close, since windows can be
             // re-opened after they are closed.
@@ -1376,7 +1386,7 @@ private void MapORFMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GE
 }//GEN-LAST:event_MapORFMenuItemActionPerformed
 
 private void mouseMovedinTextPane(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mouseMovedinTextPane
-    _sv.processMouseMoved(evt, mouseLocationJLabel, jLabel31, jLabel30);
+    _sv.processMouseMoved(evt, mouseLocationJLabel, featureNameJLabel, jLabel30);
 }//GEN-LAST:event_mouseMovedinTextPane
 
 private void packageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_packageButtonActionPerformed
@@ -1412,11 +1422,11 @@ private void LockCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-F
 private void highlightFeaturesEnzymesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_highlightFeaturesEnzymesMenuItemActionPerformed
     _sv.resetHighlight(SequenceTextPane);
     _sv.hightlightRestrictionSites();
-    _sv.hightLightFeatures();
+    _sv.highlightFeatures();
 }//GEN-LAST:event_highlightFeaturesEnzymesMenuItemActionPerformed
 
 private void highlightFeaturesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_highlightFeaturesMenuItemActionPerformed
-    _sv.processSearchToolAction(evt, "Highlight Features");
+    _sv.highlightFeatures();
 }//GEN-LAST:event_highlightFeaturesMenuItemActionPerformed
 
 private void enzymeLibMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enzymeLibMenuItemActionPerformed
@@ -1424,7 +1434,7 @@ private void enzymeLibMenuItemActionPerformed(java.awt.event.ActionEvent evt) {/
 }//GEN-LAST:event_enzymeLibMenuItemActionPerformed
 
 private void highlightEnzMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_highlightEnzMenuItemActionPerformed
-    _sv.processSearchToolAction(evt, "Highlight Restriction Sites");
+    _sv.hightlightRestrictionSites();
 }//GEN-LAST:event_highlightEnzMenuItemActionPerformed
 
 private void MethCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_MethCheckBoxItemStateChanged
@@ -1561,8 +1571,11 @@ private void undoMenuItemActionPerformed1(java.awt.event.ActionEvent evt) {//GEN
 
 private void revCompMenuItemActionPerformed1(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_revCompMenuItemActionPerformed1
     // TODO add your handling code here:
+    if (SequenceTextPane.getSelectedText()!=null ) {
     NucSeq ns = new NucSeq(SequenceTextPane.getSelectedText());
+    
     OutputTextArea.setText(ns.revComp());
+    }
 
 }//GEN-LAST:event_revCompMenuItemActionPerformed1
 
@@ -1618,7 +1631,6 @@ private void HighlightMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             }
         });
     }
-
     private JComponent guiContentPane;
     private JRootPane guiRootPane;
     private SequenceView _sv;
@@ -1661,6 +1673,7 @@ private void HighlightMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JCheckBox degeneracyCheckBox;
     private javax.swing.JMenuItem editFeatureLibraryMenuItem;
     private javax.swing.JMenuItem enzymeLibMenuItem;
+    private javax.swing.JLabel featureNameJLabel;
     private javax.swing.JButton featuresButton;
     private javax.swing.JMenuItem findMenuItem;
     private javax.swing.JMenuItem helpMenuItem;
@@ -1690,7 +1703,6 @@ private void HighlightMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
-    private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel33;
     private javax.swing.JLabel jLabel4;

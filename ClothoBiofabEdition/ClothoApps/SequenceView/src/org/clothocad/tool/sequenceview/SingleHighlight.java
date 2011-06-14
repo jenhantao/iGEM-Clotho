@@ -133,4 +133,5 @@ public class SingleHighlight implements Cloneable {
     
     private HashMap<String,Object> _highlightData;
     private int _addIndex;
+    
 }
