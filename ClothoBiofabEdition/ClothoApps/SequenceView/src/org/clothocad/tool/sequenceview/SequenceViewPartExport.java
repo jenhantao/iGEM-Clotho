@@ -397,11 +397,13 @@ private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         this.dispose();
         return;
     }
-    System.out.println("saving: " + newObject.getName());
+    if (newObject != null) {
+        System.out.println("saving: " + newObject.getName());
+    }
     saved = newObject.saveDefault();
     coll.addObject(newObject);
     if (saved) {
-        System.out.println("Successful save!");     
+        System.out.println("Successful save!");
         this.dispose();
     }
 }//GEN-LAST:event_saveButtonActionPerformed

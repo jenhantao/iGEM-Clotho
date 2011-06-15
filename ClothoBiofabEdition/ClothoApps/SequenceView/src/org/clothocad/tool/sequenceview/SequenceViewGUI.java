@@ -142,7 +142,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
 
             @Override
             public void focusGained(FocusEvent e) {
-                _sv.configureBasePairBoth(jLabel2);
+                _sv.configureBasePairBoth(columnCountJLabel);
             }
         });
     }
@@ -152,7 +152,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
     }
 
     public javax.swing.JLabel getColLabel() {
-        return jLabel2;
+        return columnCountJLabel;
     }
 
     /**
@@ -209,6 +209,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
 
     public void setIndexTextArea(String s) {
         indexTextArea.setText(s);
+        indexTextArea.repaint();
     }
 
     /** This method is called from within the constructor to
@@ -234,7 +235,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         topComponentViewButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        columnCountJLabel = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -268,6 +269,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         CircularCheckBox = new javax.swing.JCheckBox();
         MethCheckBox = new javax.swing.JCheckBox();
         LockCheckBox = new javax.swing.JCheckBox();
+        jLabel20 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         SequenceTextPane = new javax.swing.JTextPane();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -480,7 +482,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel1.setText("Location"); // NOI18N
 
-        jLabel2.setText("ColLabel"); // NOI18N
+        columnCountJLabel.setText("ColLabel"); // NOI18N
 
         jLabel3.setText("0"); // NOI18N
 
@@ -547,7 +549,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
 
         mouseLocationJLabel.setText("0"); // NOI18N
 
-        jLabel30.setFont(new java.awt.Font("Tahoma", 1, 11));
+        jLabel30.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel30.setText("Feature"); // NOI18N
 
         featureNameJLabel.setText(" "); // NOI18N
@@ -594,15 +596,20 @@ public class SequenceViewGUI extends javax.swing.JFrame {
             }
         });
 
+        jLabel20.setText("Columns: ");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1280, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(1177, Short.MAX_VALUE)
+                .addComponent(jLabel20)
+                .addGap(64, 64, 64))
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(LockCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                    .addComponent(LockCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(SequenceLengthJLabel)
@@ -669,21 +676,24 @@ public class SequenceViewGUI extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel2Layout.createSequentialGroup()
                             .addComponent(jLabel30)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 316, Short.MAX_VALUE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 320, Short.MAX_VALUE)
                             .addComponent(degeneracyCheckBox)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(MethCheckBox)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(CircularCheckBox))
                         .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addComponent(featureNameJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 557, Short.MAX_VALUE)
+                            .addComponent(featureNameJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 561, Short.MAX_VALUE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jLabel2)))
+                            .addComponent(columnCountJLabel)))
                     .addContainerGap()))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 70, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(34, Short.MAX_VALUE)
+                .addComponent(jLabel20)
+                .addGap(22, 22, 22))
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
                     .addContainerGap()
@@ -751,11 +761,11 @@ public class SequenceViewGUI extends javax.swing.JFrame {
                                 .addComponent(MethCheckBox)
                                 .addComponent(degeneracyCheckBox))
                             .addGap(4, 4, 4)
-                            .addComponent(jLabel2)))
+                            .addComponent(columnCountJLabel)))
                     .addContainerGap(22, Short.MAX_VALUE)))
         );
 
-        SequenceTextPane.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
+        SequenceTextPane.setFont(new java.awt.Font("Courier New", 0, 11));
         SequenceTextPane.setDragEnabled(true);
         SequenceTextPane.setMargin(new java.awt.Insets(0, 0, 0, 0));
         SequenceTextPane.addCaretListener(new javax.swing.event.CaretListener() {
@@ -826,26 +836,26 @@ public class SequenceViewGUI extends javax.swing.JFrame {
                         .addGap(28, 28, 28)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1159, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1167, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(19, 19, 19)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 650, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel32, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(32, 32, 32)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel33, javax.swing.GroupLayout.DEFAULT_SIZE, 532, Short.MAX_VALUE)
+                                .addComponent(jLabel33, javax.swing.GroupLayout.DEFAULT_SIZE, 536, Short.MAX_VALUE)
                                 .addGap(83, 83, 83))
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 615, Short.MAX_VALUE)))
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(mainToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 1280, Short.MAX_VALUE))))
+                            .addComponent(mainToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 1288, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -1265,7 +1275,7 @@ private void keyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyTyped
 
 private void frameResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_frameResized
     if (_firstResize >= 2) {
-        _sv.configureBasePairBoth(jLabel2);
+        _sv.configureBasePairBoth(columnCountJLabel);
     } else {
         _firstResize++;
     }
@@ -1421,7 +1431,7 @@ private void LockCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-F
 
 private void highlightFeaturesEnzymesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_highlightFeaturesEnzymesMenuItemActionPerformed
     _sv.resetHighlight(SequenceTextPane);
-    _sv.hightlightRestrictionSites();
+    _sv.highlightRestrictionSites();
     _sv.highlightFeatures();
 }//GEN-LAST:event_highlightFeaturesEnzymesMenuItemActionPerformed
 
@@ -1434,7 +1444,7 @@ private void enzymeLibMenuItemActionPerformed(java.awt.event.ActionEvent evt) {/
 }//GEN-LAST:event_enzymeLibMenuItemActionPerformed
 
 private void highlightEnzMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_highlightEnzMenuItemActionPerformed
-    _sv.hightlightRestrictionSites();
+    _sv.highlightRestrictionSites();
 }//GEN-LAST:event_highlightEnzMenuItemActionPerformed
 
 private void MethCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_MethCheckBoxItemStateChanged
@@ -1455,7 +1465,7 @@ private void revTransButtonActionPerformed(java.awt.event.ActionEvent evt) {//GE
 
 private void removeAllHighlightsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeAllHighlightsMenuItemActionPerformed
     _sv.resetHighlight(SequenceTextPane);
-    _sv.get_highlightData().clear();
+//    _sv.get_highlightData().clear();
 }//GEN-LAST:event_removeAllHighlightsMenuItemActionPerformed
 
 private void findMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findMenuItemActionPerformed
@@ -1476,7 +1486,7 @@ private void textPaneFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
 
 private void removeFeatureEnzymeHighlightMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeFeatureEnzymeHighlightMenuItemActionPerformed
     _sv.removeFeatureEnzymeHighlights();
-    _sv.get_highlightData().clear();
+//    _sv.get_highlightData().clear();
 }//GEN-LAST:event_removeFeatureEnzymeHighlightMenuItemActionPerformed
 
 private void highlightSelectedMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_highlightSelectedMenuItemActionPerformed
@@ -1549,7 +1559,7 @@ private void createPartMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
 }//GEN-LAST:event_createPartMenuItemActionPerformed
 
 private void LockCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LockCheckBoxActionPerformed
-    _sv.configureBasePairBoth(jLabel2);
+    _sv.configureBasePairBoth(columnCountJLabel);
 }//GEN-LAST:event_LockCheckBoxActionPerformed
 
 private void CircularCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CircularCheckBoxActionPerformed
@@ -1667,6 +1677,7 @@ private void HighlightMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JMenu WindowMenu;
     private javax.swing.JMenuItem analyzeMenuItem;
     private javax.swing.JLabel caretLocationJLabel;
+    private javax.swing.JLabel columnCountJLabel;
     private javax.swing.JMenuItem copyMenuItem;
     private javax.swing.JMenuItem createPartMenuItem;
     private javax.swing.JMenuItem cutMenuItem;
@@ -1693,7 +1704,7 @@ private void HighlightMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;

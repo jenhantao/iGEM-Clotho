@@ -27,7 +27,9 @@ import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.Shape;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,14 +57,18 @@ import javax.swing.JOptionPane;
 //import org.clothocad.core.ClothoCore;
 //import org.clothocad.core.ClothoCore.LogLevel;
 //import org.clothocad.databaseio.Datum;
+import javax.swing.SwingWorker;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
+import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.JTextComponent;
 import org.clothocore.api.data.NucSeq;
 import org.clothocore.util.dialog.ClothoDialogBox;
 //import org.clothocad.util.ClothoDialogBox;
 import org.clothocore.util.chooser.ClothoOpenChooser;
 import org.clothocore.util.chooser.ClothoSaveChooser;
+import org.clothocad.library.sequencelight.*;
+
 //import org.clothocad.util.ClothoOpenChooser;
 //import org.clothocad.util.ClothoSaveChooser;
 //import org.clothocad.util.ClothoSearchUtil;
@@ -84,7 +90,13 @@ import org.clothocore.util.chooser.ClothoSaveChooser;
 //import tool.partsmanager.PartsManagerEnums;
 import org.clothocad.tool.sequenceview.ClothoSearchUtil;
 import org.clothocore.api.core.Collator;
+import org.clothocore.api.core.Collector;
 import org.clothocore.api.core.wrapper.ToolWrapper;
+import org.clothocore.api.data.Annotation;
+import org.clothocore.api.data.Feature;
+import org.clothocore.api.data.ObjType;
+import org.clothocore.api.data.Person;
+import org.openide.util.Exceptions;
 
 /**
  * The sequence view of the design. An editable view for raw DNA data.
@@ -99,13 +111,28 @@ public class SequenceView {
 
     public SequenceView(String n, String d, SequenceViewManager m, int index, HashMap<String, SequenceViewPlugInInterface> pi) {
         //super(n, d, c);
+//        allFeatures = Collector.getAll(ObjType.FEATURE);
+
+
 
         _manager = m;
         _myIndex = index;
-
+        _annotationsOn = false;
         _plugIns = pi;
-        _highlightData = new ArrayList();
+//        _highlightData = new ArrayList();
         _sequenceview = new SequenceViewGUI(this);
+        _sequence = new NucSeq(_sequenceview.get_TextArea().getText());
+        new SwingWorker() {
+
+            @Override
+            protected Object doInBackground() throws Exception {
+                Person user = Collector.getCurrentUser();
+                _sequence.autoAnnotate(user);
+                return null;
+            }
+        }.execute();
+
+
         _sequenceviewtools = new SequenceViewSearchTools(this);
         _preferencesFrame = null;// new SequenceViewPreferences(this);
 
@@ -122,7 +149,7 @@ public class SequenceView {
         _dnaType = true;
         _fileOpenerInstantiated = false;
         _fileSaverInstantiated = false;
-        _highlightDataMade = false;
+//        _highlightDataMade = false;
         _highlightStored = false;
         _insertIsInsideAHighlight = false;
         _keyTypedAtLeastOnce = false;
@@ -236,9 +263,7 @@ public class SequenceView {
     ///////////////////////////////////////////////////////////////////
     ////                         public methods                    ////
 
-    
     //highlights all nonrestriction related features
-  
     public static int getNumberOfSequenceViews() {
         return numOfSeqViews;
     }
@@ -897,7 +922,6 @@ public class SequenceView {
     /**
      * Finds the previous Open Reading Frame in the reverse of the SequenceView
      */
-    @Deprecated
     public void findPrevRevORF() {
         JTextComponent textArea = _sequenceview.get_TextArea();
         if (textArea.getCaretPosition() == 0) {
@@ -1052,18 +1076,17 @@ public class SequenceView {
      * returns _highlightData which is the data structure for highlights
      * @return _highlightData
      */
-    public ArrayList<SingleHighlight> get_highlightData() {
-        return _highlightData;
-    }
-
-    /**
-     * Returns _highlightDataMade.
-     * @return _highlightDataMade
-     */
-    public boolean get_highlightDataMade() {
-        return _highlightDataMade;
-    }
-
+//    public ArrayList<SingleHighlight> get_highlightData() {
+//        return _highlightData;
+//    }
+//
+//    /**
+//     * Returns _highlightDataMade.
+//     * @return _highlightDataMade
+//     */
+//    public boolean get_highlightDataMade() {
+//        return _highlightDataMade;
+//    }
     /**
      * Returns true if the sequence is set to be methylated
      * @return
@@ -1148,36 +1171,35 @@ public class SequenceView {
      * @see #removeFeatureEnzymeHighlights() 
      */
     //commented
-    public void highlightFeaturesEnzymes() {
-        //commented
-        /*
-        _ = _sequenceview.get_TextArea().getHighlighter();
-        for (int i=0; i<_highlightData.size(); i++) {
-        //The following block will shrink the highlight in the case that the
-        // previous end index is greater than the current start index.
-        _shrinkPainter = (ClothoHighlightPainter_Shrink) _highlightData.get(i).get(3);
-        _highlightData.get(i).set(3, new ClothoHighlightPainter_Shrink(_shrinkPainter.getColor()));
-        _shrinkPainter = (ClothoHighlightPainter_Shrink) _highlightData.get(i).get(3);
-        if (i>0) {
-        if ((Integer)_highlightData.get(i).get(1) < (Integer)_highlightData.get(i-1).get(2)) {
-        _shrinkPainter.shrinkHighlight();
-        //Second shrink if needed.
-        if (i>1)
-        if ((Integer)_highlightData.get(i).get(1) < (Integer)_highlightData.get(i-2).get(2)) {
-        _shrinkPainter.shrinkHighlight();
-        }
-        }
-        }
-        try {_h.addHighlight((Integer)_highlightData.get(i).get(1),
-        (Integer)_highlightData.get(i).get(2), _shrinkPainter);}
-        catch(BadLocationException e) {
-        ClothoCore.getCore().log(e.getLocalizedMessage(), LogLevel.ERROR);
-        }
-        }
-         *
-         */
-    }
-
+//    public void highlightFeaturesEnzymes() {
+//        //commented
+//        /*
+//        _ = _sequenceview.get_TextArea().getHighlighter();
+//        for (int i=0; i<_highlightData.size(); i++) {
+//        //The following block will shrink the highlight in the case that the
+//        // previous end index is greater than the current start index.
+//        _shrinkPainter = (ClothoHighlightPainter_Shrink) _highlightData.get(i).get(3);
+//        _highlightData.get(i).set(3, new ClothoHighlightPainter_Shrink(_shrinkPainter.getColor()));
+//        _shrinkPainter = (ClothoHighlightPainter_Shrink) _highlightData.get(i).get(3);
+//        if (i>0) {
+//        if ((Integer)_highlightData.get(i).get(1) < (Integer)_highlightData.get(i-1).get(2)) {
+//        _shrinkPainter.shrinkHighlight();
+//        //Second shrink if needed.
+//        if (i>1)
+//        if ((Integer)_highlightData.get(i).get(1) < (Integer)_highlightData.get(i-2).get(2)) {
+//        _shrinkPainter.shrinkHighlight();
+//        }
+//        }
+//        }
+//        try {_h.addHighlight((Integer)_highlightData.get(i).get(1),
+//        (Integer)_highlightData.get(i).get(2), _shrinkPainter);}
+//        catch(BadLocationException e) {
+//        ClothoCore.getCore().log(e.getLocalizedMessage(), LogLevel.ERROR);
+//        }
+//        }
+//         *
+//         */
+//    }
     /**
      * Adds the highlights for user selected areas.
      */
@@ -1345,7 +1367,7 @@ public class SequenceView {
                         line = inFile.readLine();
                     }
 
-                    refreshHighlightData(3);
+//                    refreshHighlightData(3);
                     sequenceChanged();
 
                     _sequenceview.get_TextArea().setText(toSeqView);
@@ -1399,7 +1421,7 @@ public class SequenceView {
                         line = inFile.readLine();
                     }
 
-                    refreshHighlightData(3);
+//                    refreshHighlightData(3);
                     sequenceChanged();
 
                     _sequenceview.get_TextArea().setText(toSeqView);
@@ -1419,7 +1441,7 @@ public class SequenceView {
                             line = inFile.readLine();
                         }
 
-                        refreshHighlightData(3);
+//                        refreshHighlightData(3);
                         sequenceChanged();
 
                         _sequenceview.get_TextArea().setText(toSeqView);
@@ -1491,12 +1513,13 @@ public class SequenceView {
             }
 
             sequence = sequence.substring(newOrigin, sequence.length()) + sequence.substring(0, newOrigin);
-
-            refreshHighlightData(0);
-
+Boolean refresh = _annotationsOn;
+this.removeFeatureEnzymeHighlights();
+this.removeUserSelectedHighlights();
             _sequenceview.get_TextArea().setText(sequence);
-
-            refreshHighlightData(1);
+if (refresh) {
+    this.highlightFeatures();
+}
         } else {
             ClothoDialogBox db = new ClothoDialogBox("Error", "Sequence is not circular!");
             db.show_Dialog(javax.swing.JOptionPane.OK_OPTION);
@@ -1971,42 +1994,42 @@ public class SequenceView {
         Integer location = new Integer(pos);
         //if _mouseoverData is already made, then the mousemoved event should
         // set the loc field as the name of the feature/enzyme.
-//        if (_highlightDataMade == true) {
-//            _mouseoverString = "";
+        if (_annotationsOn == true) {
+            _mouseoverString = "";
+            if (_annotations.size() > 0) {
+                _annotationsArray = _sequence.getAnnotations().toArray();
 //            _hasAtLeastOneHighlight = false;
-//            for (int i = 0; i < _highlightData.size(); i++) {
-//                //if location is between the start/end indices of the current
-//                // _mouseoverDataIndividual, then append _mouseoverString
-//                if ((location > (Integer) _highlightData.get(i).get(1))
-//                        & (location < (Integer) _highlightData.get(i).get(2))) {
-//                    //Searcher is used to prevent identical concatenations of mouseovers
-//                    // (i.e., so we don't see something like "EcoR1, EcoR1, EcoR1, BamHI")
-//                    //uncommented
-//                    _searcher = new ClothoSearchUtil((String) _highlightData.get(i).get(0), _mouseoverString);
-//                    //uncomment
-//
-//                    if (_searcher.getHitCount() == 0) {
-//                        if (_hasAtLeastOneHighlight) {
-//                            _mouseoverString = _mouseoverString.concat(", ");
-//                        }
-//
-//                        _mouseoverString = _mouseoverString.concat((String) _highlightData.get(i).get(0));
-//                        _hasAtLeastOneHighlight = true;
-//                    }
-//
-//
-//                }
-//            }
-//            if (_hasAtLeastOneHighlight) {
-//                sequenceLabel.setVisible(true);
-//                sequenceName.setText(_mouseoverString);
-//            } else {
-//                sequenceLabel.setVisible(false);
-//                sequenceName.setText(" ");
-//            }
-//        }
-        sequenceLabel.setVisible(true);
-        sequenceName.setText(location.toString() + "moo");
+                for (int i = 0; i < _annotationsArray.length; i++) {
+                    //if location is between the start/end indices of the current
+                    // _mouseoverDataIndividual, then append _mouseoverString
+                    if ((location > (Integer) ((Annotation) _annotationsArray[i]).getStart()) && (location < (Integer) ((Annotation) _annotationsArray[i]).getEnd())) {
+                        //Searcher is used to prevent identical concatenations of mouseovers
+                        // (i.e., so we don't see something like "EcoR1, EcoR1, EcoR1, BamHI")
+                        //uncommented
+//                        _searcher = new ClothoSearchUtil((String) _highlightData.get(i).get(0), _mouseoverString);
+                        _searcher = new ClothoSearchUtil((String) ((Annotation) _annotationsArray[i]).getName(), _mouseoverString);
+
+                        //uncomment
+                        _mouseoverString = _mouseoverString.concat(((Annotation) _annotationsArray[i]).getName());
+
+                        if (_searcher.getHitCount() == 0) {
+                            if (_annotationsArray.length > 0) {
+                                _mouseoverString = _mouseoverString.concat(", ");
+                            }
+
+                        }
+
+                    }
+                }
+            }
+            if (_annotationsArray.length > 0) {
+                sequenceLabel.setVisible(true);
+                sequenceName.setText(_mouseoverString);
+            } else {
+                sequenceLabel.setVisible(false);
+                sequenceName.setText(" ");
+            }
+        }
         loc.setText(location.toString());
     }
 
@@ -2664,7 +2687,8 @@ public class SequenceView {
      */
     public void refreshHighlights() {
         removeFeatureEnzymeHighlights();
-        highlightFeaturesEnzymes();
+        highlightFeatures();
+        highlightRestrictionSites();
     }
 
     /**
@@ -2672,46 +2696,45 @@ public class SequenceView {
      * getText().setText("X") is invoked.
      * @param refreshType There are two different stages for refresh. Use 0 to "clear" _highlightData, 1 to "revive" _highlightData, and 2 to completely erase _highlightData
      */
-    public void refreshHighlightData(int refreshType) {
-        if (refreshType == 0) {
-            //The following block clears highlightData to prevent any nullPointerExceptions
-            // from DocumentListener
-            _highlightDataClone = (ArrayList) _highlightData.clone();
-            _highlightData.clear();
-            _highlightDataMade = false;
-        }
-        if (refreshType == 1) {
-            //The following block refreshes the highlight now that the text is replaced.
-            _highlightData = (ArrayList) _highlightDataClone.clone();
-            _highlightDataMade = true;
-            if (_needsToRefreshHighlight) {
-                refreshHighlights();
-                _needsToRefreshHighlight = false;
-            }
-            if (_insertIsInsideAHighlight) {
-                ClothoDialogBox dialogBox = new ClothoDialogBox("Insertion "
-                        + "Warning", "You are inserting text inside a feature.\n "
-                        + "Highlights will be retained until cleared.");
-                dialogBox.show_Dialog(javax.swing.JOptionPane.WARNING_MESSAGE);
-                _sequenceview.toFront();
-                _insertIsInsideAHighlight = false;
-            }
-            if (_removalIsAffectingAHighlight) {
-                ClothoDialogBox dialogBox = new ClothoDialogBox("Removal "
-                        + "Warning", "You are removing text from a feature.\n "
-                        + "Highlights will be retained until cleared.");
-                dialogBox.show_Dialog(javax.swing.JOptionPane.WARNING_MESSAGE);
-                _sequenceview.toFront();
-                _removalIsAffectingAHighlight = false;
-            }
-        }
-        if (refreshType == 2) {
-            _highlightData.clear();
-            _highlightDataMade = false;
-            refreshHighlights();
-        }
-    }
-
+//    public void refreshHighlightData(int refreshType) {
+//        if (refreshType == 0) {
+//            //The following block clears highlightData to prevent any nullPointerExceptions
+//            // from DocumentListener
+//            _highlightDataClone = (ArrayList) _highlightData.clone();
+//            _highlightData.clear();
+//            _highlightDataMade = false;
+//        }
+//        if (refreshType == 1) {
+//            //The following block refreshes the highlight now that the text is replaced.
+//            _highlightData = (ArrayList) _highlightDataClone.clone();
+//            _highlightDataMade = true;
+//            if (_needsToRefreshHighlight) {
+//                refreshHighlights();
+//                _needsToRefreshHighlight = false;
+//            }
+//            if (_insertIsInsideAHighlight) {
+//                ClothoDialogBox dialogBox = new ClothoDialogBox("Insertion "
+//                        + "Warning", "You are inserting text inside a feature.\n "
+//                        + "Highlights will be retained until cleared.");
+//                dialogBox.show_Dialog(javax.swing.JOptionPane.WARNING_MESSAGE);
+//                _sequenceview.toFront();
+//                _insertIsInsideAHighlight = false;
+//            }
+//            if (_removalIsAffectingAHighlight) {
+//                ClothoDialogBox dialogBox = new ClothoDialogBox("Removal "
+//                        + "Warning", "You are removing text from a feature.\n "
+//                        + "Highlights will be retained until cleared.");
+//                dialogBox.show_Dialog(javax.swing.JOptionPane.WARNING_MESSAGE);
+//                _sequenceview.toFront();
+//                _removalIsAffectingAHighlight = false;
+//            }
+//        }
+//        if (refreshType == 2) {
+//            _highlightData.clear();
+//            _highlightDataMade = false;
+//            refreshHighlights();
+//        }
+//    }
     /**
      * Removes only Feature/Enzyme Highlights from the current sequenceview. Used
      * in conjunction with the Remove Features/Enzymes Highlights menu item, under
@@ -2719,14 +2742,14 @@ public class SequenceView {
      */
     public void removeFeatureEnzymeHighlights() {
         // Remove any existing underlines.
+        _annotationsOn = false;
         _h = _sequenceview.get_TextArea().getHighlighter();
         javax.swing.text.Highlighter.Highlight[] highlights = _h.getHighlights();
         for (int i = 0; i < highlights.length; i++) {
             javax.swing.text.Highlighter.Highlight h = highlights[i];
-            //commented
-            //  if (h.getPainter() instanceof ClothoHighlightPainter_Shrink) {
-            //      _h.removeHighlight(h);
-            //  }
+            if (h.getPainter() instanceof FeaturePainter) {
+                _h.removeHighlight(h);
+            }
         }
     }
 
@@ -2753,16 +2776,18 @@ public class SequenceView {
      * @param replacement String that replaces the selected text
      */
     public void replaceTextAtSelection(String replacement) {
-        refreshHighlightData(0);
-
+//        refreshHighlightData(0);
+        Boolean refresh = _annotationsOn;
+        this.removeFeatureEnzymeHighlights();
+        this.removeUserSelectedHighlights();
         String text = _sequenceview.get_TextArea().getText();
         int start = _sequenceview.get_TextArea().getSelectionStart();
         int end = _sequenceview.get_TextArea().getSelectionEnd();
         text = text.substring(0, start) + replacement + text.substring(end, text.length());
         _sequenceview.get_TextArea().setText(text);
-
-        refreshHighlightData(1);
-
+        if (refresh) {
+            this.highlightFeatures();
+        }
         _sequenceview.get_TextArea().setSelectionStart(start);
         _sequenceview.get_TextArea().setSelectionEnd(end);
         //_sequenceview.get_TextArea().setCaretPosition(end);
@@ -3053,11 +3078,22 @@ public class SequenceView {
         _ORFsCalculated = false;
         _revORFsCalculated = false;
         _saved = false;
-        if (_highlightDataMade) {
-            _needsToRefreshHighlight = true;
-        }
+//        if (_highlightDataMade) {
+//            _needsToRefreshHighlight = true;
+//        }
         updateSequenceCount(_sequenceview.getSeqCountLabel());
         configureBasePairBoth(_sequenceview.getColLabel());
+        _sequence.changeSeq(_sequenceview.get_TextArea().getText());
+        new SwingWorker() {
+
+            @Override
+            protected Object doInBackground() throws Exception {
+                Person user = Collector.getCurrentUser();
+                _sequence.removeAnnotations();
+                _sequence.autoAnnotate(user);
+                return null;
+            }
+        }.execute();
     }
 
     /**
@@ -3326,6 +3362,8 @@ public class SequenceView {
         JCheckBox cb = _sequenceview.getCircularBox();
         if (cb.isSelected()) {
             _circular = true;
+            _sequence = new NucSeq(_sequence.getSeq(), false, true);
+            sequenceChanged();
         } else {
             _circular = false;
         }
@@ -3392,11 +3430,10 @@ public class SequenceView {
      * Set of actions before sequence view is somehow cleared; if for instance
      * loading a sequence or closing the window.
      */
-    public void updateClearedSequence() {
-        _highlightData.clear();
-        _highlightDataMade = false;
-    }
-
+//    public void updateClearedSequence() {
+//        _highlightData.clear();
+//        _highlightDataMade = false;
+//    }
 //    public void updateFields(SequenceViewPartExport svpe) {
     //System.out.print("Update Fields\n");
 //        if (svpe.visible()) {
@@ -3647,21 +3684,47 @@ public class SequenceView {
     }
 
     public void highlightRestrictionSites() {
-        throw new UnsupportedOperationException("Not yet implemented");
+        _annotationsOn = true;
     }
 
     public void highlightFeatures() {
-        throw new UnsupportedOperationException("Not yet implemented");
+        _annotations = _sequence.getAnnotations();
+        this.removeFeatureEnzymeHighlights();
+        this.removeUserSelectedHighlights();
+        _annotationsOn = true;
+        _h = _sequenceview.get_TextArea().getHighlighter();
+
+        for (Annotation an : _annotations) {
+            try {
+                //            System.out.println("start: "+an.getStart()+" end: "+an.getEnd()+" color: "+an.getColor());
+                _h.addHighlight(an.getStart(), an.getEnd(), new FeaturePainter(an.getColor()));
+            } catch (BadLocationException ex) {
+                System.out.println("error highlighting features");
+                Exceptions.printStackTrace(ex);
+            }
+        }
+
+    }
+
+    private class FeaturePainter extends DefaultHighlighter.DefaultHighlightPainter {
+
+        FeaturePainter(Color c) {
+            super(c);
+        }
     }
     ///////////////////////////////////////////////////////////////////
     ////                         private variables                 ////
+    private NucSeq _sequence;
+    private HashSet<Annotation> _annotations;
+    private Object[] _annotationsArray;
     private Object lastORFHighlightTag;
     private int currentORFStart;
     private int currentORFEnd;
     NucSeq _revComp = new NucSeq("");
-    private ArrayList<SingleHighlight> _highlightData;
-    private ArrayList<SingleHighlight> _highlightDataClone;
+//    private ArrayList<SingleHighlight> _highlightData;
+//    private ArrayList<SingleHighlight> _highlightDataClone;
     private ArrayList<String> _startCodons;
+    private boolean _annotationsOn;
     private boolean _allowDegeneracy;
     private boolean _backspaceKeyPressed;
     private boolean _circular;
@@ -3669,8 +3732,8 @@ public class SequenceView {
     private boolean _dnaType;
     private boolean _fileOpenerInstantiated;
     private boolean _fileSaverInstantiated;
-    private boolean _hasAtLeastOneHighlight;  //allows for the possibility of labelling two highlight names if they overlap in the sequenceview.
-    private boolean _highlightDataMade;
+//    private boolean _hasAtLeastOneHighlight;  //allows for the possibility of labelling two highlight names if they overlap in the sequenceview.
+//    private boolean _highlightDataMade;
     private boolean _insertIsInsideAHighlight;
     private boolean _locked;
     private boolean _longTimeHighlightWarned;
@@ -3735,6 +3798,7 @@ public class SequenceView {
     private UndoManager _undo;
     private UndoAction undoAction;
     private RedoAction redoAction;
+    private ArrayList<Feature> allFeatures;
 //    private ClothoUndoAction _undoAction;
 //    private ClothoRedoAction _redoAction;
 //    private SequenceUtils _sequenceUtils;

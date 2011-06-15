@@ -50,7 +50,7 @@ public class SequenceViewDocumentListener implements DocumentListener{
     
     public void insertUpdate(DocumentEvent evt) {
         _connection.sequenceChanged();
-        updateHighlightData_Insert(evt);
+//        updateHighlightData_Insert(evt);
         if (!_insertIsInsideAHighlightWarnedAlready && _insertIsInsideAHighlight) {
             _connection.set_insertIsInsideAHighlight(_insertIsInsideAHighlight);
             _insertIsInsideAHighlight = false;
@@ -103,7 +103,7 @@ public class SequenceViewDocumentListener implements DocumentListener{
 
     public void removeUpdate(DocumentEvent evt) {
         _connection.sequenceChanged();
-        updateHighlightData_Remove(evt);
+//        updateHighlightData_Remove(evt);
         if (!_removalIsAffectingAHighlightWarnedAlready && _removalIsAffectingAHighlight) {
             _connection.set_removalIsAffectingAHighlight(_removalIsAffectingAHighlight);
             _removalIsAffectingAHighlight = false;
@@ -116,160 +116,160 @@ public class SequenceViewDocumentListener implements DocumentListener{
     }
     
     //DEBUG HERE: Revise Sequence upon breaking a highlight.
-    public void updateHighlightData_Insert(DocumentEvent evt) {
-        if (!_connection.get_highlightDataMade()) {
-            return;
-        }
-        for (int i=0; i<_connection.get_highlightData().size(); i++) {
-            //The following block stores highlight index information
-            Integer startIndexInteger = (Integer)_connection.get_highlightData().get(i).get(1);
-            Integer endIndexInteger = (Integer)_connection.get_highlightData().get(i).get(2);
-            int startIndex = startIndexInteger.intValue();
-            int endIndex = endIndexInteger.intValue();
-            //all highlights above the caret position must be moved up. So,
-            // The following block moves up all affected highlights.
-            if (evt.getOffset() <= startIndex) {
-                _connection.get_highlightData().get(i).set(1, startIndex+evt.getLength());
-                _connection.get_highlightData().get(i).set(2, endIndex+evt.getLength());
-            }
-            //The following block handles insertions inbetween highlights;
-            // highlightData will be split but only temporarily; everything
-            // resets if user invokes clearHighlight
-            if (evt.getOffset() < endIndex && evt.getOffset() > startIndex) {
-                //The following line sets a boolean that will be used to later 
-                // warn of the impending insertion.
-                _insertIsInsideAHighlight = true;
-                //The following block will split the highlight.
-                //Revise sequences as well too, later (set 4)
-                _connection.get_highlightData().add(i+1,(SingleHighlight)_connection.
-                        get_highlightData().get(i).clone());
-                _connection.get_highlightData().get(i+1).set(1, evt.getOffset());
-                _connection.get_highlightData().get(i+1).set(2, endIndex);
-                _connection.get_highlightData().get(i).set(2, evt.getOffset());
-            }
-        }
-    }
-    
-    public void updateHighlightData_Remove(DocumentEvent evt) {
-        if (!_connection.get_highlightDataMade()) {
-            return;
-        }
-        
-        if (evt.getLength() == 1) {
-            for (int i=0; i<_connection.get_highlightData().size(); i++) {
-                //In the case that backspace was pressed...
-                if (_connection.get_backspaceKeyPressed()) {
-                    //The following block stores highlight index information
-                    Integer startIndexInteger = (Integer)_connection.get_highlightData().get(i).get(1);
-                    Integer endIndexInteger = (Integer)_connection.get_highlightData().get(i).get(2);
-                    int startIndex = startIndexInteger.intValue();
-                    int endIndex = endIndexInteger.intValue();
-                    //If the removal is BEFORE the highlight...
-                    if (evt.getOffset() < startIndex &&
-                            evt.getOffset() < endIndex) {
-                        //The following block shifts the affected highlights down.
-                        _connection.get_highlightData().get(i).set(1, startIndex-1);
-                        _connection.get_highlightData().get(i).set(2, endIndex-1);
-                    }
-                    //If the removal is INSIDE the highlight...
-                    else if (evt.getOffset() >= startIndex && 
-                            evt.getOffset() < endIndex) {
-                        //System.out.println("Inside Highlight");
-                        //_connection.get_highlightData().get(i).set(1, startIndex);
-                        _connection.get_highlightData().get(i).set(2, endIndex-1);
-                        _removalIsAffectingAHighlight = true;
-                    }
-                }
-                //In the case that delete was pressed...
-                if (_connection.get_deleteKeyPressed()) {
-                    //The following block stores highlight index information
-                    Integer startIndexInteger = (Integer)_connection.get_highlightData().get(i).get(1);
-                    Integer endIndexInteger = (Integer)_connection.get_highlightData().get(i).get(2);
-                    int startIndex = startIndexInteger.intValue();
-                    int endIndex = endIndexInteger.intValue();
-                    //If the removal is BEFORE the highlight...
-                    if (evt.getOffset() < startIndex && evt.getOffset() < endIndex) {
-                        //The following block shifts the affected highlights down.
-                        _connection.get_highlightData().get(i).set(1, startIndex-1);
-                        _connection.get_highlightData().get(i).set(2, endIndex-1);
-                    }
-                    //If the removal is INSIDE the highlight...
-                    else if (evt.getOffset() >= startIndex && evt.getOffset() < endIndex) {
-                        //System.out.println("event offset: " + evt.getOffset());
-                        //System.out.println("event length: " + evt.getLength());
-                        //System.out.println(_connection.get_highlightData().get(i));
-                        _connection.get_highlightData().get(i).set(2, endIndex - 1);
-                        _removalIsAffectingAHighlight = true;
-                    }
-                }
-            }
-            _connection.set_backspaceKeyPressed(false);
-            _connection.set_deleteKeyPressedPressed(false);
-        }
-        //There are five kinds of selection removals:
-        // Case 1. Highlight isn't affected, but is shifted.
-        // Case 2. The whole highlight is removed.
-        // Case 3. The starting portion of the highlight is removed.
-        // Case 4. The ending portion of the highlight is removed.
-        // Case 5. The inside of the highlight is removed.
-        if (evt.getLength()>1) {
-            if (_textPane.getText().length() == 0) {
-                _connection.get_highlightData().clear();
-            }
-            for (int i=0; i<_connection.get_highlightData().size(); i++) {
-                //Case 1
-                if (evt.getOffset()+evt.getLength() <= (Integer)_connection.get_highlightData().get(i).get(1) &&
-                        evt.getOffset()+evt.getLength() <= (Integer)_connection.get_highlightData().get(i).get(2)) {
-                    //The following block stores highlight index information
-                    Integer startIndexInteger = (Integer)_connection.get_highlightData().get(i).get(1);
-                    Integer endIndexInteger = (Integer)_connection.get_highlightData().get(i).get(2);
-                    int startIndex = startIndexInteger.intValue();
-                    int endIndex = endIndexInteger.intValue();
-                    //The following block sets the shifted values to _highlightData
-                    _connection.get_highlightData().get(i).set(1, startIndex-evt.getLength());
-                    _connection.get_highlightData().get(i).set(2, endIndex-evt.getLength());
-                }
-                //Case 2
-                else if (evt.getOffset() <= (Integer)_connection.get_highlightData().get(i).get(1) && 
-                        evt.getOffset()+evt.getLength() >= (Integer)_connection.get_highlightData().get(i).get(2)) {
-                    _connection.get_highlightData().remove(i);
-                    _removalIsAffectingAHighlight = true;
-                }
-                //Case 3
-                else if (evt.getOffset()+evt.getLength() < (Integer)_connection.get_highlightData().get(i).get(2) &&
-                        evt.getOffset()+evt.getLength() >= (Integer)_connection.get_highlightData().get(i).get(1) &&
-                        evt.getOffset() <= (Integer)_connection.get_highlightData().get(i).get(1)) {
-                    //System.out.println("event offset: " + evt.getOffset());
-                    //System.out.println("event length: " + evt.getLength());
-                    //System.out.println(_connection.get_highlightData().get(i));
-                    //System.out.println("Case 3");
-                    
-                    //The following block stores highlight index information
-                    Integer endIndexInteger = (Integer)_connection.get_highlightData().get(i).get(2);
-                    int endIndex = endIndexInteger.intValue();
-                    _connection.get_highlightData().get(i).set(1, evt.getOffset());
-                    _connection.get_highlightData().get(i).set(2, endIndex - evt.getLength());
-                    _removalIsAffectingAHighlight = true;
-                }
-                //Case 4
-                else if (evt.getOffset()+evt.getLength() >= (Integer)_connection.get_highlightData().get(i).get(2) &&
-                        evt.getOffset() < (Integer)_connection.get_highlightData().get(i).get(2)) {
-                    _connection.get_highlightData().get(i).set(2, evt.getOffset());
-                    _removalIsAffectingAHighlight = true;
-                }
-                //Case 5
-                else if (evt.getOffset() > (Integer)_connection.get_highlightData().get(i).get(1) &&
-                        evt.getOffset()+evt.getLength() < (Integer)_connection.get_highlightData().get(i).get(2)) {
-                    //The following block stores highlight index information
-                    Integer endIndexInteger = (Integer)_connection.get_highlightData().get(i).get(2);
-                    int endIndex = endIndexInteger.intValue();
-                    _connection.get_highlightData().get(i).set(2, endIndex - evt.getLength());
-                    _removalIsAffectingAHighlight = true;
-                }
-            }
-
-        }
-    }
+//    public void updateHighlightData_Insert(DocumentEvent evt) {
+//        if (!_connection.get_highlightDataMade()) {
+//            return;
+//        }
+//        for (int i=0; i<_connection.get_highlightData().size(); i++) {
+//            //The following block stores highlight index information
+//            Integer startIndexInteger = (Integer)_connection.get_highlightData().get(i).get(1);
+//            Integer endIndexInteger = (Integer)_connection.get_highlightData().get(i).get(2);
+//            int startIndex = startIndexInteger.intValue();
+//            int endIndex = endIndexInteger.intValue();
+//            //all highlights above the caret position must be moved up. So,
+//            // The following block moves up all affected highlights.
+//            if (evt.getOffset() <= startIndex) {
+//                _connection.get_highlightData().get(i).set(1, startIndex+evt.getLength());
+//                _connection.get_highlightData().get(i).set(2, endIndex+evt.getLength());
+//            }
+//            //The following block handles insertions inbetween highlights;
+//            // highlightData will be split but only temporarily; everything
+//            // resets if user invokes clearHighlight
+//            if (evt.getOffset() < endIndex && evt.getOffset() > startIndex) {
+//                //The following line sets a boolean that will be used to later 
+//                // warn of the impending insertion.
+//                _insertIsInsideAHighlight = true;
+//                //The following block will split the highlight.
+//                //Revise sequences as well too, later (set 4)
+//                _connection.get_highlightData().add(i+1,(SingleHighlight)_connection.
+//                        get_highlightData().get(i).clone());
+//                _connection.get_highlightData().get(i+1).set(1, evt.getOffset());
+//                _connection.get_highlightData().get(i+1).set(2, endIndex);
+//                _connection.get_highlightData().get(i).set(2, evt.getOffset());
+//            }
+//        }
+//    }
+//    
+//    public void updateHighlightData_Remove(DocumentEvent evt) {
+//        if (!_connection.get_highlightDataMade()) {
+//            return;
+//        }
+//        
+//        if (evt.getLength() == 1) {
+//            for (int i=0; i<_connection.get_highlightData().size(); i++) {
+//                //In the case that backspace was pressed...
+//                if (_connection.get_backspaceKeyPressed()) {
+//                    //The following block stores highlight index information
+//                    Integer startIndexInteger = (Integer)_connection.get_highlightData().get(i).get(1);
+//                    Integer endIndexInteger = (Integer)_connection.get_highlightData().get(i).get(2);
+//                    int startIndex = startIndexInteger.intValue();
+//                    int endIndex = endIndexInteger.intValue();
+//                    //If the removal is BEFORE the highlight...
+//                    if (evt.getOffset() < startIndex &&
+//                            evt.getOffset() < endIndex) {
+//                        //The following block shifts the affected highlights down.
+//                        _connection.get_highlightData().get(i).set(1, startIndex-1);
+//                        _connection.get_highlightData().get(i).set(2, endIndex-1);
+//                    }
+//                    //If the removal is INSIDE the highlight...
+//                    else if (evt.getOffset() >= startIndex && 
+//                            evt.getOffset() < endIndex) {
+//                        //System.out.println("Inside Highlight");
+//                        //_connection.get_highlightData().get(i).set(1, startIndex);
+//                        _connection.get_highlightData().get(i).set(2, endIndex-1);
+//                        _removalIsAffectingAHighlight = true;
+//                    }
+//                }
+//                //In the case that delete was pressed...
+//                if (_connection.get_deleteKeyPressed()) {
+//                    //The following block stores highlight index information
+//                    Integer startIndexInteger = (Integer)_connection.get_highlightData().get(i).get(1);
+//                    Integer endIndexInteger = (Integer)_connection.get_highlightData().get(i).get(2);
+//                    int startIndex = startIndexInteger.intValue();
+//                    int endIndex = endIndexInteger.intValue();
+//                    //If the removal is BEFORE the highlight...
+//                    if (evt.getOffset() < startIndex && evt.getOffset() < endIndex) {
+//                        //The following block shifts the affected highlights down.
+//                        _connection.get_highlightData().get(i).set(1, startIndex-1);
+//                        _connection.get_highlightData().get(i).set(2, endIndex-1);
+//                    }
+//                    //If the removal is INSIDE the highlight...
+//                    else if (evt.getOffset() >= startIndex && evt.getOffset() < endIndex) {
+//                        //System.out.println("event offset: " + evt.getOffset());
+//                        //System.out.println("event length: " + evt.getLength());
+//                        //System.out.println(_connection.get_highlightData().get(i));
+//                        _connection.get_highlightData().get(i).set(2, endIndex - 1);
+//                        _removalIsAffectingAHighlight = true;
+//                    }
+//                }
+//            }
+//            _connection.set_backspaceKeyPressed(false);
+//            _connection.set_deleteKeyPressedPressed(false);
+//        }
+//        //There are five kinds of selection removals:
+//        // Case 1. Highlight isn't affected, but is shifted.
+//        // Case 2. The whole highlight is removed.
+//        // Case 3. The starting portion of the highlight is removed.
+//        // Case 4. The ending portion of the highlight is removed.
+//        // Case 5. The inside of the highlight is removed.
+//        if (evt.getLength()>1) {
+//            if (_textPane.getText().length() == 0) {
+//                _connection.get_highlightData().clear();
+//            }
+//            for (int i=0; i<_connection.get_highlightData().size(); i++) {
+//                //Case 1
+//                if (evt.getOffset()+evt.getLength() <= (Integer)_connection.get_highlightData().get(i).get(1) &&
+//                        evt.getOffset()+evt.getLength() <= (Integer)_connection.get_highlightData().get(i).get(2)) {
+//                    //The following block stores highlight index information
+//                    Integer startIndexInteger = (Integer)_connection.get_highlightData().get(i).get(1);
+//                    Integer endIndexInteger = (Integer)_connection.get_highlightData().get(i).get(2);
+//                    int startIndex = startIndexInteger.intValue();
+//                    int endIndex = endIndexInteger.intValue();
+//                    //The following block sets the shifted values to _highlightData
+//                    _connection.get_highlightData().get(i).set(1, startIndex-evt.getLength());
+//                    _connection.get_highlightData().get(i).set(2, endIndex-evt.getLength());
+//                }
+//                //Case 2
+//                else if (evt.getOffset() <= (Integer)_connection.get_highlightData().get(i).get(1) && 
+//                        evt.getOffset()+evt.getLength() >= (Integer)_connection.get_highlightData().get(i).get(2)) {
+//                    _connection.get_highlightData().remove(i);
+//                    _removalIsAffectingAHighlight = true;
+//                }
+//                //Case 3
+//                else if (evt.getOffset()+evt.getLength() < (Integer)_connection.get_highlightData().get(i).get(2) &&
+//                        evt.getOffset()+evt.getLength() >= (Integer)_connection.get_highlightData().get(i).get(1) &&
+//                        evt.getOffset() <= (Integer)_connection.get_highlightData().get(i).get(1)) {
+//                    //System.out.println("event offset: " + evt.getOffset());
+//                    //System.out.println("event length: " + evt.getLength());
+//                    //System.out.println(_connection.get_highlightData().get(i));
+//                    //System.out.println("Case 3");
+//                    
+//                    //The following block stores highlight index information
+//                    Integer endIndexInteger = (Integer)_connection.get_highlightData().get(i).get(2);
+//                    int endIndex = endIndexInteger.intValue();
+//                    _connection.get_highlightData().get(i).set(1, evt.getOffset());
+//                    _connection.get_highlightData().get(i).set(2, endIndex - evt.getLength());
+//                    _removalIsAffectingAHighlight = true;
+//                }
+//                //Case 4
+//                else if (evt.getOffset()+evt.getLength() >= (Integer)_connection.get_highlightData().get(i).get(2) &&
+//                        evt.getOffset() < (Integer)_connection.get_highlightData().get(i).get(2)) {
+//                    _connection.get_highlightData().get(i).set(2, evt.getOffset());
+//                    _removalIsAffectingAHighlight = true;
+//                }
+//                //Case 5
+//                else if (evt.getOffset() > (Integer)_connection.get_highlightData().get(i).get(1) &&
+//                        evt.getOffset()+evt.getLength() < (Integer)_connection.get_highlightData().get(i).get(2)) {
+//                    //The following block stores highlight index information
+//                    Integer endIndexInteger = (Integer)_connection.get_highlightData().get(i).get(2);
+//                    int endIndex = endIndexInteger.intValue();
+//                    _connection.get_highlightData().get(i).set(2, endIndex - evt.getLength());
+//                    _removalIsAffectingAHighlight = true;
+//                }
+//            }
+//
+//        }
+//    }
     
     ///////////////////////////////////////////////////////////////////
     ////                         private variables                 //// 
