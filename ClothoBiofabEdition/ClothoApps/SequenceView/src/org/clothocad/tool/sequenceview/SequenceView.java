@@ -118,6 +118,8 @@ public class SequenceView {
         _manager = m;
         _myIndex = index;
         _annotationsOn = false;
+        _REOn = false;
+        _featuresOn = false;
         _plugIns = pi;
 //        _highlightData = new ArrayList();
         _sequenceview = new SequenceViewGUI(this);
@@ -366,9 +368,12 @@ public class SequenceView {
         Rectangle r = new Rectangle();
         int lineHeight = _sequenceview.get_TextArea().getFontMetrics(_sequenceview.get_TextArea().getFont()).getHeight();
         try {
-            r = _sequenceview.get_TextArea().modelToView(len_offset);
+            if (len_offset>0) {
+                len_offset--;
+            }
+            r = _sequenceview.get_TextArea().modelToView(len_offset);//-1 fixes indexing error when inserting a new character
         } catch (BadLocationException ex) {
-            // ClothoCore.getCore().log("Error with JTextPane rectangle\n", LogLevel.ERROR);
+            ex.printStackTrace();
         }
 
         int logicalLines = r.y / lineHeight;
@@ -1513,13 +1518,13 @@ public class SequenceView {
             }
 
             sequence = sequence.substring(newOrigin, sequence.length()) + sequence.substring(0, newOrigin);
-Boolean refresh = _annotationsOn;
-this.removeFeatureEnzymeHighlights();
-this.removeUserSelectedHighlights();
+            Boolean refresh = _annotationsOn;
+            this.removeFeatureEnzymeHighlights();
+            this.removeUserSelectedHighlights();
             _sequenceview.get_TextArea().setText(sequence);
-if (refresh) {
-    this.highlightFeatures();
-}
+            if (refresh) {
+                this.highlightFeatures();
+            }
         } else {
             ClothoDialogBox db = new ClothoDialogBox("Error", "Sequence is not circular!");
             db.show_Dialog(javax.swing.JOptionPane.OK_OPTION);
@@ -1991,7 +1996,7 @@ if (refresh) {
         int pos = src.getUI().viewToModel(src, evt.getPoint(), biasRet);
         //System.out.print("Mouse: " +  point.getX() + " " + point.getY() + "\n");
 
-        Integer location = new Integer(pos);
+        Integer location = new Integer(pos) + 1;//location indexing starts at 1, not 0, this is the fix
         //if _mouseoverData is already made, then the mousemoved event should
         // set the loc field as the name of the feature/enzyme.
         if (_annotationsOn == true) {
@@ -2002,6 +2007,11 @@ if (refresh) {
                 for (int i = 0; i < _annotationsArray.length; i++) {
                     //if location is between the start/end indices of the current
                     // _mouseoverDataIndividual, then append _mouseoverString
+//                    System.out.println(((Annotation) _annotationsArray[i]).getFeature().getFamilyLinks().size());
+                    //if _REOn is false, then we don't want to display the name of the feature, same for features, which are distinguished by the lack of a "restriction enzyme search tag"
+
+
+
                     if ((location > (Integer) ((Annotation) _annotationsArray[i]).getStart()) && (location < (Integer) ((Annotation) _annotationsArray[i]).getEnd())) {
                         //Searcher is used to prevent identical concatenations of mouseovers
                         // (i.e., so we don't see something like "EcoR1, EcoR1, EcoR1, BamHI")
@@ -2010,7 +2020,13 @@ if (refresh) {
                         _searcher = new ClothoSearchUtil((String) ((Annotation) _annotationsArray[i]).getName(), _mouseoverString);
 
                         //uncomment
-                        _mouseoverString = _mouseoverString.concat(((Annotation) _annotationsArray[i]).getName());
+                        if (_REOn && ((Annotation) _annotationsArray[i]).getFeature().getSearchTags().contains("restriction enzyme")) {
+                            _mouseoverString = _mouseoverString.concat(((Annotation) _annotationsArray[i]).getName());
+
+                        } else if (_featuresOn && !((Annotation) _annotationsArray[i]).getFeature().getSearchTags().contains("restriction enzyme")) {
+                            _mouseoverString = _mouseoverString.concat(((Annotation) _annotationsArray[i]).getName());
+
+                        }
 
                         if (_searcher.getHitCount() == 0) {
                             if (_annotationsArray.length > 0) {
@@ -2029,6 +2045,9 @@ if (refresh) {
                 sequenceLabel.setVisible(false);
                 sequenceName.setText(" ");
             }
+        } else {
+            sequenceLabel.setVisible(false);
+            sequenceName.setText(" ");
         }
         loc.setText(location.toString());
     }
@@ -2743,6 +2762,8 @@ if (refresh) {
     public void removeFeatureEnzymeHighlights() {
         // Remove any existing underlines.
         _annotationsOn = false;
+        _REOn = false;
+        _featuresOn = false;
         _h = _sequenceview.get_TextArea().getHighlighter();
         javax.swing.text.Highlighter.Highlight[] highlights = _h.getHighlights();
         for (int i = 0; i < highlights.length; i++) {
@@ -2799,6 +2820,9 @@ if (refresh) {
      * @param sequenceview
      */
     public void resetHighlight(javax.swing.JTextPane sequenceview) {
+        _annotationsOn = false;
+        _REOn = false;
+        _featuresOn = false;
         _h = sequenceview.getHighlighter();
         _h.removeAllHighlights();
         //commented
@@ -3678,13 +3702,31 @@ if (refresh) {
     }
 
     private String revComp_String(String s) {
-        NucSeq ns = new NucSeq(s);
-        ns = new NucSeq(ns.revComp());
-        return (ns.toString());
+//        NucSeq ns = new NucSeq(s);
+//        ns = new NucSeq(ns.revComp());
+        return (_sequence.revComp().toString());
     }
 
     public void highlightRestrictionSites() {
+        _annotations = _sequence.getAnnotations();
+        this.removeFeatureEnzymeHighlights();
+        this.removeUserSelectedHighlights();
         _annotationsOn = true;
+        _REOn = true;
+        _h = _sequenceview.get_TextArea().getHighlighter();
+
+        for (Annotation an : _annotations) {
+            if (an.getFeature().getSearchTags().contains("restriction enzyme")) {
+
+                try {
+                    _h.addHighlight(an.getStart(), an.getEnd(), new FeaturePainter(an.getColor()));
+                } catch (BadLocationException ex) {
+                    System.out.println("error highlighting features");
+                    Exceptions.printStackTrace(ex);
+
+                }
+            }
+        }
     }
 
     public void highlightFeatures() {
@@ -3692,15 +3734,18 @@ if (refresh) {
         this.removeFeatureEnzymeHighlights();
         this.removeUserSelectedHighlights();
         _annotationsOn = true;
+        _featuresOn = true;
         _h = _sequenceview.get_TextArea().getHighlighter();
 
         for (Annotation an : _annotations) {
-            try {
-                //            System.out.println("start: "+an.getStart()+" end: "+an.getEnd()+" color: "+an.getColor());
-                _h.addHighlight(an.getStart(), an.getEnd(), new FeaturePainter(an.getColor()));
-            } catch (BadLocationException ex) {
-                System.out.println("error highlighting features");
-                Exceptions.printStackTrace(ex);
+            if (!an.getFeature().getSearchTags().contains("restriction enzyme")) {
+                try {
+                    _h.addHighlight(an.getStart(), an.getEnd(), new FeaturePainter(an.getColor()));
+                } catch (BadLocationException ex) {
+                    System.out.println("error highlighting features");
+                    Exceptions.printStackTrace(ex);
+
+                }
             }
         }
 
@@ -3725,6 +3770,8 @@ if (refresh) {
 //    private ArrayList<SingleHighlight> _highlightDataClone;
     private ArrayList<String> _startCodons;
     private boolean _annotationsOn;
+    private boolean _REOn;
+    private boolean _featuresOn;
     private boolean _allowDegeneracy;
     private boolean _backspaceKeyPressed;
     private boolean _circular;

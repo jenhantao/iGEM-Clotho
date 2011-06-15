@@ -209,7 +209,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
 
     public void setIndexTextArea(String s) {
         indexTextArea.setText(s);
-        indexTextArea.repaint();
+        
     }
 
     /** This method is called from within the constructor to
@@ -324,6 +324,8 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         MapORFMenuItem = new javax.swing.JMenuItem();
         HighlightMenu = new javax.swing.JMenu();
         highlightSelectedMenuItem = new javax.swing.JMenuItem();
+        highlightFeaturesMenuItem = new javax.swing.JMenuItem();
+        highlightEnzMenuItem = new javax.swing.JMenuItem();
         highlightFeaturesEnzymesMenuItem = new javax.swing.JMenuItem();
         jSeparator6 = new javax.swing.JSeparator();
         removeAllHighlightsMenuItem = new javax.swing.JMenuItem();
@@ -331,10 +333,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         removeUserSelectedHighlightMenuItem = new javax.swing.JMenuItem();
         jSeparator4 = new javax.swing.JSeparator();
         editFeatureLibraryMenuItem = new javax.swing.JMenuItem();
-        highlightFeaturesMenuItem = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JSeparator();
-        enzymeLibMenuItem = new javax.swing.JMenuItem();
-        highlightEnzMenuItem = new javax.swing.JMenuItem();
         WindowMenu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -549,7 +548,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
 
         mouseLocationJLabel.setText("0"); // NOI18N
 
-        jLabel30.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel30.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel30.setText("Feature"); // NOI18N
 
         featureNameJLabel.setText(" "); // NOI18N
@@ -765,7 +764,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
                     .addContainerGap(22, Short.MAX_VALUE)))
         );
 
-        SequenceTextPane.setFont(new java.awt.Font("Courier New", 0, 11));
+        SequenceTextPane.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
         SequenceTextPane.setDragEnabled(true);
         SequenceTextPane.setMargin(new java.awt.Insets(0, 0, 0, 0));
         SequenceTextPane.addCaretListener(new javax.swing.event.CaretListener() {
@@ -811,7 +810,9 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         indexTextArea.setToolTipText("Base Pair Line Index"); // NOI18N
         indexTextArea.setBorder(javax.swing.BorderFactory.createEtchedBorder(java.awt.Color.white, java.awt.Color.white));
         indexTextArea.setOpaque(false);
+        indexTextArea.setVerifyInputWhenFocusTarget(false);
         jScrollPane2.setViewportView(indexTextArea);
+        indexTextArea.getAccessibleContext().setAccessibleParent(jScrollPane2);
 
         CommentTextArea.setColumns(20);
         CommentTextArea.setRows(5);
@@ -1066,6 +1067,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
 
         analyzeMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         analyzeMenuItem.setText("Select PlugIn"); // NOI18N
+        analyzeMenuItem.setEnabled(false);
         analyzeMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 analyzeMenuItemActionPerformed(evt);
@@ -1083,6 +1085,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         ToolMenu.add(jSeparator15);
 
         preferenceMenuItem.setText("Preferences"); // NOI18N
+        preferenceMenuItem.setEnabled(false);
         preferenceMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 preferenceMenuItemActionPerformed(evt);
@@ -1158,6 +1161,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
             }
         });
 
+        highlightSelectedMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
         highlightSelectedMenuItem.setText("Highlight");
         highlightSelectedMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1166,6 +1170,25 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         });
         HighlightMenu.add(highlightSelectedMenuItem);
 
+        highlightFeaturesMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_K, java.awt.event.InputEvent.CTRL_MASK));
+        highlightFeaturesMenuItem.setText("Highlight Features"); // NOI18N
+        highlightFeaturesMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                highlightFeaturesMenuItemActionPerformed(evt);
+            }
+        });
+        HighlightMenu.add(highlightFeaturesMenuItem);
+
+        highlightEnzMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        highlightEnzMenuItem.setText("Highlight Restriction Sites"); // NOI18N
+        highlightEnzMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                highlightEnzMenuItemActionPerformed(evt);
+            }
+        });
+        HighlightMenu.add(highlightEnzMenuItem);
+
+        highlightFeaturesEnzymesMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_K, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         highlightFeaturesEnzymesMenuItem.setText("Highlight Features/Enzymes"); // NOI18N
         highlightFeaturesEnzymesMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1201,39 +1224,14 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         HighlightMenu.add(removeUserSelectedHighlightMenuItem);
         HighlightMenu.add(jSeparator4);
 
-        editFeatureLibraryMenuItem.setText("Open Feature Library");
+        editFeatureLibraryMenuItem.setText("Open Feature/Enzyme Library");
         editFeatureLibraryMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editFeatureLibraryMenuItemActionPerformed(evt);
             }
         });
         HighlightMenu.add(editFeatureLibraryMenuItem);
-
-        highlightFeaturesMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_K, java.awt.event.InputEvent.CTRL_MASK));
-        highlightFeaturesMenuItem.setText("Highlight Features"); // NOI18N
-        highlightFeaturesMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                highlightFeaturesMenuItemActionPerformed(evt);
-            }
-        });
-        HighlightMenu.add(highlightFeaturesMenuItem);
         HighlightMenu.add(jSeparator5);
-
-        enzymeLibMenuItem.setText("Open Enzyme Library"); // NOI18N
-        enzymeLibMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                enzymeLibMenuItemActionPerformed(evt);
-            }
-        });
-        HighlightMenu.add(enzymeLibMenuItem);
-
-        highlightEnzMenuItem.setText("Highlight Restriction Sites"); // NOI18N
-        highlightEnzMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                highlightEnzMenuItemActionPerformed(evt);
-            }
-        });
-        HighlightMenu.add(highlightEnzMenuItem);
 
         SequenceViewMenuBar.add(HighlightMenu);
 
@@ -1438,10 +1436,6 @@ private void highlightFeaturesEnzymesMenuItemActionPerformed(java.awt.event.Acti
 private void highlightFeaturesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_highlightFeaturesMenuItemActionPerformed
     _sv.highlightFeatures();
 }//GEN-LAST:event_highlightFeaturesMenuItemActionPerformed
-
-private void enzymeLibMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enzymeLibMenuItemActionPerformed
-    _sv.openEnzymeLibrary();
-}//GEN-LAST:event_enzymeLibMenuItemActionPerformed
 
 private void highlightEnzMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_highlightEnzMenuItemActionPerformed
     _sv.highlightRestrictionSites();
@@ -1683,7 +1677,6 @@ private void HighlightMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JMenuItem cutMenuItem;
     private javax.swing.JCheckBox degeneracyCheckBox;
     private javax.swing.JMenuItem editFeatureLibraryMenuItem;
-    private javax.swing.JMenuItem enzymeLibMenuItem;
     private javax.swing.JLabel featureNameJLabel;
     private javax.swing.JButton featuresButton;
     private javax.swing.JMenuItem findMenuItem;

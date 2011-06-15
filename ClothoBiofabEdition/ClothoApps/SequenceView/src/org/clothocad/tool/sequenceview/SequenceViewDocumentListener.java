@@ -48,6 +48,7 @@ public class SequenceViewDocumentListener implements DocumentListener{
     ///////////////////////////////////////////////////////////////////
     ////                         public methods                    ////
     
+    @Override
     public void insertUpdate(DocumentEvent evt) {
         _connection.sequenceChanged();
 //        updateHighlightData_Insert(evt);
@@ -101,6 +102,7 @@ public class SequenceViewDocumentListener implements DocumentListener{
         */
     }
 
+    @Override
     public void removeUpdate(DocumentEvent evt) {
         _connection.sequenceChanged();
 //        updateHighlightData_Remove(evt);
@@ -111,6 +113,7 @@ public class SequenceViewDocumentListener implements DocumentListener{
         }
     }
 
+    @Override
     public void changedUpdate(DocumentEvent evt) {
         _connection.sequenceChanged();
     }
