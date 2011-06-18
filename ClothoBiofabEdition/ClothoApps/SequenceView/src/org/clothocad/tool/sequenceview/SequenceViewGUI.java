@@ -23,6 +23,7 @@ ENHANCEMENTS, OR MODIFICATIONS..
 package org.clothocad.tool.sequenceview;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import org.openide.windows.TopComponent;
 import java.awt.Component;
 import java.awt.event.FocusEvent;
@@ -68,6 +69,8 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         jScrollPane1.getVerticalScrollBar().addAdjustmentListener(listener2);
         SequenceViewDocumentListener listener3 = new SequenceViewDocumentListener(SequenceTextPane, _sv);
         SequenceTextPane.getDocument().addDocumentListener(listener3);
+        SequenceTextPane.setSelectedTextColor(Color.WHITE);
+        SequenceTextPane.setSelectionColor(Color.gray);
         jLabel30.setVisible(false);
 
         setIconImage(ImageSource.getTinyLogo());
@@ -286,6 +289,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         jSeparator13 = new javax.swing.JSeparator();
         LoadMenuItem = new javax.swing.JMenuItem();
         SaveMenuItem = new javax.swing.JMenuItem();
+        createPartMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JSeparator();
         ExitMenuItem = new javax.swing.JMenuItem();
         EditMenu = new javax.swing.JMenu();
@@ -309,10 +313,9 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         TranslateMenuItem = new javax.swing.JMenuItem();
         revTranslateMenuItem = new javax.swing.JMenuItem();
         jSeparator14 = new javax.swing.JSeparator();
-        analyzeMenuItem = new javax.swing.JMenuItem();
-        createPartMenuItem = new javax.swing.JMenuItem();
         jSeparator15 = new javax.swing.JSeparator();
         preferenceMenuItem = new javax.swing.JMenuItem();
+        analyzeMenuItem = new javax.swing.JMenuItem();
         helpMenuItem = new javax.swing.JMenuItem();
         ORFMenu = new javax.swing.JMenu();
         NextORFMenuItem = new javax.swing.JMenuItem();
@@ -910,6 +913,14 @@ public class SequenceViewGUI extends javax.swing.JFrame {
             }
         });
         FileMenu.add(SaveMenuItem);
+
+        createPartMenuItem.setText("Create New Clotho Object"); // NOI18N
+        createPartMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createPartMenuItemActionPerformed(evt);
+            }
+        });
+        FileMenu.add(createPartMenuItem);
         FileMenu.add(jSeparator1);
 
         ExitMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
@@ -1064,24 +1075,6 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         });
         ToolMenu.add(revTranslateMenuItem);
         ToolMenu.add(jSeparator14);
-
-        analyzeMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
-        analyzeMenuItem.setText("Select PlugIn"); // NOI18N
-        analyzeMenuItem.setEnabled(false);
-        analyzeMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                analyzeMenuItemActionPerformed(evt);
-            }
-        });
-        ToolMenu.add(analyzeMenuItem);
-
-        createPartMenuItem.setText("Create New Clotho Object"); // NOI18N
-        createPartMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                createPartMenuItemActionPerformed(evt);
-            }
-        });
-        ToolMenu.add(createPartMenuItem);
         ToolMenu.add(jSeparator15);
 
         preferenceMenuItem.setText("Preferences"); // NOI18N
@@ -1092,6 +1085,16 @@ public class SequenceViewGUI extends javax.swing.JFrame {
             }
         });
         ToolMenu.add(preferenceMenuItem);
+
+        analyzeMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        analyzeMenuItem.setText("Select PlugIn"); // NOI18N
+        analyzeMenuItem.setEnabled(false);
+        analyzeMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                analyzeMenuItemActionPerformed(evt);
+            }
+        });
+        ToolMenu.add(analyzeMenuItem);
 
         helpMenuItem.setText("Help"); // NOI18N
         helpMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -1604,6 +1607,7 @@ private void topComponentViewButtonActionPerformed(java.awt.event.ActionEvent ev
             JScrollPane sp = new JScrollPane(guiContentPane);
             tc.add(SequenceViewMenuBar, BorderLayout.NORTH);
             tc.add(sp, BorderLayout.CENTER);
+            tc.setName("Sequence View");
             tc.open();
             tc.requestActive();
 

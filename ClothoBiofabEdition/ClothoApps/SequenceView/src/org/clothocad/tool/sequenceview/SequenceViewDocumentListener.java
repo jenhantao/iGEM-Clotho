@@ -1,56 +1,54 @@
 /*
- Copyright (c) 2008 The Regents of the University of California.
- All rights reserved.
- Permission is hereby granted, without written agreement and without
- license or royalty fees, to use, copy, modify, and distribute this
- software and its documentation for any purpose, provided that the above
- copyright notice and the following two paragraphs appear in all copies
- of this software.
+Copyright (c) 2008 The Regents of the University of California.
+All rights reserved.
+Permission is hereby granted, without written agreement and without
+license or royalty fees, to use, copy, modify, and distribute this
+software and its documentation for any purpose, provided that the above
+copyright notice and the following two paragraphs appear in all copies
+of this software.
 
- IN NO EVENT SHALL THE UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY
- FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES
- ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
- THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
- SUCH DAMAGE.
+IN NO EVENT SHALL THE UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY
+FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES
+ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.
 
- THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY WARRANTIES,
- INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
- PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
- CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
- ENHANCEMENTS, OR MODIFICATIONS..
+THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
+PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
+CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
+ENHANCEMENTS, OR MODIFICATIONS..
  */
-
 package org.clothocad.tool.sequenceview;
 
 import javax.swing.JTextPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import org.openide.util.Exceptions;
 //import org.clothocad.core.ClothoCore;
 
 /**
  * Listener used to monitor changes in the text of the SequenceView
  * @author Matthew Johnson
  */
-public class SequenceViewDocumentListener implements DocumentListener{
+public class SequenceViewDocumentListener implements DocumentListener {
 
-    public SequenceViewDocumentListener(JTextPane tp, SequenceView c)
-        {
-            _textPane = tp;
-            _connection = c;
-            _clipboard = java.awt.Toolkit.getDefaultToolkit().getSystemClipboard();
-            _insertIsInsideAHighlight = false;
-            _insertIsInsideAHighlightWarnedAlready = false;
-            _removalIsAffectingAHighlight = false;
-            _removalIsAffectingAHighlightWarnedAlready = false;
-        }
-    
+    public SequenceViewDocumentListener(JTextPane tp, SequenceView c) {
+        _textPane = tp;
+        _connection = c;
+        _clipboard = java.awt.Toolkit.getDefaultToolkit().getSystemClipboard();
+        _insertIsInsideAHighlight = false;
+        _insertIsInsideAHighlightWarnedAlready = false;
+        _removalIsAffectingAHighlight = false;
+        _removalIsAffectingAHighlightWarnedAlready = false;
+    }
+
     ///////////////////////////////////////////////////////////////////
     ////                         public methods                    ////
-    
     @Override
     public void insertUpdate(DocumentEvent evt) {
-        _connection.sequenceChanged();
 //        updateHighlightData_Insert(evt);
         if (!_insertIsInsideAHighlightWarnedAlready && _insertIsInsideAHighlight) {
             _connection.set_insertIsInsideAHighlight(_insertIsInsideAHighlight);
@@ -59,34 +57,31 @@ public class SequenceViewDocumentListener implements DocumentListener{
         }
         //Quick fix for ORF issue: underlining ORF then type after that, it keep underlining new character
 
-        javax.swing.text.Highlighter hl= _connection.getSequenceView().get_TextArea().getHighlighter();
+        javax.swing.text.Highlighter hl = _connection.getSequenceView().get_TextArea().getHighlighter();
         javax.swing.text.Highlighter.Highlight[] highlights = hl.getHighlights();
-            for (int i = 0; i < highlights.length; i++) {
-                javax.swing.text.Highlighter.Highlight u = highlights[i];
-                //u.getEndOffset(); // --> new extended offset including new characters
-                //evt.getOffset();  // original, where the cursor before insert
-                //modified only when the evt is add at the end of the old ORF hightlight, thus end of evt is end of u
-                if ( (u.getStartOffset() <evt.getOffset())
-                  && (u.getEndOffset() == evt.getOffset()+evt.getLength())
-                  //&& (u.getPainter() instanceof org.clothocad.util.highlight.ClothoHighlightPainter_Underline) //commented
-                  ) {
-                    try{
-                       hl.changeHighlight(u, u.getStartOffset(), u.getEndOffset()-evt.getLength());
-                        }
-                    catch (javax.swing.text.BadLocationException ble) {
-                        //commented
-                       // ClothoCore.getCore().log(ble.toString(), org.clothocad.core.ClothoCore.LogLevel.ERROR);
-                    }
+        for (int i = 0; i < highlights.length; i++) {
+            javax.swing.text.Highlighter.Highlight u = highlights[i];
+            //u.getEndOffset(); // --> new extended offset including new characters
+            //evt.getOffset();  // original, where the cursor before insert
+            //modified only when the evt is add at the end of the old ORF hightlight, thus end of evt is end of u
+            if ((u.getStartOffset() < evt.getOffset())
+                    && (u.getEndOffset() == evt.getOffset() + evt.getLength()) //&& (u.getPainter() instanceof org.clothocad.util.highlight.ClothoHighlightPainter_Underline) //commented
+                    ) {
+                try {
+                    hl.changeHighlight(u, u.getStartOffset(), u.getEndOffset() - evt.getLength());
+                } catch (javax.swing.text.BadLocationException ble) {
+                    //commented
+                    // ClothoCore.getCore().log(ble.toString(), org.clothocad.core.ClothoCore.LogLevel.ERROR);
                 }
-                //if add in the middle of the ORF hightlight, delete the hightlight
-                else if ((u.getStartOffset() <evt.getOffset())
-                  && (u.getEndOffset() > evt.getOffset()+evt.getLength())
-                  //commented
-                  //&& (u.getPainter() instanceof org.clothocad.util.highlight.ClothoHighlightPainter_Underline)
-                  ){
-                    hl.removeHighlight(u);
-                }
+            } //if add in the middle of the ORF hightlight, delete the hightlight
+            else if ((u.getStartOffset() < evt.getOffset())
+                    && (u.getEndOffset() > evt.getOffset() + evt.getLength()) //commented
+                    //&& (u.getPainter() instanceof org.clothocad.util.highlight.ClothoHighlightPainter_Underline)
+                    ) {
+                hl.removeHighlight(u);
             }
+            _connection.sequenceChanged();
+        }
 
 
         // Checks to see if any text over one character is added, and makes it
@@ -94,30 +89,58 @@ public class SequenceViewDocumentListener implements DocumentListener{
         //BUG: this makes after copy/paste the selection includes old characters
         /*
         if (evt.getLength() > 1) {
-            JTextPane s = _connection.getSequenceView().get_TextArea();
-            //s.setSelectionStart(s.getCaretPosition());
-            s.setSelectionStart(s.getCaretPosition() - evt.getLength());
-            s.setSelectionEnd(s.getCaretPosition() );
+        JTextPane s = _connection.getSequenceView().get_TextArea();
+        //s.setSelectionStart(s.getCaretPosition());
+        s.setSelectionStart(s.getCaretPosition() - evt.getLength());
+        s.setSelectionEnd(s.getCaretPosition() );
         }
-        */
+         */
     }
 
     @Override
     public void removeUpdate(DocumentEvent evt) {
-        _connection.sequenceChanged();
 //        updateHighlightData_Remove(evt);
         if (!_removalIsAffectingAHighlightWarnedAlready && _removalIsAffectingAHighlight) {
             _connection.set_removalIsAffectingAHighlight(_removalIsAffectingAHighlight);
             _removalIsAffectingAHighlight = false;
             _removalIsAffectingAHighlightWarnedAlready = true;
         }
+        javax.swing.text.Highlighter hl = _connection.getSequenceView().get_TextArea().getHighlighter();
+        javax.swing.text.Highlighter.Highlight[] highlights = hl.getHighlights();
+        for (int i = 0; i < highlights.length; i++) {
+            javax.swing.text.Highlighter.Highlight u = highlights[i];
+            //deleting before a higlight
+            if (evt.getOffset() < u.getStartOffset()) {
+                try {
+                    hl.changeHighlight(u, u.getStartOffset() - evt.getLength() + 1, u.getEndOffset() - evt.getLength() + 1);
+                } catch (BadLocationException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+                //deleting from the middle
+            } else if ((u.getStartOffset() <= evt.getOffset()) && (u.getEndOffset() >= evt.getOffset() + evt.getLength())) {
+                hl.removeHighlight(u);
+                //deleting at the end of a highlight
+            } else if ((u.getEndOffset() == evt.getOffset())) {
+                hl.removeHighlight(u);
+            }
+
+        }
+        _connection.sequenceChanged();
     }
 
     @Override
     public void changedUpdate(DocumentEvent evt) {
+//        javax.swing.text.Highlighter hl = _connection.getSequenceView().get_TextArea().getHighlighter();
+//        javax.swing.text.Highlighter.Highlight[] highlights = hl.getHighlights();
+//        for (int i = 0; i < highlights.length; i++) {
+//            javax.swing.text.Highlighter.Highlight u = highlights[i];
+//            if ((u.getStartOffset() < evt.getOffset()) && (u.getEndOffset() > evt.getOffset() + evt.getLength())) {
+//                hl.removeHighlight(u);
+//            }
+//
+//        }
         _connection.sequenceChanged();
     }
-    
     //DEBUG HERE: Revise Sequence upon breaking a highlight.
 //    public void updateHighlightData_Insert(DocumentEvent evt) {
 //        if (!_connection.get_highlightDataMade()) {
@@ -273,10 +296,8 @@ public class SequenceViewDocumentListener implements DocumentListener{
 //
 //        }
 //    }
-    
     ///////////////////////////////////////////////////////////////////
     ////                         private variables                 //// 
-    
     java.awt.datatransfer.Clipboard _clipboard;
     private boolean _insertIsInsideAHighlight;
     private boolean _insertIsInsideAHighlightWarnedAlready;
@@ -284,5 +305,4 @@ public class SequenceViewDocumentListener implements DocumentListener{
     private boolean _removalIsAffectingAHighlightWarnedAlready;
     private SequenceView _connection;
     private JTextPane _textPane;
-    
 }

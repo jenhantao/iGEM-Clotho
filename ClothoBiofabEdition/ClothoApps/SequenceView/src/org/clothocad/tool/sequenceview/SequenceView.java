@@ -368,7 +368,7 @@ public class SequenceView {
         Rectangle r = new Rectangle();
         int lineHeight = _sequenceview.get_TextArea().getFontMetrics(_sequenceview.get_TextArea().getFont()).getHeight();
         try {
-            if (len_offset>0) {
+            if (len_offset > 0) {
                 len_offset--;
             }
             r = _sequenceview.get_TextArea().modelToView(len_offset);//-1 fixes indexing error when inserting a new character
@@ -1965,7 +1965,7 @@ public class SequenceView {
 
             lengthValue.setText(len.toString());
 
-            String selectedText = _sequenceview.get_TextArea().getSelectedText();
+//            String selectedText = _sequenceview.get_TextArea().getSelectedText();
 
             //FIXME d.set_circular(_circular);
             double[] gc = new double[2];
@@ -1994,6 +1994,7 @@ public class SequenceView {
         JTextPane src = (JTextPane) evt.getComponent();
         Position.Bias[] biasRet = new Position.Bias[1];
         int pos = src.getUI().viewToModel(src, evt.getPoint(), biasRet);
+//        System.out.println("Annotations: "+_annotationsOn+" RE: "+_REOn+" features: "+_featuresOn);
         //System.out.print("Mouse: " +  point.getX() + " " + point.getY() + "\n");
 
         Integer location = new Integer(pos) + 1;//location indexing starts at 1, not 0, this is the fix
@@ -2705,9 +2706,18 @@ public class SequenceView {
      * LOSE JTextPane INFORMATION SUCH AS CARET POSITION.
      */
     public void refreshHighlights() {
+        System.out.print("refreshing! ");
+        Boolean re = _REOn;
+        Boolean fe = _featuresOn;
         removeFeatureEnzymeHighlights();
-        highlightFeatures();
-        highlightRestrictionSites();
+        if (fe) {
+            System.out.println("features");
+            highlightFeatures();
+        }
+        if (re) {
+            System.out.println("enzymes");
+            highlightRestrictionSites();
+        }
     }
 
     /**
@@ -3102,9 +3112,7 @@ public class SequenceView {
         _ORFsCalculated = false;
         _revORFsCalculated = false;
         _saved = false;
-//        if (_highlightDataMade) {
-//            _needsToRefreshHighlight = true;
-//        }
+
         updateSequenceCount(_sequenceview.getSeqCountLabel());
         configureBasePairBoth(_sequenceview.getColLabel());
         _sequence.changeSeq(_sequenceview.get_TextArea().getText());
@@ -3709,8 +3717,9 @@ public class SequenceView {
 
     public void highlightRestrictionSites() {
         _annotations = _sequence.getAnnotations();
-        this.removeFeatureEnzymeHighlights();
-        this.removeUserSelectedHighlights();
+//        this.removeFeatureEnzymeHighlights();
+//        this.removeUserSelectedHighlights();
+//       
         _annotationsOn = true;
         _REOn = true;
         _h = _sequenceview.get_TextArea().getHighlighter();
@@ -3731,8 +3740,8 @@ public class SequenceView {
 
     public void highlightFeatures() {
         _annotations = _sequence.getAnnotations();
-        this.removeFeatureEnzymeHighlights();
-        this.removeUserSelectedHighlights();
+//        this.removeFeatureEnzymeHighlights();
+//        this.removeUserSelectedHighlights();
         _annotationsOn = true;
         _featuresOn = true;
         _h = _sequenceview.get_TextArea().getHighlighter();

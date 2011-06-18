@@ -50,6 +50,7 @@ import org.openide.util.ImageUtilities;
 /**
  *
  * @author J. Christopher Anderson
+ * edited by Craig LaBoda
  */
 public class SuperSearch extends JPanel {
 
