@@ -61,6 +61,7 @@ import javax.swing.SwingWorker;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter.Highlight;
 import javax.swing.text.JTextComponent;
 import org.clothocore.api.data.NucSeq;
 import org.clothocore.util.dialog.ClothoDialogBox;
@@ -727,23 +728,59 @@ public class SequenceView {
                         if (_circular && hm.get(startPositions.get(startPositions.size() - 1)) == textArea.getText().length()) {
                             this.removeUserSelectedHighlights();
                             String seq = textArea.getText();
+                            Highlight[] highlights = _h.getHighlights();
+                            ArrayList<Highlight> shuffledHighlights = new ArrayList(); //stores highlights that will be temporarily removed
+                            for (int i = 0; i < highlights.length; i++) {
+                                if (highlights[i].getPainter() instanceof FeaturePainter) {
+                                    shuffledHighlights.add(highlights[i]);
+                                    _h.removeHighlight(highlights[i]);
+                                }
+                            }
+                            if (lastORFHighlightTag != null) {
+                                _h.removeHighlight(lastORFHighlightTag);
+                            }
                             _h.addHighlight(currentORFStart, seq.length(), _painter);
                             _h.addHighlight(0, Math.min(seq.toLowerCase().indexOf("tag"), Math.min(seq.toLowerCase().indexOf("taa"), seq.toLowerCase().indexOf("tga"))) + 3, _painter);
                             currentORFStart = startPositions.get(0); //reset start to first ORF start to allow looping
                             textArea.setCaretPosition(0);
                             currentORFStart++;
+                            for (Highlight h : shuffledHighlights) {
+                                _h.addHighlight(h.getStartOffset(), h.getEndOffset(), h.getPainter());
+                            }
                         } else {
+                            Highlight[] highlights = _h.getHighlights();
+                            ArrayList<Highlight> shuffledHighlights = new ArrayList(); //stores highlights that will be temporarily removed
+                            for (int i = 0; i < highlights.length; i++) {
+                                if (highlights[i].getPainter() instanceof FeaturePainter) {
+                                    shuffledHighlights.add(highlights[i]);
+                                    _h.removeHighlight(highlights[i]);
+                                }
+                            }
                             this.removeUserSelectedHighlights();
                             lastORFHighlightTag = _h.addHighlight(currentORFStart, hm.get(currentORFStart), _painter);
                             textArea.setCaretPosition(currentORFStart);
                             currentORFStart++;
+                            for (Highlight h : shuffledHighlights) {
+                                _h.addHighlight(h.getStartOffset(), h.getEndOffset(), h.getPainter());
+                            }
                         }
                     } else {
                         //default case
+                        Highlight[] highlights = _h.getHighlights();
+                        ArrayList<Highlight> shuffledHighlights = new ArrayList(); //stores highlights that will be temporarily removed
+                        for (int i = 0; i < highlights.length; i++) {
+                            if (highlights[i].getPainter() instanceof FeaturePainter) {
+                                shuffledHighlights.add(highlights[i]);
+                                _h.removeHighlight(highlights[i]);
+                            }
+                        }
                         this.removeUserSelectedHighlights();
                         lastORFHighlightTag = _h.addHighlight(currentORFStart, hm.get(currentORFStart), _painter);
                         textArea.setCaretPosition(currentORFStart);
                         currentORFStart++;
+                        for (Highlight h : shuffledHighlights) {
+                            _h.addHighlight(h.getStartOffset(), h.getEndOffset(), h.getPainter());
+                        }
                     }
 
                 } catch (BadLocationException e) {
@@ -792,24 +829,63 @@ public class SequenceView {
                 try {
                     if (startPositions.indexOf(currentORFStart) == 0) {
                         if (_circular && hm.get(startPositions.get(startPositions.size() - 1)) == textArea.getText().length()) {
+                            Highlight[] highlights = _h.getHighlights();
+                            ArrayList<Highlight> shuffledHighlights = new ArrayList(); //stores highlights that will be temporarily removed
+                            for (int i = 0; i < highlights.length; i++) {
+                                if (highlights[i].getPainter() instanceof FeaturePainter) {
+                                    shuffledHighlights.add(highlights[i]);
+                                    _h.removeHighlight(highlights[i]);
+                                }
+                            }
+
                             this.removeUserSelectedHighlights();
                             String seq = textArea.getText();
+
                             _h.addHighlight(startPositions.get(startPositions.size() - 1), seq.length(), _painter);
                             _h.addHighlight(0, Math.min(seq.toLowerCase().indexOf("tag"), Math.min(seq.toLowerCase().indexOf("taa"), seq.toLowerCase().indexOf("tga"))) + 3, _painter);
                             currentORFStart = startPositions.get(startPositions.size() - 1); //reset start to first ORF start to allow looping
                             textArea.setCaretPosition(currentORFStart);
                             currentORFStart--;
+                            for (Highlight h : shuffledHighlights) {
+                                _h.addHighlight(h.getStartOffset(), h.getEndOffset(), h.getPainter());
+                            }
+
                         } else {
+                            Highlight[] highlights = _h.getHighlights();
+                            ArrayList<Highlight> shuffledHighlights = new ArrayList(); //stores highlights that will be temporarily removed
+                            for (int i = 0; i < highlights.length; i++) {
+                                if (highlights[i].getPainter() instanceof FeaturePainter) {
+                                    shuffledHighlights.add(highlights[i]);
+                                    _h.removeHighlight(highlights[i]);
+                                }
+                            }
+
                             this.removeUserSelectedHighlights();
                             lastORFHighlightTag = _h.addHighlight(currentORFStart, hm.get(currentORFStart), _painter);
                             textArea.setCaretPosition(currentORFStart);
                             currentORFStart--; //reset start to first ORF start to allow looping
+                            for (Highlight h : shuffledHighlights) {
+                                _h.addHighlight(h.getStartOffset(), h.getEndOffset(), h.getPainter());
+                            }
+
                         }
                     } else {
+                        Highlight[] highlights = _h.getHighlights();
+                        ArrayList<Highlight> shuffledHighlights = new ArrayList(); //stores highlights that will be temporarily removed
+                        for (int i = 0; i < highlights.length; i++) {
+                            if (highlights[i].getPainter() instanceof FeaturePainter) {
+                                shuffledHighlights.add(highlights[i]);
+                                _h.removeHighlight(highlights[i]);
+                            }
+                        }
                         this.removeUserSelectedHighlights();
                         lastORFHighlightTag = _h.addHighlight(currentORFStart, hm.get(currentORFStart), _painter);
                         textArea.setCaretPosition(currentORFStart);
                         currentORFStart--;
+                        for (Highlight h : shuffledHighlights) {
+                            _h.addHighlight(h.getStartOffset(), h.getEndOffset(), h.getPainter());
+                        }
+
                     }
                 } catch (BadLocationException e) {
                     e.printStackTrace();
@@ -856,6 +932,15 @@ public class SequenceView {
 
                     if (endPositions.indexOf(currentORFStart) == endPositions.size() - 1) {
                         if (_circular && currentORFStart == textArea.getText().length()) {
+                            Highlight[] highlights = _h.getHighlights();
+                            ArrayList<Highlight> shuffledHighlights = new ArrayList(); //stores highlights that will be temporarily removed
+                            for (int i = 0; i < highlights.length; i++) {
+                                if (highlights[i].getPainter() instanceof FeaturePainter) {
+                                    shuffledHighlights.add(highlights[i]);
+                                    _h.removeHighlight(highlights[i]);
+                                }
+                            }
+
                             this.removeUserSelectedHighlights();
                             String seq = textArea.getText();
                             _h.addHighlight(currentORFStart, seq.length(), _painter);
@@ -863,18 +948,47 @@ public class SequenceView {
                             currentORFStart = endPositions.get(0); //reset start to first ORF start to allow looping
                             textArea.setCaretPosition(hm.get(currentORFStart));
                             currentORFStart++;
+                            for (Highlight h : shuffledHighlights) {
+                                _h.addHighlight(h.getStartOffset(), h.getEndOffset(), h.getPainter());
+                            }
+
                         } else {
+                            Highlight[] highlights = _h.getHighlights();
+                            ArrayList<Highlight> shuffledHighlights = new ArrayList(); //stores highlights that will be temporarily removed
+                            for (int i = 0; i < highlights.length; i++) {
+                                if (highlights[i].getPainter() instanceof FeaturePainter) {
+                                    shuffledHighlights.add(highlights[i]);
+                                    _h.removeHighlight(highlights[i]);
+                                }
+                            }
+
                             this.removeUserSelectedHighlights();
                             lastORFHighlightTag = _h.addHighlight(hm.get(currentORFStart), currentORFStart, _painter);
                             textArea.setCaretPosition(hm.get(currentORFStart));
                             currentORFStart++;
+                            for (Highlight h : shuffledHighlights) {
+                                _h.addHighlight(h.getStartOffset(), h.getEndOffset(), h.getPainter());
+                            }
+
                         }
                     } else {
+                        Highlight[] highlights = _h.getHighlights();
+                        ArrayList<Highlight> shuffledHighlights = new ArrayList(); //stores highlights that will be temporarily removed
+                        for (int i = 0; i < highlights.length; i++) {
+                            if (highlights[i].getPainter() instanceof FeaturePainter) {
+                                shuffledHighlights.add(highlights[i]);
+                                _h.removeHighlight(highlights[i]);
+                            }
+                        }
 
                         this.removeUserSelectedHighlights();
                         lastORFHighlightTag = _h.addHighlight(hm.get(currentORFStart), currentORFStart, _painter);
                         textArea.setCaretPosition(hm.get(currentORFStart));
                         currentORFStart++;
+                        for (Highlight h : shuffledHighlights) {
+                            _h.addHighlight(h.getStartOffset(), h.getEndOffset(), h.getPainter());
+                        }
+
                     }
 
                 } catch (BadLocationException e) {
@@ -963,6 +1077,15 @@ public class SequenceView {
                 try {
                     if (endPositions.indexOf(currentORFStart) == 0) {
                         if (_circular && currentORFStart == textArea.getText().length()) {
+                            Highlight[] highlights = _h.getHighlights();
+                            ArrayList<Highlight> shuffledHighlights = new ArrayList(); //stores highlights that will be temporarily removed
+                            for (int i = 0; i < highlights.length; i++) {
+                                if (highlights[i].getPainter() instanceof FeaturePainter) {
+                                    shuffledHighlights.add(highlights[i]);
+                                    _h.removeHighlight(highlights[i]);
+                                }
+                            }
+
                             this.removeUserSelectedHighlights();
                             String seq = textArea.getText();
                             _h.addHighlight(endPositions.get(endPositions.size() - 1), seq.length(), _painter);
@@ -970,17 +1093,47 @@ public class SequenceView {
                             currentORFStart = endPositions.get(endPositions.size() - 1); //reset start to first ORF start to allow looping
                             textArea.setCaretPosition(hm.get(currentORFStart));
                             currentORFStart--;
+                            for (Highlight h : shuffledHighlights) {
+                                _h.addHighlight(h.getStartOffset(), h.getEndOffset(), h.getPainter());
+                            }
+
                         } else {
+                            Highlight[] highlights = _h.getHighlights();
+                            ArrayList<Highlight> shuffledHighlights = new ArrayList(); //stores highlights that will be temporarily removed
+                            for (int i = 0; i < highlights.length; i++) {
+                                if (highlights[i].getPainter() instanceof FeaturePainter) {
+                                    shuffledHighlights.add(highlights[i]);
+                                    _h.removeHighlight(highlights[i]);
+                                }
+                            }
+
                             this.removeUserSelectedHighlights();
                             lastORFHighlightTag = _h.addHighlight(hm.get(currentORFStart), currentORFStart, _painter);
                             textArea.setCaretPosition(hm.get(currentORFStart));
                             currentORFStart--; //reset start to first ORF start to allow looping
+                            for (Highlight h : shuffledHighlights) {
+                                _h.addHighlight(h.getStartOffset(), h.getEndOffset(), h.getPainter());
+                            }
+
                         }
                     } else {
+                        Highlight[] highlights = _h.getHighlights();
+                        ArrayList<Highlight> shuffledHighlights = new ArrayList(); //stores highlights that will be temporarily removed
+                        for (int i = 0; i < highlights.length; i++) {
+                            if (highlights[i].getPainter() instanceof FeaturePainter) {
+                                shuffledHighlights.add(highlights[i]);
+                                _h.removeHighlight(highlights[i]);
+                            }
+                        }
+
                         this.removeUserSelectedHighlights();
                         lastORFHighlightTag = _h.addHighlight(hm.get(currentORFStart), currentORFStart, _painter);
                         textArea.setCaretPosition(hm.get(currentORFStart));
                         currentORFStart--;
+                        for (Highlight h : shuffledHighlights) {
+                            _h.addHighlight(h.getStartOffset(), h.getEndOffset(), h.getPainter());
+                        }
+
                     }
                 } catch (BadLocationException e) {
                     e.printStackTrace();
@@ -2794,7 +2947,7 @@ public class SequenceView {
             javax.swing.text.Highlighter.Highlight[] highlights = _h.getHighlights();
             for (int i = 0; i < highlights.length; i++) {
                 javax.swing.text.Highlighter.Highlight h = highlights[i];
-                if (h.getPainter() instanceof javax.swing.text.DefaultHighlighter.DefaultHighlightPainter) {
+                if (h.getPainter() instanceof javax.swing.text.DefaultHighlighter.DefaultHighlightPainter && !(h.getPainter() instanceof FeaturePainter)) {
                     _h.removeHighlight(h);
                 }
             }
