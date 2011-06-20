@@ -137,7 +137,7 @@ public class SequenceView {
 
 
         _sequenceviewtools = new SequenceViewSearchTools(this);
-        _preferencesFrame = null;// new SequenceViewPreferences(this);
+//        _preferencesFrame = null;// new SequenceViewPreferences(this);
 
         _duplicates = new HashSet();
         _sequenceview.get_TextArea().setCaretPosition(0);
@@ -146,7 +146,9 @@ public class SequenceView {
         _logicalCol = width_offset / charwidth;
         _logicalLineCnt = 1;
         _selectedHit = -1;
-        _painter = new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
+        ORFColor = Color.YELLOW;
+        userSelectColor = Color.GRAY;
+        userHighlightColor = Color.ORANGE;
         _backspaceKeyPressed = false;
         _deleteKeyPressed = false;
         _dnaType = true;
@@ -189,7 +191,7 @@ public class SequenceView {
         //_redoAction.addUndo(_undoAction);
         //doc.addUndoableEditListener(new ClothoUndoableActionListener(_undo, _undoAction, _redoAction));
 
-        _preferences = Preferences.userNodeForPackage(SequenceView.class);
+//        _preferences = Preferences.userNodeForPackage(SequenceView.class);
         //c.registry.registerProvider(this, "sequence");
     }
 
@@ -689,6 +691,7 @@ public class SequenceView {
      * Finds the next Open Reading Frame in the SequenceView
      */
     public void findNextORF() {
+        _painter = new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(ORFColor); //default orf highlight color;
         JTextComponent textArea = _sequenceview.get_TextArea();
         _h = textArea.getHighlighter();
         HashMap<Integer, Integer> hm;
@@ -722,6 +725,7 @@ public class SequenceView {
                 currentORFStart = startPositions.get(0);
             }
             if (hm.containsKey(currentORFStart) && hm.get(currentORFStart) <= textArea.getText().length()) {
+
                 try {
 
                     if (startPositions.indexOf(currentORFStart) == startPositions.size() - 1) {
@@ -794,6 +798,7 @@ public class SequenceView {
      * Finds the previous Open Reading Frame in the SequenceView
      */
     public void findPrevORF() {
+        _painter = new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(ORFColor); //default orf highlight color;
         JTextComponent textArea = _sequenceview.get_TextArea();
         if (textArea.getCaretPosition() == 0) {
             textArea.setCaretPosition(textArea.getText().length());
@@ -898,7 +903,7 @@ public class SequenceView {
      * Finds the next Open Reading Frame in the reverse of the SequenceView
      */
     public void findNextRevORF() {
-
+        _painter = new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(ORFColor); //default orf highlight color;
         JTextComponent textArea = _sequenceview.get_TextArea();
         _h = textArea.getHighlighter();
         HashMap<Integer, Integer> hm;
@@ -1042,6 +1047,7 @@ public class SequenceView {
      * Finds the previous Open Reading Frame in the reverse of the SequenceView
      */
     public void findPrevRevORF() {
+        _painter = new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(ORFColor); //default orf highlight color;
         JTextComponent textArea = _sequenceview.get_TextArea();
         if (textArea.getCaretPosition() == 0) {
             textArea.setCaretPosition(textArea.getText().length());
@@ -1274,10 +1280,9 @@ public class SequenceView {
      * Return the preferences frame for this sequence view
      * @return
      */
-    public SequenceViewPreferences getPreferences() {
-        return _preferencesFrame;
-    }
-
+//    public SequenceViewPreferences getPreferences() {
+//        return _preferencesFrame;
+//    }
     public SequenceViewManager getManager() {
         return _manager;
     }
@@ -1363,11 +1368,23 @@ public class SequenceView {
      */
     public void highlightUserSelected() {
         _h = _sequenceview.get_TextArea().getHighlighter();
+
         if (_sequenceview.get_TextArea().getSelectedText() != null) {
             try {
+                Highlight[] highlights = _h.getHighlights();
+                ArrayList<Highlight> shuffledHighlights = new ArrayList(); //stores highlights that will be temporarily removed
+                for (int i = 0; i < highlights.length; i++) {
+                    if (highlights[i].getPainter() instanceof FeaturePainter) {
+                        shuffledHighlights.add(highlights[i]);
+                        _h.removeHighlight(highlights[i]);
+                    }
+                }
                 _h.addHighlight(_sequenceview.get_TextArea().getSelectionStart(),
                         _sequenceview.get_TextArea().getSelectionEnd(),
-                        new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.ORANGE));//maybe add option to change highlight color later
+                        new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(userHighlightColor));//maybe add option to change highlight color later
+                for (Highlight h : shuffledHighlights) {
+                    _h.addHighlight(h.getStartOffset(), h.getEndOffset(), h.getPainter());
+                }
                 /*_h.addHighlight(_sequenceview.get_TextArea().getSelectionStart(),
                 _sequenceview.get_TextArea().getSelectionEnd(),
                 new javax.swing.text.DefaultHighlighter.
@@ -1415,49 +1432,52 @@ public class SequenceView {
 //        }
     }
 
+    @Deprecated
     public void load_preferences() {
-        String command;
-        String token;
-
-        // Default Values
-        _sequenceview.getMethylationBox().setSelected(false);
-        _sequenceview.getCircularBox().setSelected(true);
-        _sequenceview.getDegeneracyBox().setSelected(false);
-
-        // Resets ORFs, in case "_multipleStartCodons" is changed
-        _ORFsCalculated = false;
-        _revORFsCalculated = false;
-
-        _dnaType = _preferences.getBoolean("dnaType", true);
-        _methylated = _preferences.getBoolean("methylated", false);
-        if (_methylated == true) {
-            _sequenceview.getMethylationBox().setSelected(true);
-        }
-
-        _circular = _preferences.getBoolean("circular", true);
-        if (_circular == false) {
-            _sequenceview.getCircularBox().setSelected(false);
-        }
-
-        _allowDegeneracy = _preferences.getBoolean("degeneracy", false);
-        if (_allowDegeneracy == true) {
-            _sequenceview.getDegeneracyBox().setSelected(true);
-            ItemEvent fauxBoxClick = new ItemEvent(_sequenceview.getDegeneracyBox(), ItemEvent.ITEM_STATE_CHANGED, _sequenceview.getDegeneracyBox(), ItemEvent.SELECTED);
-            this.update_AllowDegeneracy(fauxBoxClick);
-        }
-
-        _filePath = new File(_preferences.get("filePath", "org/clothocad/documents"));
-
-        _multipleStartCodons = _preferences.getBoolean("multipleStartCodons", false);
-
-        _threeLetterCode = _preferences.getBoolean("threeLetterCode", false);
-
-        this.updateWindowMenus();
+        //TODO: add load preference support
+//        String command;
+//        String token;
+//
+//        // Default Values
+//        _sequenceview.getMethylationBox().setSelected(false);
+//        _sequenceview.getCircularBox().setSelected(true);
+//        _sequenceview.getDegeneracyBox().setSelected(false);
+//
+//        // Resets ORFs, in case "_multipleStartCodons" is changed
+//        _ORFsCalculated = false;
+//        _revORFsCalculated = false;
+//
+//        _dnaType = _preferences.getBoolean("dnaType", true);
+//        _methylated = _preferences.getBoolean("methylated", false);
+//        if (_methylated == true) {
+//            _sequenceview.getMethylationBox().setSelected(true);
+//        }
+//
+//        _circular = _preferences.getBoolean("circular", true);
+//        if (_circular == false) {
+//            _sequenceview.getCircularBox().setSelected(false);
+//        }
+//
+//        _allowDegeneracy = _preferences.getBoolean("degeneracy", false);
+//        if (_allowDegeneracy == true) {
+//            _sequenceview.getDegeneracyBox().setSelected(true);
+//            ItemEvent fauxBoxClick = new ItemEvent(_sequenceview.getDegeneracyBox(), ItemEvent.ITEM_STATE_CHANGED, _sequenceview.getDegeneracyBox(), ItemEvent.SELECTED);
+//            this.update_AllowDegeneracy(fauxBoxClick);
+//        }
+//
+//        _filePath = new File(_preferences.get("filePath", "org/clothocad/documents"));
+//
+//        _multipleStartCodons = _preferences.getBoolean("multipleStartCodons", false);
+//
+//        _threeLetterCode = _preferences.getBoolean("threeLetterCode", false);
+//
+//        this.updateWindowMenus();
     }
 
     /**
      *  Loads part data into the sequence view, overwriting any existing data
      */
+    @Deprecated
     public void loadPart() //Datum data, String level, String name)
     {
         //commented
@@ -1563,6 +1583,7 @@ public class SequenceView {
                             area = "FEATURES";
                             // FIXME
                             // Do something with features data
+                            //Perhaps automatically generate new Clotho Features?
                         }
 
                         if (line.startsWith("ORIGIN")) {
@@ -1812,17 +1833,20 @@ public class SequenceView {
      * Open the preferences window
      */
     public void openPreferences() {
-        if (_preferencesFrame == null) {
-            _preferencesFrame = new SequenceViewPreferences(this);
-        }
-        _preferencesFrame.setDNA(_dnaType);
-        _preferencesFrame.setMethylated(_methylated);
-        _preferencesFrame.setCircular(_circular);
-        _preferencesFrame.setDegen(_allowDegeneracy);
-        _preferencesFrame.setFilePath(_filePath.toString());
-        _preferencesFrame.setMultiCodons(_multipleStartCodons);
-        _preferencesFrame.setThreeLetterCode(_threeLetterCode);
-        _preferencesFrame.setVisible(true);
+        BasicPreferences basicPreferencesFrame = new BasicPreferences(this);
+        basicPreferencesFrame.setVisible(true);
+        //TODO: implement more sophistcated preferences
+//        if (_preferencesFrame == null) {
+//            _preferencesFrame = new SequenceViewPreferences(this);
+//        }
+//        _preferencesFrame.setDNA(_dnaType);
+//        _preferencesFrame.setMethylated(_methylated);
+//        _preferencesFrame.setCircular(_circular);
+//        _preferencesFrame.setDegen(_allowDegeneracy);
+//        _preferencesFrame.setFilePath(_filePath.toString());
+//        _preferencesFrame.setMultiCodons(_multipleStartCodons);
+//        _preferencesFrame.setThreeLetterCode(_threeLetterCode);
+//        _preferencesFrame.setVisible(true);
     }
 
     /**
@@ -3062,15 +3086,16 @@ public class SequenceView {
      * Save the preferences
      */
     public void savePrefernces() {
-        _preferences.putBoolean("dnaType", _preferencesFrame.getDNA());
-        _preferences.putBoolean("methylated", _preferencesFrame.getMethylated());
-        _preferences.putBoolean("circular", _preferencesFrame.getCircular());
-        _preferences.putBoolean("degeneracy", _preferencesFrame.getDegen());
-        _preferences.put("filePath", _preferencesFrame.getFilePath());
-        _preferences.putBoolean("multipleStartCodons", _preferencesFrame.getMultiCodons());
-        _preferences.putBoolean("threeLetterCode", _preferencesFrame.getThreeLetterCode());
-
-        load_preferences();
+        //TODO: implement saving preferences
+//        _preferences.putBoolean("dnaType", _preferencesFrame.getDNA());
+//        _preferences.putBoolean("methylated", _preferencesFrame.getMethylated());
+//        _preferences.putBoolean("circular", _preferencesFrame.getCircular());
+//        _preferences.putBoolean("degeneracy", _preferencesFrame.getDegen());
+//        _preferences.put("filePath", _preferencesFrame.getFilePath());
+//        _preferences.putBoolean("multipleStartCodons", _preferencesFrame.getMultiCodons());
+//        _preferences.putBoolean("threeLetterCode", _preferencesFrame.getThreeLetterCode());
+//
+//        load_preferences();
     }
 
     /**
@@ -3919,6 +3944,31 @@ public class SequenceView {
             super(c);
         }
     }
+
+    public Color getORFColor() {
+        return ORFColor;
+    }
+
+    public void changeORFColor(Color c) {
+        ORFColor = c;
+    }
+
+    public Color getUserSelectColor() {
+        return userSelectColor;
+    }
+
+    public void changeUserSelectColor(Color c) {
+        userSelectColor = c;
+        _sequenceview.get_TextArea().setSelectionColor(userSelectColor);
+    }
+
+    public Color getUserHighlightColor() {
+        return userHighlightColor;
+    }
+
+    public void changeUserHighlightColor(Color c) {
+        userHighlightColor = c;
+    }
     ///////////////////////////////////////////////////////////////////
     ////                         private variables                 ////
     private NucSeq _sequence;
@@ -3982,7 +4032,7 @@ public class SequenceView {
     private SequenceViewGUI _sequenceview;
     private SequenceViewManager _manager;
     private SequenceViewSearchTools _sequenceviewtools;
-    private SequenceViewPreferences _preferencesFrame;
+//    private SequenceViewPreferences _preferencesFrame;
     private String _caseSensitiveOption;
     private String _gcString;
     private String _mouseoverString;
@@ -3995,7 +4045,7 @@ public class SequenceView {
     private int _logicalLineCnt;
     private int _logicalCol;
     private int _myIndex;
-    private Preferences _preferences;
+//    private Preferences _preferences;
     private String _database;
     private String _table;
     private boolean _keyTypedAtLeastOnce;
@@ -4008,6 +4058,9 @@ public class SequenceView {
     private UndoAction undoAction;
     private RedoAction redoAction;
     private ArrayList<Feature> allFeatures;
+    private Color userSelectColor;
+    private Color ORFColor;
+    private Color userHighlightColor;
 //    private ClothoUndoAction _undoAction;
 //    private ClothoRedoAction _redoAction;
 //    private SequenceUtils _sequenceUtils;

@@ -313,9 +313,6 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         TranslateMenuItem = new javax.swing.JMenuItem();
         revTranslateMenuItem = new javax.swing.JMenuItem();
         jSeparator14 = new javax.swing.JSeparator();
-        jSeparator15 = new javax.swing.JSeparator();
-        preferenceMenuItem = new javax.swing.JMenuItem();
-        analyzeMenuItem = new javax.swing.JMenuItem();
         helpMenuItem = new javax.swing.JMenuItem();
         ORFMenu = new javax.swing.JMenu();
         NextORFMenuItem = new javax.swing.JMenuItem();
@@ -336,6 +333,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         removeUserSelectedHighlightMenuItem = new javax.swing.JMenuItem();
         jSeparator4 = new javax.swing.JSeparator();
         editFeatureLibraryMenuItem = new javax.swing.JMenuItem();
+        preferenceMenuItem = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JSeparator();
         WindowMenu = new javax.swing.JMenu();
 
@@ -767,7 +765,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
                     .addContainerGap(22, Short.MAX_VALUE)))
         );
 
-        SequenceTextPane.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
+        SequenceTextPane.setFont(new java.awt.Font("Courier New", 0, 11));
         SequenceTextPane.setDragEnabled(true);
         SequenceTextPane.setMargin(new java.awt.Insets(0, 0, 0, 0));
         SequenceTextPane.addCaretListener(new javax.swing.event.CaretListener() {
@@ -1075,26 +1073,6 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         });
         ToolMenu.add(revTranslateMenuItem);
         ToolMenu.add(jSeparator14);
-        ToolMenu.add(jSeparator15);
-
-        preferenceMenuItem.setText("Preferences"); // NOI18N
-        preferenceMenuItem.setEnabled(false);
-        preferenceMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                preferenceMenuItemActionPerformed(evt);
-            }
-        });
-        ToolMenu.add(preferenceMenuItem);
-
-        analyzeMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
-        analyzeMenuItem.setText("Select PlugIn"); // NOI18N
-        analyzeMenuItem.setEnabled(false);
-        analyzeMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                analyzeMenuItemActionPerformed(evt);
-            }
-        });
-        ToolMenu.add(analyzeMenuItem);
 
         helpMenuItem.setText("Help"); // NOI18N
         helpMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -1164,7 +1142,6 @@ public class SequenceViewGUI extends javax.swing.JFrame {
             }
         });
 
-        highlightSelectedMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
         highlightSelectedMenuItem.setText("Highlight");
         highlightSelectedMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1234,6 +1211,14 @@ public class SequenceViewGUI extends javax.swing.JFrame {
             }
         });
         HighlightMenu.add(editFeatureLibraryMenuItem);
+
+        preferenceMenuItem.setText("Preferences"); // NOI18N
+        preferenceMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                preferenceMenuItemActionPerformed(evt);
+            }
+        });
+        HighlightMenu.add(preferenceMenuItem);
         HighlightMenu.add(jSeparator5);
 
         SequenceViewMenuBar.add(HighlightMenu);
@@ -1486,10 +1471,6 @@ private void removeFeatureEnzymeHighlightMenuItemActionPerformed(java.awt.event.
 //    _sv.get_highlightData().clear();
 }//GEN-LAST:event_removeFeatureEnzymeHighlightMenuItemActionPerformed
 
-private void highlightSelectedMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_highlightSelectedMenuItemActionPerformed
-    _sv.highlightUserSelected();
-}//GEN-LAST:event_highlightSelectedMenuItemActionPerformed
-
 private void removeUserSelectedHighlightMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeUserSelectedHighlightMenuItemActionPerformed
     _sv.removeUserSelectedHighlights();
 }//GEN-LAST:event_removeUserSelectedHighlightMenuItemActionPerformed
@@ -1546,10 +1527,6 @@ private void redoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 private void featuresButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_featuresButtonActionPerformed
     _sv.processSearchToolAction(evt, "Highlight Features");
 }//GEN-LAST:event_featuresButtonActionPerformed
-
-private void analyzeMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analyzeMenuItemActionPerformed
-    _sv.callPlugIns();
-}//GEN-LAST:event_analyzeMenuItemActionPerformed
 
 private void createPartMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createPartMenuItemActionPerformed
     _sv.createPart();
@@ -1626,6 +1603,10 @@ private void HighlightMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     // TODO add your handling code here:
 }//GEN-LAST:event_HighlightMenuActionPerformed
 
+private void highlightSelectedMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_highlightSelectedMenuItemActionPerformed
+    _sv.highlightUserSelected();
+}//GEN-LAST:event_highlightSelectedMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1673,7 +1654,6 @@ private void HighlightMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JMenuItem ToolsMenuItem;
     private javax.swing.JMenuItem TranslateMenuItem;
     private javax.swing.JMenu WindowMenu;
-    private javax.swing.JMenuItem analyzeMenuItem;
     private javax.swing.JLabel caretLocationJLabel;
     private javax.swing.JLabel columnCountJLabel;
     private javax.swing.JMenuItem copyMenuItem;
@@ -1731,7 +1711,6 @@ private void HighlightMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JSeparator jSeparator12;
     private javax.swing.JSeparator jSeparator13;
     private javax.swing.JSeparator jSeparator14;
-    private javax.swing.JSeparator jSeparator15;
     private javax.swing.JSeparator jSeparator17;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;

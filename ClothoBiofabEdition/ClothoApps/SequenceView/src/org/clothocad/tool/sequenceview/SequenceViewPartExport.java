@@ -355,7 +355,10 @@ public class SequenceViewPartExport extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-
+    String desc = _sv.getSequenceView().getOutputTextArea().getText();
+    if (desc == null) {
+        desc = "";
+    }
     String name = nameTextField.getText();
     String seq = null;
     System.out.println("saving: " + name);
@@ -382,16 +385,16 @@ private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         if (seq.toUpperCase().indexOf("ATG") != -1) {
             newObject = Feature.generateFeature(name, seq, Collector.getCurrentUser(), true);
         } else {
-            newObject = Feature.generateFeature(name, seq, Collector.getCurrentUser(), true);
+            newObject = Feature.generateFeature(name, seq, Collector.getCurrentUser(), false);
         }
     } else if (objectTypeComboBox.getSelectedIndex() == 1) {
-        newObject = new Oligo(name, "", Collector.getCurrentUser(), seq);
+        newObject = new Oligo(name, desc, Collector.getCurrentUser(), seq);
     } else if (objectTypeComboBox.getSelectedIndex() == 2) {
         //part
-        newObject = Part.generateBasic(name, "", seq, form, Collector.getCurrentUser());
+        newObject = Part.generateBasic(name, desc, seq, form, Collector.getCurrentUser());
 
     } else if (objectTypeComboBox.getSelectedIndex() == 3) {
-        Vector.generateVector(name, "", seq, form, Collector.getCurrentUser());
+        Vector.generateVector(name, desc, seq, form, Collector.getCurrentUser());
     } else {
         System.out.println("error saving new Clotho object, check selected fields");
         this.dispose();
