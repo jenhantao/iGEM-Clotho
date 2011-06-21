@@ -313,7 +313,6 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         TranslateMenuItem = new javax.swing.JMenuItem();
         revTranslateMenuItem = new javax.swing.JMenuItem();
         jSeparator14 = new javax.swing.JSeparator();
-        helpMenuItem = new javax.swing.JMenuItem();
         ORFMenu = new javax.swing.JMenu();
         NextORFMenuItem = new javax.swing.JMenuItem();
         PrevORFMenuItem = new javax.swing.JMenuItem();
@@ -336,6 +335,8 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         preferenceMenuItem = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JSeparator();
         WindowMenu = new javax.swing.JMenu();
+        HelpMenu = new javax.swing.JMenu();
+        helpMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Clotho: Sequence View"); // NOI18N
@@ -1074,14 +1075,6 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         ToolMenu.add(revTranslateMenuItem);
         ToolMenu.add(jSeparator14);
 
-        helpMenuItem.setText("Help"); // NOI18N
-        helpMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                helpMenuItemActionPerformed(evt);
-            }
-        });
-        ToolMenu.add(helpMenuItem);
-
         SequenceViewMenuBar.add(ToolMenu);
 
         ORFMenu.setText("ORFs"); // NOI18N
@@ -1230,6 +1223,18 @@ public class SequenceViewGUI extends javax.swing.JFrame {
             }
         });
         SequenceViewMenuBar.add(WindowMenu);
+
+        HelpMenu.setText("Help");
+
+        helpMenuItem.setText("Help"); // NOI18N
+        helpMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                helpMenuItemActionPerformed(evt);
+            }
+        });
+        HelpMenu.add(helpMenuItem);
+
+        SequenceViewMenuBar.add(HelpMenu);
 
         setJMenuBar(SequenceViewMenuBar);
 
@@ -1634,6 +1639,7 @@ private void highlightSelectedMenuItemActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JMenu EditMenu;
     private javax.swing.JMenuItem ExitMenuItem;
     private javax.swing.JMenu FileMenu;
+    private javax.swing.JMenu HelpMenu;
     private javax.swing.JMenu HighlightMenu;
     private javax.swing.JMenuItem LoadMenuItem;
     private javax.swing.JCheckBox LockCheckBox;

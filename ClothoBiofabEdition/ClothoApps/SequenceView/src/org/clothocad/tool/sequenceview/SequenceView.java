@@ -97,6 +97,7 @@ import org.clothocore.api.data.Annotation;
 import org.clothocore.api.data.Feature;
 import org.clothocore.api.data.ObjType;
 import org.clothocore.api.data.Person;
+import org.clothocore.util.misc.BareBonesBrowserLaunch;
 import org.openide.util.Exceptions;
 
 /**
@@ -1805,7 +1806,7 @@ public class SequenceView {
      * Open help
      */
     public void openHelp() {
-        //commented
+        BareBonesBrowserLaunch.openURL(Collator.helpURLBase + "/Sequence_View");
         //  _manager.openHelp();
     }
 
