@@ -1546,8 +1546,8 @@ public class SequenceView {
                 } else {
 //                    ClothoDialogBox db = new ClothoDialogBox("Clotho: Sequence View", "This does not appear to be a Genbank or FASTA formated file.\n Do you want to proceed?");
 //                    if (db.show_optionDialog(javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE) == javax.swing.JOptionPane.YES_OPTION) {
-                        String[] yesNoOpt = {"Yes", "No"};
-                        if (javax.swing.JOptionPane.showOptionDialog(new JFrame(),"This does not appear to be a Genbank or FASTA formated file.\n Do you want to proceed?","Clotho: Sequnce View",javax.swing.JOptionPane.YES_NO_OPTION,javax.swing.JOptionPane.QUESTION_MESSAGE, null, yesNoOpt, yesNoOpt[1])== javax.swing.JOptionPane.YES_OPTION)  {
+                    String[] yesNoOpt = {"Yes", "No"};
+                    if (javax.swing.JOptionPane.showOptionDialog(new JFrame(), "This does not appear to be a Genbank or FASTA formated file.\n Do you want to proceed?", "Clotho: Sequnce View", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, null, yesNoOpt, yesNoOpt[1]) == javax.swing.JOptionPane.YES_OPTION) {
                         setTitle("Clotho: Sequence View (Address: " + _myIndex + ") " + toLoad.getName());
                         _sequenceview.getOutputTextArea().setText(toLoad.getName() + " loaded");
 
@@ -1636,8 +1636,9 @@ public class SequenceView {
                 this.highlightFeatures();
             }
         } else {
-            ClothoDialogBox db = new ClothoDialogBox("Error", "Sequence is not circular!");
-            db.show_Dialog(javax.swing.JOptionPane.OK_OPTION);
+//            ClothoDialogBox db = new ClothoDialogBox("Error", "Sequence is not circular!");
+//            db.show_Dialog(javax.swing.JOptionPane.OK_OPTION);
+            javax.swing.JOptionPane.showMessageDialog(new JFrame(), "Sequence is not circular", "error", javax.swing.JOptionPane.OK_OPTION);
         }
     }
 
@@ -2382,9 +2383,10 @@ public class SequenceView {
             _hitCount = _searcher.getHitCount();
 
             if (_hitCount < 1) {
-                ClothoDialogBox toolsDialog = new ClothoDialogBox("SequenceView "
-                        + "Tools Message", "No hits!");
-                toolsDialog.show_Dialog(javax.swing.JOptionPane.INFORMATION_MESSAGE);
+//                ClothoDialogBox toolsDialog = new ClothoDialogBox("SequenceView "
+//                        + "Tools Message", "No hits!");
+//                toolsDialog.show_Dialog(javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(new JFrame(), "No hits!", "Sequence View: Tools Message", javax.swing.JOptionPane.INFORMATION_MESSAGE);
                 _sequenceview.get_TextArea().setCaretPosition(0);
                 _selectedHit = 0;
                 return;
@@ -2430,9 +2432,10 @@ public class SequenceView {
             _hitCount = _searcher.getHitCount();
 
             if (_hitCount < 1) {
-                ClothoDialogBox toolsDialog = new ClothoDialogBox("SequenceView "
-                        + "Tools Message", "No hits!");
-                toolsDialog.show_Dialog(javax.swing.JOptionPane.INFORMATION_MESSAGE);
+//                ClothoDialogBox toolsDialog = new ClothoDialogBox("SequenceView "
+//                        + "Tools Message", "No hits!");
+//                toolsDialog.show_Dialog(javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(new JFrame(), "No hits!", "Sequence View: Tools Message", javax.swing.JOptionPane.INFORMATION_MESSAGE);
                 _sequenceview.get_TextArea().setCaretPosition(0);
                 _selectedHit = 0;
                 return;
@@ -2448,18 +2451,21 @@ public class SequenceView {
             try {
                 Integer.parseInt(_goField.getText());
             } catch (NumberFormatException e) {
-                ClothoDialogBox toolsDialog = new ClothoDialogBox("SequenceView "
-                        + "Tools Error", "Field is not an integer.");
-                toolsDialog.show_Dialog(javax.swing.JOptionPane.ERROR_MESSAGE);
+//                ClothoDialogBox toolsDialog = new ClothoDialogBox("SequenceView "
+//                        + "Tools Error", "Field is not an integer.");
+//                toolsDialog.show_Dialog(javax.swing.JOptionPane.ERROR_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(new JFrame(), "Field is not an integer.", "Sequence View Tools Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                 _sequenceviewtools.toFront();
                 return;
             }
             //The following block tests for out-of-bounds errors.
             if (_sequenceview.get_TextArea().getText().length() < Integer.parseInt(_goField.getText()) | Integer.parseInt(_goField.getText()) < 0) {
-                ClothoDialogBox toolsDialog = new ClothoDialogBox("SequenceView "
-                        + "Tools Error", "A number greater than sequence length "
-                        + "or a negative\nnumber was entered into Go field.");
-                toolsDialog.show_Dialog(javax.swing.JOptionPane.ERROR_MESSAGE);
+//                ClothoDialogBox toolsDialog = new ClothoDialogBox("SequenceView "
+//                        + "Tools Error", "A number greater than sequence length "
+//                        + "or a negative\nnumber was entered into Go field.");
+//                toolsDialog.show_Dialog(javax.swing.JOptionPane.ERROR_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(new JFrame(), "A number greater than the sequence length or a negative\nnumber was intered into Go field", "Sequence View Tools Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+
                 _sequenceviewtools.toFront();
                 return;
             }
@@ -2472,9 +2478,10 @@ public class SequenceView {
                 Integer.parseInt(_selectFromField.getText());
                 Integer.parseInt(_selectToField.getText());
             } catch (NumberFormatException e) {
-                ClothoDialogBox toolsDialog = new ClothoDialogBox("SequenceView "
-                        + "Tools Error", "One of the fields is not an integer.");
-                toolsDialog.show_Dialog(javax.swing.JOptionPane.ERROR_MESSAGE);
+//                ClothoDialogBox toolsDialog = new ClothoDialogBox("SequenceView "
+//                        + "Tools Error", "One of the fields is not an integer.");
+//                toolsDialog.show_Dialog(javax.swing.JOptionPane.ERROR_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(new JFrame(), "One of the fields is not an integer", "Sequence View Tools Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                 _sequenceviewtools.toFront();
                 return;
             }
@@ -2487,13 +2494,18 @@ public class SequenceView {
                     | Integer.parseInt(_selectToField.getText()) < 0
                     | Integer.parseInt(_selectToField.getText())
                     > _sequenceview.get_TextArea().getText().length()) {
-                ClothoDialogBox toolsDialog = new ClothoDialogBox("SequenceView "
-                        + "Tools Error", "Cannot select because one of the "
+//                ClothoDialogBox toolsDialog = new ClothoDialogBox("SequenceView "
+//                        + "Tools Error", "Cannot select because one of the "
+//                        + "following happened:\n"
+//                        + "1. From and/or To fields are negative,\n"
+//                        + "2. From and/or To fields are over the sequence length,\n"
+//                        + "3. From Field is greater than To Field.");
+//                toolsDialog.show_Dialog(javax.swing.JOptionPane.ERROR_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(new JFrame(), "Cannot select because one of the "
                         + "following happened:\n"
                         + "1. From and/or To fields are negative,\n"
                         + "2. From and/or To fields are over the sequence length,\n"
-                        + "3. From Field is greater than To Field.");
-                toolsDialog.show_Dialog(javax.swing.JOptionPane.ERROR_MESSAGE);
+                        + "3. From Field is greater than To Field.", "Sequence View Tools Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                 return;
             }
             _sequenceview.get_TextArea().grabFocus();
@@ -2578,9 +2590,10 @@ public class SequenceView {
             _search = _searcher.getSearch();
             _hitCount = _searcher.getHitCount();
             if (_hitCount < 1) {
-                ClothoDialogBox toolsDialog = new ClothoDialogBox("SequenceView "
-                        + "Tools Message", "No hits!");
-                toolsDialog.show_Dialog(javax.swing.JOptionPane.INFORMATION_MESSAGE);
+//                ClothoDialogBox toolsDialog = new ClothoDialogBox("SequenceView "
+//                        + "Tools Message", "No hits!");
+//                toolsDialog.show_Dialog(javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(new JFrame(), "No hits!", "Sequence View: Tools Message", javax.swing.JOptionPane.INFORMATION_MESSAGE);
                 _selectedHit = 0;
                 return;
             }
@@ -2655,9 +2668,12 @@ public class SequenceView {
             }
             //end of hits, trigger condition for new search since since the _search & _hitCount is not valid anymore
             if (_selectedHit > _hitCount - 1) {
-                ClothoDialogBox toolsDialog = new ClothoDialogBox("SequenceView "
-                        + "Tools Message", "No more hits!");
-                toolsDialog.show_Dialog(javax.swing.JOptionPane.INFORMATION_MESSAGE);
+//                ClothoDialogBox toolsDialog = new ClothoDialogBox("SequenceView "
+//                        + "Tools Message", "No more hits!");
+//                toolsDialog.show_Dialog(javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(new JFrame(), "No more hits!", "Sequence View: Tools Message", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+
                 _search = null;
                 _sequenceview.get_TextArea().setCaretPosition(0);
                 return;
@@ -2667,9 +2683,10 @@ public class SequenceView {
             //uncomment
 
             if (_searcher.getHitCount() < 1) {
-                ClothoDialogBox toolsDialog = new ClothoDialogBox("SequenceView "
-                        + "Tools Message", "No Hits!");
-                toolsDialog.show_Dialog(javax.swing.JOptionPane.INFORMATION_MESSAGE);
+//                ClothoDialogBox toolsDialog = new ClothoDialogBox("SequenceView "
+//                        + "Tools Message", "No Hits!");
+//                toolsDialog.show_Dialog(javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(new JFrame(), "No hits!", "Sequence View: Tools Message", javax.swing.JOptionPane.INFORMATION_MESSAGE);
                 _sequenceviewtools.toFront();
                 return;
             }
@@ -3343,15 +3360,17 @@ public class SequenceView {
         if ((currentText == null) || (currentText.equalsIgnoreCase(""))) { //if currently empty, don't need to ask for replace/append
             actionChoice = 0; //Replace All
         } else {
-            ClothoDialogBox db = new ClothoDialogBox("Sequence View Import", "Incoming sequence information. What should be done?");
+//            ClothoDialogBox db = new ClothoDialogBox("Sequence View Import", "Incoming sequence information. What should be done?");
             String[] options = {"Replace All", "Replace Selected", "Append", "Cancel"};
-            actionChoice = db.show_optionDialog(javax.swing.JOptionPane.YES_NO_CANCEL_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, options, options[0]);
+//            actionChoice = db.show_optionDialog(javax.swing.JOptionPane.YES_NO_CANCEL_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, options, options[0]);
+            actionChoice = javax.swing.JOptionPane.showOptionDialog(new JFrame(), "Incoming sequence information. What should be done?", "Sequence View Import", javax.swing.JOptionPane.YES_NO_CANCEL_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
         }
         //check for valid characters
         if (!this.checkValidSequence(newSequence, this.getDegeneracy())) {
-            ClothoDialogBox dbox = new ClothoDialogBox("Sequence View Import", "Imported sequence contains non-standard characters. Continue?");
+//            ClothoDialogBox dbox = new ClothoDialogBox("Sequence View Import", "Imported sequence contains non-standard characters. Continue?");
             String[] choices = {"Continue", "Cancel"};
-            int getChoice = dbox.show_optionDialog(javax.swing.JOptionPane.YES_NO_CANCEL_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, choices, choices[1]);
+//            int getChoice = dbox.show_optionDialog(javax.swing.JOptionPane.YES_NO_CANCEL_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, choices, choices[1]);
+            int getChoice = javax.swing.JOptionPane.showOptionDialog(new JFrame(), "Imported sequence contains non-standard characters. Continue?", "Sequence View Import", javax.swing.JOptionPane.YES_NO_CANCEL_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, null, choices, choices[1]);
             if (getChoice == 1) {
                 return;
             }
@@ -3554,11 +3573,14 @@ public class SequenceView {
             // ClothoCore.getCore().log("Allow Degeneracy Selected\n", LogLevel.MESSAGE);
             _allowDegeneracy = true;
             if (!_longTimeHighlightWarned) {
-                ClothoDialogBox dialogBox = new ClothoDialogBox("Highlighting Warning",
-                        "While checked, highlighting may take an extended \n"
+//                ClothoDialogBox dialogBox = new ClothoDialogBox("Highlighting Warning",
+//                        "While checked, highlighting may take an extended \n"
+//                        + "period of time to search for enzymes/features. \n"
+//                        + "Uncheck Allow Degeneracy if this is not desired.");
+//                dialogBox.show_Dialog(javax.swing.JOptionPane.WARNING_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(new JFrame(), "While checked, highlighting may take an extended \n"
                         + "period of time to search for enzymes/features. \n"
-                        + "Uncheck Allow Degeneracy if this is not desired.");
-                dialogBox.show_Dialog(javax.swing.JOptionPane.WARNING_MESSAGE);
+                        + "Uncheck Allow Degeneracy if this is not desired.", "Highlighting Warning", javax.swing.JOptionPane.WARNING_MESSAGE);
                 _longTimeHighlightWarned = true;
             }
         }
@@ -3713,20 +3735,20 @@ public class SequenceView {
             _needsToRefreshHighlight = false;
         }
         if (_insertIsInsideAHighlight) {
-            ClothoDialogBox dialogBox = new ClothoDialogBox("Insertion "
-                    + "Warning", "You are inserting text inside a feature.\n "
-                    + "Highlights will be retained until cleared.");
-            dialogBox.show_Dialog(javax.swing.JOptionPane.WARNING_MESSAGE);
-            _sequenceview.toFront();
+//            ClothoDialogBox dialogBox = new ClothoDialogBox("Insertion "
+//                    + "Warning", "You are inserting text inside a feature.\n "
+//                    + "Highlights will be retained until cleared.");
+//            dialogBox.show_Dialog(javax.swing.JOptionPane.WARNING_MESSAGE);
+//            _sequenceview.toFront();
             _insertIsInsideAHighlight = false;
         }
 
         if (_removalIsAffectingAHighlight) {
-            ClothoDialogBox dialogBox = new ClothoDialogBox("Removal "
-                    + "Warning", "You are removing text from a feature.\n "
-                    + "Highlights will be retained until cleared.");
-            dialogBox.show_Dialog(javax.swing.JOptionPane.WARNING_MESSAGE);
-            _sequenceview.toFront();
+//            ClothoDialogBox dialogBox = new ClothoDialogBox("Removal "
+//                    + "Warning", "You are removing text from a feature.\n "
+//                    + "Highlights will be retained until cleared.");
+//            dialogBox.show_Dialog(javax.swing.JOptionPane.WARNING_MESSAGE);
+//            _sequenceview.toFront();
             _removalIsAffectingAHighlight = false;
         }
     }
@@ -3793,10 +3815,10 @@ public class SequenceView {
      * @param funcName - the function name in the dialog box
      */
     private void askHighlight(String funcName) {
-        ClothoDialogBox toolsDialog = new ClothoDialogBox("SequenceView "
-                + "Tools Message", "Need to highlight the sequence for " + funcName);
-        toolsDialog.show_Dialog(javax.swing.JOptionPane.INFORMATION_MESSAGE);
-
+//        ClothoDialogBox toolsDialog = new ClothoDialogBox("SequenceView "
+//                + "Tools Message", "Need to highlight the sequence for " + funcName);
+//        toolsDialog.show_Dialog(javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        javax.swing.JOptionPane.showMessageDialog(new JFrame(), "Need to highlight the sequence for " + funcName, "Sequence View Tools Message", javax.swing.JOptionPane.INFORMATION_MESSAGE);
     }
 
     protected boolean checkValidSequence(String newS, boolean degenerated) {
