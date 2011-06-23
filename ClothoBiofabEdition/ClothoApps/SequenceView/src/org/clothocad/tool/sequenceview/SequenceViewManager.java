@@ -31,6 +31,7 @@ import org.clothocore.api.data.ObjBase;
 import org.clothocore.api.plugin.ClothoTool;
 //commented
 //import org.clothocad.core.ClothoTool;
+import org.clothocore.api.plugin.ClothoViewer;
 import org.clothocore.util.basic.UnknownKeywordException;
 //        clothocad.util.UnknownKeywordException; //commented
 

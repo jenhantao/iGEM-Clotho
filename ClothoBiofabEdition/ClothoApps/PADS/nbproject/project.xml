@@ -3,8 +3,8 @@
     <type>org.netbeans.modules.apisupport.project</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
-            <code-name-base>org.clothocad.tool.sequenceview</code-name-base>
-            <suite-component/>
+            <code-name-base>org.clothocad.tool.pads</code-name-base>
+            <standalone/>
             <module-dependencies>
                 <dependency>
                     <code-name-base>org.clothocore</code-name-base>
@@ -13,15 +13,6 @@
                     <run-dependency>
                         <release-version>1</release-version>
                         <specification-version>1</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.modules.settings</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>1.26.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -40,26 +31,12 @@
                         <specification-version>8.6.1</specification-version>
                     </run-dependency>
                 </dependency>
-                <dependency>
-                    <code-name-base>org.openide.util.lookup</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>8.3.1</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.openide.windows</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>6.33.1</specification-version>
-                    </run-dependency>
-                </dependency>
             </module-dependencies>
-            <public-packages>
-                <package>org.clothocad.tool.sequenceview</package>
-            </public-packages>
+            <public-packages/>
+            <class-path-extension>
+                <runtime-relative-path>ext/org-openide-util.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/org-openide-util.jar</binary-origin>
+            </class-path-extension>
         </data>
     </configuration>
 </project>

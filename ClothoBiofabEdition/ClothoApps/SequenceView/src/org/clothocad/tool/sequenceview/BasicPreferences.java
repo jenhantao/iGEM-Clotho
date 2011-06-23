@@ -34,13 +34,21 @@ public class BasicPreferences extends javax.swing.JFrame implements ChangeListen
         initComponents();
         jColorChooser1.getSelectionModel().addChangeListener(this);
         jColorChooser1.setPreviewPanel(new JPanel());
-        AbstractColorChooserPanel[] cc= jColorChooser1.getChooserPanels();
-        for (int i=1;i<cc.length;i++){
+        AbstractColorChooserPanel[] cc = jColorChooser1.getChooserPanels();
+        for (int i = 1; i < cc.length; i++) {
             jColorChooser1.removeChooserPanel(cc[i]);
         }
-        this.setSize(450,300);
+        this.setSize(450, 330);
         selectedColorPanel.setBackground(jColorChooser1.getColor());
         selectedColorPanel.setVisible(true);
+        if (_sv.getMagicHighlight()) {
+            yesRadioButton.setSelected(true);
+            noRadioButton.setSelected(false);
+        } else {
+            yesRadioButton.setSelected(false);
+            noRadioButton.setSelected(true);
+        }
+        turnOnMagicHighlight = false;
     }
 
     /** This method is called from within the constructor to
@@ -63,6 +71,9 @@ public class BasicPreferences extends javax.swing.JFrame implements ChangeListen
         cancelButton = new javax.swing.JButton();
         jColorChooser1 = new javax.swing.JColorChooser();
         selectedColorPanel = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        yesRadioButton = new javax.swing.JRadioButton();
+        noRadioButton = new javax.swing.JRadioButton();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -77,7 +88,6 @@ public class BasicPreferences extends javax.swing.JFrame implements ChangeListen
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(org.openide.util.NbBundle.getMessage(BasicPreferences.class, "BasicPreferences.title")); // NOI18N
-        setAlwaysOnTop(true);
         setName("BasicPreferencesFrame"); // NOI18N
 
         jLabel1.setText(org.openide.util.NbBundle.getMessage(BasicPreferences.class, "BasicPreferences.jLabel1.text")); // NOI18N
@@ -140,12 +150,28 @@ public class BasicPreferences extends javax.swing.JFrame implements ChangeListen
         selectedColorPanel.setLayout(selectedColorPanelLayout);
         selectedColorPanelLayout.setHorizontalGroup(
             selectedColorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 76, Short.MAX_VALUE)
+            .addGap(0, 55, Short.MAX_VALUE)
         );
         selectedColorPanelLayout.setVerticalGroup(
             selectedColorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 76, Short.MAX_VALUE)
+            .addGap(0, 53, Short.MAX_VALUE)
         );
+
+        jLabel3.setText(org.openide.util.NbBundle.getMessage(BasicPreferences.class, "BasicPreferences.jLabel3.text")); // NOI18N
+
+        yesRadioButton.setText(org.openide.util.NbBundle.getMessage(BasicPreferences.class, "BasicPreferences.yesRadioButton.text")); // NOI18N
+        yesRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                yesRadioButtonActionPerformed(evt);
+            }
+        });
+
+        noRadioButton.setText(org.openide.util.NbBundle.getMessage(BasicPreferences.class, "BasicPreferences.noRadioButton.text")); // NOI18N
+        noRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                noRadioButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -156,18 +182,26 @@ public class BasicPreferences extends javax.swing.JFrame implements ChangeListen
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(userHighlightColorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(changeUserHighlightsButton)
-                            .addComponent(changeORFHighlightsButton))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(selectedColorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel2))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(userHighlightColorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(changeUserHighlightsButton)
+                                    .addComponent(changeORFHighlightsButton))
+                                .addGap(27, 27, 27)
+                                .addComponent(selectedColorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(yesRadioButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(noRadioButton))))
                     .addComponent(jColorChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
@@ -188,26 +222,35 @@ public class BasicPreferences extends javax.swing.JFrame implements ChangeListen
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(userHighlightColorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(changeUserHighlightsButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(changeORFHighlightsButton))
-                    .addComponent(selectedColorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jColorChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cancelButton)
-                    .addComponent(saveButton))
-                .addGap(126, 126, 126))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(userHighlightColorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel1))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(selectedColorPanel, javax.swing.GroupLayout.Alignment.LEADING, 0, 57, Short.MAX_VALUE)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(changeUserHighlightsButton)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(changeORFHighlightsButton))))
+                        .addGap(49, 49, 49)
+                        .addComponent(jColorChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cancelButton)
+                            .addComponent(saveButton))
+                        .addGap(105, 105, 105))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(yesRadioButton)
+                            .addComponent(noRadioButton))
+                        .addGap(279, 279, 279))))
         );
 
         layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {changeORFHighlightsButton, changeUserHighlightsButton});
@@ -232,6 +275,9 @@ public class BasicPreferences extends javax.swing.JFrame implements ChangeListen
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         _sv.changeORFColor(selectedORFHighlightColor);
         _sv.changeUserHighlightColor(selectedUserHighlightColor);
+        if(turnOnMagicHighlight) {
+            _sv.setMagicHighlight(turnOnMagicHighlight);
+        }
         this.dispose();
     }//GEN-LAST:event_saveButtonActionPerformed
 
@@ -240,6 +286,18 @@ public class BasicPreferences extends javax.swing.JFrame implements ChangeListen
         userHighlightColorLabel.setBackground(selectedUserHighlightColor);
         userHighlightColorLabel.repaint();
     }//GEN-LAST:event_changeUserHighlightsButtonActionPerformed
+
+    private void yesRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yesRadioButtonActionPerformed
+        yesRadioButton.setSelected(true);
+        noRadioButton.setSelected(false);
+        turnOnMagicHighlight = true;
+    }//GEN-LAST:event_yesRadioButtonActionPerformed
+
+    private void noRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_noRadioButtonActionPerformed
+        yesRadioButton.setSelected(false);
+        noRadioButton.setSelected(true);
+        turnOnMagicHighlight = false;
+    }//GEN-LAST:event_noRadioButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -259,15 +317,19 @@ public class BasicPreferences extends javax.swing.JFrame implements ChangeListen
     private javax.swing.JColorChooser jColorChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JRadioButton noRadioButton;
     private javax.swing.JButton saveButton;
     private javax.swing.JPanel selectedColorPanel;
     private javax.swing.JLabel userHighlightColorLabel;
+    private javax.swing.JRadioButton yesRadioButton;
     // End of variables declaration//GEN-END:variables
     private SequenceView _sv;
     private Color selectedUserHighlightColor;
     private Color selectedORFHighlightColor;
+    private boolean turnOnMagicHighlight;
 
     @Override
     public void stateChanged(ChangeEvent e) {

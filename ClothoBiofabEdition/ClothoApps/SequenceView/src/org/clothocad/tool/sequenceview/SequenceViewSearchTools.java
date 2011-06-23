@@ -681,6 +681,11 @@ public class SequenceViewSearchTools extends javax.swing.JFrame {
                 caseSensitiveCheckItemStateChanged(evt);
             }
         });
+        caseSensitiveCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                caseSensitiveCheckActionPerformed(evt);
+            }
+        });
 
         findRevCompCheck.setText("Find only rev-comp");
         findRevCompCheck.setToolTipText("Check to find only reverse-complement");
@@ -886,10 +891,17 @@ private void upperCaseButtonActionPerformed(java.awt.event.ActionEvent evt) {//G
 private void packageAsPartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_packageAsPartButtonActionPerformed
     _sv.packagePartOpen();
 }//GEN-LAST:event_packageAsPartButtonActionPerformed
-
+@Deprecated
+/**
+ * Not used by any button
+ */
 private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
     _sv.exportSeq();
 }//GEN-LAST:event_exportButtonActionPerformed
+
+private void caseSensitiveCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_caseSensitiveCheckActionPerformed
+    // TODO add your handling code here:
+}//GEN-LAST:event_caseSensitiveCheckActionPerformed
 
     /**
     * @param args the command line arguments

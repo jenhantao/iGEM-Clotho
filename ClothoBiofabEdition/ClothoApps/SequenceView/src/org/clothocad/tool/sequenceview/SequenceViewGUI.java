@@ -70,7 +70,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         SequenceViewDocumentListener listener3 = new SequenceViewDocumentListener(SequenceTextPane, _sv);
         SequenceTextPane.getDocument().addDocumentListener(listener3);
         SequenceTextPane.setSelectedTextColor(Color.WHITE);
-        SequenceTextPane.setSelectionColor(Color.gray);
+        SequenceTextPane.setSelectionColor(Color.GRAY);
         jLabel30.setVisible(false);
 
         setIconImage(ImageSource.getTinyLogo());
@@ -212,7 +212,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
 
     public void setIndexTextArea(String s) {
         indexTextArea.setText(s);
-        
+
     }
 
     /** This method is called from within the constructor to
@@ -227,15 +227,16 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         mainToolBar = new javax.swing.JToolBar();
         revCompButton = new javax.swing.JButton();
-        featuresButton = new javax.swing.JButton();
         transButton = new javax.swing.JButton();
         revTransButton = new javax.swing.JButton();
         uppperCaseButton = new javax.swing.JButton();
         switchButton = new javax.swing.JButton();
         lowerCaseButton = new javax.swing.JButton();
         packageButton = new javax.swing.JButton();
+        featuresButton = new javax.swing.JButton();
         resSiteButton = new javax.swing.JButton();
-        topComponentViewButton = new javax.swing.JButton();
+        highlightButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         columnCountJLabel = new javax.swing.JLabel();
@@ -367,19 +368,6 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         });
         mainToolBar.add(revCompButton);
 
-        featuresButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/clothocad/tool/sequenceview/images/icons/HighlightFeatures.png"))); // NOI18N
-        featuresButton.setMnemonic('F');
-        featuresButton.setToolTipText("Highlight Features"); // NOI18N
-        featuresButton.setFocusable(false);
-        featuresButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        featuresButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        featuresButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                featuresButtonActionPerformed(evt);
-            }
-        });
-        mainToolBar.add(featuresButton);
-
         transButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/clothocad/tool/sequenceview/images/icons/Translate.png"))); // NOI18N
         transButton.setMnemonic('T');
         transButton.setToolTipText("Translate"); // NOI18N
@@ -446,7 +434,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
 
         packageButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/clothocad/tool/sequenceview/images/icons/packagePartIcon16.png"))); // NOI18N
         packageButton.setMnemonic('P');
-        packageButton.setToolTipText("Package as Part: Associates it with a connection"); // NOI18N
+        packageButton.setToolTipText("Package as Clotho object: Associates it with a connection"); // NOI18N
         packageButton.setFocusable(false);
         packageButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         packageButton.addActionListener(new java.awt.event.ActionListener() {
@@ -455,6 +443,19 @@ public class SequenceViewGUI extends javax.swing.JFrame {
             }
         });
         mainToolBar.add(packageButton);
+
+        featuresButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/clothocad/tool/sequenceview/images/icons/HighlightFeatures.png"))); // NOI18N
+        featuresButton.setMnemonic('F');
+        featuresButton.setToolTipText("Highlight Features"); // NOI18N
+        featuresButton.setFocusable(false);
+        featuresButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        featuresButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        featuresButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                featuresButtonActionPerformed(evt);
+            }
+        });
+        mainToolBar.add(featuresButton);
 
         resSiteButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/clothocad/tool/sequenceview/images/icons/HighlightRestrictionSites.png"))); // NOI18N
         resSiteButton.setMnemonic('H');
@@ -469,16 +470,29 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         });
         mainToolBar.add(resSiteButton);
 
-        topComponentViewButton.setText("TopComponent View");
-        topComponentViewButton.setFocusable(false);
-        topComponentViewButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        topComponentViewButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        topComponentViewButton.addActionListener(new java.awt.event.ActionListener() {
+        highlightButton.setText("Highlight");
+        highlightButton.setToolTipText("Highlight selected sequence");
+        highlightButton.setFocusable(false);
+        highlightButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        highlightButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        highlightButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                topComponentViewButtonActionPerformed(evt);
+                highlightButtonActionPerformed(evt);
             }
         });
-        mainToolBar.add(topComponentViewButton);
+        mainToolBar.add(highlightButton);
+
+        jButton1.setText("Clear All Highlighting");
+        jButton1.setToolTipText("Clear all highlighting");
+        jButton1.setFocusable(false);
+        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        mainToolBar.add(jButton1);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel1.setText("Location"); // NOI18N
@@ -766,7 +780,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
                     .addContainerGap(22, Short.MAX_VALUE)))
         );
 
-        SequenceTextPane.setFont(new java.awt.Font("Courier New", 0, 11));
+        SequenceTextPane.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
         SequenceTextPane.setDragEnabled(true);
         SequenceTextPane.setMargin(new java.awt.Insets(0, 0, 0, 0));
         SequenceTextPane.addCaretListener(new javax.swing.event.CaretListener() {
@@ -1135,7 +1149,8 @@ public class SequenceViewGUI extends javax.swing.JFrame {
             }
         });
 
-        highlightSelectedMenuItem.setText("Highlight");
+        highlightSelectedMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.CTRL_MASK));
+        highlightSelectedMenuItem.setText("Highlight Selected");
         highlightSelectedMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 highlightSelectedMenuItemActionPerformed(evt);
@@ -1304,6 +1319,7 @@ private void switchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 }//GEN-LAST:event_switchButtonActionPerformed
 
 private void resSiteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resSiteButtonActionPerformed
+    _sv.highlightRestrictionSites();
 }//GEN-LAST:event_resSiteButtonActionPerformed
 
 private void keyReleasedJTextPane(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyReleasedJTextPane
@@ -1326,16 +1342,16 @@ private void ExitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 //        ClothoDialogBox db = new ClothoDialogBox("Warning!", "Sequence View contains unsaved data!  Close without saving?");
         String[] options = {"Yes Close", "No", "Save", "Hide"};
 //        int chosen = db.show_optionDialog(javax.swing.JOptionPane.YES_NO_CANCEL_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, options, options[2]);
-        int chosen =javax.swing.JOptionPane.showOptionDialog(
-			    null,
-			    "Sequence View contains unsaved data!  Close without saving?",
-                            "Warning!",
-			    javax.swing.JOptionPane.YES_NO_CANCEL_OPTION,
-                            javax.swing.JOptionPane.QUESTION_MESSAGE,
-                            null,
-                            options,
-                            options[2]);//FIXME replace with ClothoDialogBox
-        
+        int chosen = javax.swing.JOptionPane.showOptionDialog(
+                null,
+                "Sequence View contains unsaved data!  Close without saving?",
+                "Warning!",
+                javax.swing.JOptionPane.YES_NO_CANCEL_OPTION,
+                javax.swing.JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[2]);//FIXME replace with ClothoDialogBox
+
         if (chosen == javax.swing.JOptionPane.YES_OPTION) {
             // No longer clears data on close, since windows can be
             // re-opened after they are closed.
@@ -1530,7 +1546,7 @@ private void redoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 }//GEN-LAST:event_redoMenuItemActionPerformed
 
 private void featuresButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_featuresButtonActionPerformed
-    _sv.processSearchToolAction(evt, "Highlight Features");
+    _sv.highlightFeatures();
 }//GEN-LAST:event_featuresButtonActionPerformed
 
 private void createPartMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createPartMenuItemActionPerformed
@@ -1560,10 +1576,10 @@ private void undoMenuItemActionPerformed1(java.awt.event.ActionEvent evt) {//GEN
 
 private void revCompMenuItemActionPerformed1(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_revCompMenuItemActionPerformed1
     // TODO add your handling code here:
-    if (SequenceTextPane.getSelectedText()!=null ) {
-    NucSeq ns = new NucSeq(SequenceTextPane.getSelectedText());
-    
-    OutputTextArea.setText(ns.revComp());
+    if (SequenceTextPane.getSelectedText() != null) {
+        NucSeq ns = new NucSeq(SequenceTextPane.getSelectedText());
+
+        OutputTextArea.setText(ns.revComp());
     }
 
 }//GEN-LAST:event_revCompMenuItemActionPerformed1
@@ -1576,26 +1592,6 @@ private void editFeatureLibraryMenuItemActionPerformed(java.awt.event.ActionEven
         }
     }
 }//GEN-LAST:event_editFeatureLibraryMenuItemActionPerformed
-
-private void topComponentViewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_topComponentViewButtonActionPerformed
-    guiContentPane = (JComponent) this.getContentPane();
-    guiRootPane = this.getRootPane();
-    SwingUtilities.invokeLater(new Runnable() {
-
-        @Override
-        public void run() {
-            TopComponent tc = new TopComponent();
-            tc.setLayout(new BorderLayout());
-            JScrollPane sp = new JScrollPane(guiContentPane);
-            tc.add(SequenceViewMenuBar, BorderLayout.NORTH);
-            tc.add(sp, BorderLayout.CENTER);
-            tc.setName("Sequence View");
-            tc.open();
-            tc.requestActive();
-
-        }
-    });
-    this.dispose();}//GEN-LAST:event_topComponentViewButtonActionPerformed
 
 private void WindowMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_WindowMenuActionPerformed
 }//GEN-LAST:event_WindowMenuActionPerformed
@@ -1611,6 +1607,15 @@ private void HighlightMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 private void highlightSelectedMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_highlightSelectedMenuItemActionPerformed
     _sv.highlightUserSelected();
 }//GEN-LAST:event_highlightSelectedMenuItemActionPerformed
+
+private void highlightButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_highlightButtonActionPerformed
+    _sv.highlightUserSelected();
+}//GEN-LAST:event_highlightButtonActionPerformed
+
+private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+_sv.removeFeatureEnzymeHighlights();
+_sv.removeUserSelectedHighlights();
+}//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1671,11 +1676,13 @@ private void highlightSelectedMenuItemActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JButton featuresButton;
     private javax.swing.JMenuItem findMenuItem;
     private javax.swing.JMenuItem helpMenuItem;
+    private javax.swing.JButton highlightButton;
     private javax.swing.JMenuItem highlightEnzMenuItem;
     private javax.swing.JMenuItem highlightFeaturesEnzymesMenuItem;
     private javax.swing.JMenuItem highlightFeaturesMenuItem;
     private javax.swing.JMenuItem highlightSelectedMenuItem;
     private javax.swing.JTextArea indexTextArea;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1743,7 +1750,6 @@ private void highlightSelectedMenuItemActionPerformed(java.awt.event.ActionEvent
     private javax.swing.JButton revTransButton;
     private javax.swing.JMenuItem revTranslateMenuItem;
     private javax.swing.JButton switchButton;
-    private javax.swing.JButton topComponentViewButton;
     private javax.swing.JButton transButton;
     private javax.swing.JMenuItem undoMenuItem;
     private javax.swing.JButton uppperCaseButton;
