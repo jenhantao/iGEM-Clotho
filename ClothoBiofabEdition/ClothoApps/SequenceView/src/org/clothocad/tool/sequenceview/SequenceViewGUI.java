@@ -333,6 +333,9 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         removeUserSelectedHighlightMenuItem = new javax.swing.JMenuItem();
         jSeparator4 = new javax.swing.JSeparator();
         editFeatureLibraryMenuItem = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        importGenbankMenuItem = new javax.swing.JMenuItem();
+        importApEMenuItem = new javax.swing.JMenuItem();
         preferenceMenuItem = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JSeparator();
         WindowMenu = new javax.swing.JMenu();
@@ -780,7 +783,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
                     .addContainerGap(22, Short.MAX_VALUE)))
         );
 
-        SequenceTextPane.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
+        SequenceTextPane.setFont(new java.awt.Font("Courier New", 0, 11));
         SequenceTextPane.setDragEnabled(true);
         SequenceTextPane.setMargin(new java.awt.Insets(0, 0, 0, 0));
         SequenceTextPane.addCaretListener(new javax.swing.event.CaretListener() {
@@ -1220,6 +1223,26 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         });
         HighlightMenu.add(editFeatureLibraryMenuItem);
 
+        jMenu1.setText("Import Features");
+
+        importGenbankMenuItem.setText("Import Genbank Features");
+        importGenbankMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importGenbankMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(importGenbankMenuItem);
+
+        importApEMenuItem.setText("Import ApE Features");
+        importApEMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importApEMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(importApEMenuItem);
+
+        HighlightMenu.add(jMenu1);
+
         preferenceMenuItem.setText("Preferences"); // NOI18N
         preferenceMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1613,9 +1636,17 @@ private void highlightButtonActionPerformed(java.awt.event.ActionEvent evt) {//G
 }//GEN-LAST:event_highlightButtonActionPerformed
 
 private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-_sv.removeFeatureEnzymeHighlights();
-_sv.removeUserSelectedHighlights();
+    _sv.removeFeatureEnzymeHighlights();
+    _sv.removeUserSelectedHighlights();
 }//GEN-LAST:event_jButton1ActionPerformed
+
+private void importGenbankMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importGenbankMenuItemActionPerformed
+    _sv.importGenbankFeatures();
+}//GEN-LAST:event_importGenbankMenuItemActionPerformed
+
+private void importApEMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importApEMenuItemActionPerformed
+    _sv.importApEFeatures();
+}//GEN-LAST:event_importApEMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1681,6 +1712,8 @@ _sv.removeUserSelectedHighlights();
     private javax.swing.JMenuItem highlightFeaturesEnzymesMenuItem;
     private javax.swing.JMenuItem highlightFeaturesMenuItem;
     private javax.swing.JMenuItem highlightSelectedMenuItem;
+    private javax.swing.JMenuItem importApEMenuItem;
+    private javax.swing.JMenuItem importGenbankMenuItem;
     private javax.swing.JTextArea indexTextArea;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
@@ -1712,6 +1745,7 @@ _sv.removeUserSelectedHighlights();
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;

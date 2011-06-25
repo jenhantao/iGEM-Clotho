@@ -22,15 +22,19 @@ ENHANCEMENTS, OR MODIFICATIONS..
  */
 package org.clothocad.tool.sequenceview;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.Color;
+import java.awt.Event;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -38,7 +42,10 @@ import java.util.HashSet;
 import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -94,7 +101,9 @@ import org.clothocore.api.core.Collator;
 import org.clothocore.api.core.Collector;
 import org.clothocore.api.core.wrapper.ToolWrapper;
 import org.clothocore.api.data.Annotation;
+import org.clothocore.api.data.Collection;
 import org.clothocore.api.data.Feature;
+import org.clothocore.api.data.ObjLink;
 import org.clothocore.api.data.ObjType;
 import org.clothocore.api.data.Person;
 import org.clothocore.util.misc.BareBonesBrowserLaunch;
@@ -112,9 +121,6 @@ public class SequenceView {
     private static int numOfSeqViews = 0;
 
     public SequenceView(String n, String d, SequenceViewManager m, int index, HashMap<String, SequenceViewPlugInInterface> pi) {
-
-
-
         _manager = m;
         _myIndex = index;
         _annotationsOn = false;
@@ -170,20 +176,8 @@ public class SequenceView {
         _undo = new UndoManager();
         undoAction = new UndoAction();
         redoAction = new RedoAction();
-
         Document doc = _sequenceview.get_TextArea().getDocument();
         doc.addUndoableEditListener(new SequenceUndoableEditListener());
-//commented
-        //_sequenceUtils = new SequenceUtils(_dnaType);
-
-        //_undoAction = new ClothoUndoAction(_undo);
-        //_redoAction = new ClothoRedoAction(_undo);
-        //_undoAction.addRedo(_redoAction);
-        //_redoAction.addUndo(_undoAction);
-        //doc.addUndoableEditListener(new ClothoUndoableActionListener(_undo, _undoAction, _redoAction));
-
-//        _preferences = Preferences.userNodeForPackage(SequenceView.class);
-        //c.registry.registerProvider(this, "sequence");
     }
 
     class SequenceUndoableEditListener
@@ -262,32 +256,6 @@ public class SequenceView {
     //highlights all nonrestriction related features
     public static int getNumberOfSequenceViews() {
         return numOfSeqViews;
-    }
-
-    /**
-     * Packages a ClothoData object and sends it to a connection for processing
-     * highlights. Currently can be Restriction Sites or Features that get highlighted.
-     * Note that this should add the data to _highlightData.
-     * For Restriction Sites:
-     * type = "Restriction Sites"
-     * 
-     * For Features:
-     * type = "Features"
-     * @param type
-     */
-    public void callHighlights(String s) {
-        String selectedText = _sequenceview.get_TextArea().getSelectedText();
-        if (s.equalsIgnoreCase("Restriction Sites")) {
-            //commented
-            //EnzymeLibraryTool elt = (EnzymeLibraryTool) ClothoCore.getCore().getTool(EnzymeLibraryTool.class);
-            // elt.highlightSites();
-        } else if (s.equalsIgnoreCase("Features")) {
-            //commented
-            //FeatureLibraryTool flt = (FeatureLibraryTool) ClothoCore.getCore().getTool(FeatureLibraryTool.class);
-            //flt.highlightFeatures();
-        }
-
-        //ClothoCore.getCore().log("Processing Tool Action Sending to Connection...", LogLevel.MESSAGE);
     }
 
     /**
@@ -383,7 +351,6 @@ public class SequenceView {
             //System.out.print(rowValues + "\n");
             indices = indices + rowValues + "\n";
         }
-        //JLabel label = new JLabel();
         _sequenceview.setIndexTextArea(indices);
 
     }
@@ -556,7 +523,6 @@ public class SequenceView {
     public Integer createNewWindow() {
         SequenceView seqView = new SequenceView("SequenceView", "SequenceView", _manager, _manager.getSequenceViewArray().size(), _plugIns);
         //seqView.activate();
-        seqView.load_preferences();
         _manager.add(seqView);
         _manager.setMainSequenceView(seqView);
         seqView.run();
@@ -1207,7 +1173,8 @@ public class SequenceView {
     }
 
     public String getSequence() {
-        return _sequenceview.get_TextArea().getText();
+        return _sequence.toString();
+
     }
 
     /**
@@ -1289,136 +1256,9 @@ public class SequenceView {
         }
     }
 
-    @Deprecated
-    public void importData(SequenceViewPartExport svpe) {
-//        if (svpe.wholeSeqSel()) {
-//            svpe.getDataPane().setText(_sequenceview.get_TextArea().getText());
-//        } else if (svpe.highlightSeqSel()) {
-//            svpe.getDataPane().setText(_sequenceview.get_TextArea().getSelectedText());
-//        } else if (svpe.intervalSeqSel()) {
-//            int beginIndex, endIndex;
-//            try {
-//                beginIndex = Integer.parseInt(svpe.getBeginIndex());
-//            } catch (NumberFormatException e) {
-//                ClothoDialogBox db = new ClothoDialogBox("Clotho: Packager", "Begin interval must be an integer!");
-//                db.show_Dialog(javax.swing.JOptionPane.ERROR_MESSAGE);
-//                return;
-//            }
-//
-//            try {
-//                endIndex = Integer.parseInt(svpe.getEndIndex());
-//            } catch (NumberFormatException e) {
-//                ClothoDialogBox db = new ClothoDialogBox("Clotho: Packager", "End interval must be an integer!");
-//                db.show_Dialog(javax.swing.JOptionPane.ERROR_MESSAGE);
-//                return;
-//            }
-//            //Integer beginIndex = new Integer (svpe.getBeginIndex());
-//            //Integer endIndex =  new Integer (svpe.getEndIndex());
-//            if ((endIndex <= beginIndex) || endIndex < 0 || beginIndex < 0 || endIndex > _sequenceview.get_TextArea().getText().length() || beginIndex > _sequenceview.get_TextArea().getText().length()) {
-//                ClothoDialogBox db = new ClothoDialogBox("Clotho: Packager", "Sequence interval is incorrect!\nCheck the ordering, length, and make sure it is positive.");
-//                db.show_Dialog(javax.swing.JOptionPane.ERROR_MESSAGE);
-//            } else {
-//                svpe.getDataPane().setText(_sequenceview.get_TextArea().getText().substring(beginIndex, endIndex));
-//            }
-//        } else {
-//            ClothoDialogBox db = new ClothoDialogBox("Clotho: Packager", "Select an import method!");
-//            db.show_Dialog(javax.swing.JOptionPane.ERROR_MESSAGE);
-//        }
-    }
-
-    @Deprecated
-    public void load_preferences() {
-        //TODO: add load preference support
-//        String command;
-//        String token;
-//
-//        // Default Values
-//        _sequenceview.getMethylationBox().setSelected(false);
-//        _sequenceview.getCircularBox().setSelected(true);
-//        _sequenceview.getDegeneracyBox().setSelected(false);
-//
-//        // Resets ORFs, in case "_multipleStartCodons" is changed
-//        _ORFsCalculated = false;
-//        _revORFsCalculated = false;
-//
-//        _dnaType = _preferences.getBoolean("dnaType", true);
-//        _methylated = _preferences.getBoolean("methylated", false);
-//        if (_methylated == true) {
-//            _sequenceview.getMethylationBox().setSelected(true);
-//        }
-//
-//        _circular = _preferences.getBoolean("circular", true);
-//        if (_circular == false) {
-//            _sequenceview.getCircularBox().setSelected(false);
-//        }
-//
-//        _allowDegeneracy = _preferences.getBoolean("degeneracy", false);
-//        if (_allowDegeneracy == true) {
-//            _sequenceview.getDegeneracyBox().setSelected(true);
-//            ItemEvent fauxBoxClick = new ItemEvent(_sequenceview.getDegeneracyBox(), ItemEvent.ITEM_STATE_CHANGED, _sequenceview.getDegeneracyBox(), ItemEvent.SELECTED);
-//            this.update_AllowDegeneracy(fauxBoxClick);
-//        }
-//
-//        _filePath = new File(_preferences.get("filePath", "org/clothocad/documents"));
-//
-//        _multipleStartCodons = _preferences.getBoolean("multipleStartCodons", false);
-//
-//        _threeLetterCode = _preferences.getBoolean("threeLetterCode", false);
-//
-//        this.updateWindowMenus();
-    }
-
-    /**
-     *  Loads part data into the sequence view, overwriting any existing data
-     */
-    @Deprecated
-    public void loadPart() //Datum data, String level, String name)
-    {
-        //commented
-        /*
-        String title = "";
-        
-        String sequence = "";
-        Boolean circular = false;
-        if(level.equals("BioBrick"))
-        {
-        sequence = data.getFieldAsString("sequence");
-        circular = data.getFieldAsBoolean("iscircular");
-        }
-        
-        if(level.equals("DNA")){
-        sequence = data.getFieldAsDatum("insert").getFieldAsString("sequence");
-        sequence = sequence + data.getFieldAsDatum("vector").getFieldAsString("sequence");
-        circular = data.getFieldAsDatum("insert").getFieldAsBoolean("iscircular") || data.getFieldAsDatum("vector").getFieldAsBoolean("iscircular");
-        }
-        
-        if(level.equals("Sample")){
-        sequence = data.getFieldAsDatum("dna").getFieldAsDatum("insert").getFieldAsString("sequence");
-        sequence = sequence + data.getFieldAsDatum("dna").getFieldAsDatum("vector").getFieldAsString("sequence");
-        circular = data.getFieldAsDatum("dna").getFieldAsDatum("insert").getFieldAsBoolean("iscircular") || data.getFieldAsDatum("dna").getFieldAsDatum("vector").getFieldAsBoolean("iscircular");
-        }
-        
-        _sequenceview.get_TextArea().setText(sequence);
-        if (!circular) {
-        _circular = false;
-        _sequenceview.getCircularBox().setSelected(false);
-        }
-        else {
-        _circular = true;
-        _sequenceview.getCircularBox().setSelected(true);
-        }
-        
-        title = name;
-        
-        setTitle("Clotho: Sequence View (Address: " + _myIndex + " ) " + title);
-        sequenceChanged();
-         *
-         */
-    }
-
     /**
      * Loads a sequence from a specified Genbank or FASTA file
-     * 
+     * Genbank features can be imported
      * @param toLoad File to be loaded
      */
     public void loadSequence(File toLoad) {
@@ -1457,8 +1297,7 @@ public class SequenceView {
                         }
                     }.execute();
                     updateWindowMenus();
-                } // FIXME: Add more Genbank support
-                // Read in a Genbank format file
+                } // Read in a Genbank format file
                 else if (line.startsWith("LOCUS")) {
                     ArrayList<String> featureLines = new ArrayList();//holds lines that contain feature information; used to generate new features after sequence is parsed
                     String area = "";
@@ -1483,13 +1322,11 @@ public class SequenceView {
                                 toComments = toComments + comment;
                             }
                         }
-//need to move somewhere else until i have full sequence
                         if (line.startsWith("FEATURES")) {
                             area = "FEATURES";
-                            System.out.println("reading in features");
                             line = inFile.readLine().trim();
                             while (!(line.startsWith("ORIGIN"))) {
-                                if (!(line.startsWith("//"))) {
+                                if (!(line.startsWith("//")) && !(line.startsWith("SOURCE"))) {
                                     featureLines.add(line);
                                 }
                                 line = inFile.readLine().trim();
@@ -1530,19 +1367,12 @@ public class SequenceView {
                             return null;
                         }
                     }.execute();
-                    JFrame selectCollectionFrame = new JFrame("Select Collection to save features in");
-                    if (featureLines.size() > 0) {
-                        for (int i = 0; i < featureLines.size(); i++) {
-                            if (true) {
-                                String[] tokens = featureLines.get(i).split("[\\s[\\p{Punct}]]+");
-                                //first is name, second is start offset, last is end offset
-
-                                System.out.println("");
-                            }
-                        }
+                    int importOption = javax.swing.JOptionPane.showOptionDialog(new JFrame(), "Import features from genbank file?", "Sequence View Tool Message", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, null, null, null);
+                    if (importOption == 0) {
+                        new ImportFeaturesWindow("genbank", _sequence.toString(), this, featureLines);
                     }
-                    featureLines = null;
                     updateWindowMenus();
+
                 } else {
 //                    ClothoDialogBox db = new ClothoDialogBox("Clotho: Sequence View", "This does not appear to be a Genbank or FASTA formated file.\n Do you want to proceed?");
 //                    if (db.show_optionDialog(javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE) == javax.swing.JOptionPane.YES_OPTION) {
@@ -1588,6 +1418,160 @@ public class SequenceView {
 
         sequenceChanged();
         _sequenceview.requestFocus();
+    }
+
+    /**
+     * generates appropriate windows to import Genbank features
+     * @return
+     */
+    public void importGenbankFeatures() {
+        NucSeq temp = _sequence;
+        try {
+            java.io.BufferedReader inFile = null;
+            JFileChooser chooser = new JFileChooser();
+            FileNameExtensionFilter genbankFilter = new FileNameExtensionFilter("GenBank File", "gen", "gb", "gbank", "genbank");
+            chooser.addChoosableFileFilter(genbankFilter);
+            chooser.showOpenDialog(null);
+            if (chooser.getSelectedFile() != null) {
+                inFile = new java.io.BufferedReader(new java.io.FileReader(chooser.getSelectedFile()));
+                String line = inFile.readLine();
+                if (line.startsWith("LOCUS")) {
+                    ArrayList<String> featureLines = new ArrayList(); //holds lines that contain feature information; used to generate new features after sequence is parsed
+                    String area = "";
+                    String toComments = "";
+                    String sequence = "";
+                    while (line != null) {
+                        if (line.startsWith("   ")) {
+                            if (area.equals("COMMENT")) {
+                                toComments = toComments + line.substring(12, line.length());
+                            }
+                        }
+                        if (line.startsWith("COMMENT")) {
+                            String comment = line.substring(12, line.length());
+                            area = "COMMENT";
+                            // FIXME
+                            // Do something with ApE methylation data if present
+                            if (comment.startsWith("ApEinfo:methylated")) {
+                                String meth = line.substring(comment.length() - 1, comment.length());
+                            } else {
+                                toComments = toComments + comment;
+                            }
+                        }
+                        if (line.startsWith("FEATURES")) {
+                            area = "FEATURES";
+                            line = inFile.readLine().trim();
+                            while (!(line.startsWith("ORIGIN"))) {
+                                if (!(line.startsWith("//")) && !(line.startsWith("SOURCE"))) {
+                                    featureLines.add(line);
+                                }
+                                line = inFile.readLine().trim();
+                            }
+                        }
+                        if (line.startsWith("ORIGIN")) {
+                            line = inFile.readLine().trim();
+                            while (!(line.startsWith("//"))) {
+                                ArrayList<String> seq = new ArrayList(Arrays.asList(line.split(" ")));
+                                for (int i = 1; i < seq.size(); i++) {
+                                    sequence = sequence + seq.get(i);
+                                }
+                                line = inFile.readLine().trim();
+                            }
+                        }
+                        line = inFile.readLine();
+                    }
+                    new ImportFeaturesWindow("genbank", sequence, this, featureLines);
+                } else {
+                    javax.swing.JOptionPane.showMessageDialog(null, "Selected file does not appear to be a genbank file", "Sequence View Import", JOptionPane.ERROR_MESSAGE);
+                }
+                inFile.close();
+            }
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+
+    public void importApEFeatures() {
+        JFileChooser chooser = new JFileChooser();
+        chooser.showOpenDialog(null);
+        if (chooser.getSelectedFile() != null) {
+            try {
+                java.io.BufferedReader inputFile = new java.io.BufferedReader(new java.io.FileReader(chooser.getSelectedFile()));
+                String line = inputFile.readLine();
+                ArrayList<String> featureLines = new ArrayList();
+                while (line != null) {
+                    featureLines.add(line);
+                    line = inputFile.readLine();
+                }
+                if (featureLines.size() > 0) {
+                    new ImportFeaturesWindow("ApE", "", this, featureLines);
+                } else {
+                    JOptionPane.showMessageDialog(null, "File does not appear to be a valid ApE feature file", "Sequence View Import", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (java.io.IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+
+    }
+
+    /**
+     * Parses an ArrayList of strings for Genbank features
+     * @param toParse- an ArrayList of strings, each representing one line extracted from a Genbank file
+     * @param collectionLink an ObjLink that represents the collection that the new features will be saved to
+     */
+    public boolean parseForGenbankFeatures(String sequence, ObjLink collectionLink, ArrayList<String> inputLines) throws Exception {
+        Collection coll = Collector.getCollection(collectionLink.uuid);
+        int size = inputLines.size();
+        if (size > 0) {
+            for (int i = 0; i < size; i++) {
+                if (inputLines.get(i).substring(inputLines.get(i).length() - 1).matches("\\d") && !inputLines.get(i).startsWith("/")) {
+                    String[] tokens = inputLines.get(i).split("[\\s[\\p{Punct}]]+");
+                    String seq = sequence.substring(Integer.parseInt(tokens[tokens.length - 2]) - 1, Integer.parseInt(tokens[tokens.length - 1]) - 1);
+//                                    System.out.println("I found a " + tokens[0] + " which is located at (" + tokens[tokens.length - 2] + ", " + tokens[tokens.length - 1] + ")");
+
+                    i++;
+                    while (!inputLines.get(i).contains("\"")) {
+                        i++;
+                    }
+                    String name = inputLines.get(i);//not actually the name yet
+//                    tokens = inputLines.get(i).split("[\\p{Punct}]+");
+//                    String name = tokens[tokens.length - 1];
+                    name = name.substring(name.indexOf("\"") + 1, name.lastIndexOf("\""));
+                    System.out.println("name: " + name);
+                    Feature newFeature = Feature.generateFeature(name, seq, Collector.getCurrentUser(), false);
+                    if (newFeature != null) {
+                        Collector.add(newFeature);
+                        coll.addObject(newFeature);
+                        newFeature.saveDefault();
+                        coll.saveDefault();
+
+                    }
+                }
+            }
+
+        }
+        javax.swing.JOptionPane.showMessageDialog(null, "Finished importing features!", "Sequence View Import", JOptionPane.INFORMATION_MESSAGE);
+        return true;
+    }
+
+    public boolean parseForApEFeatures(ObjLink collectionLink, ArrayList<String> inputLines) throws Exception {
+        Collection coll = Collector.getCollection(collectionLink.uuid);
+        int size = inputLines.size();
+        if (size > 0) {
+            for (int i = 0; i < size; i++) {
+                String[] tokens = inputLines.get(i).split("\\t");
+                Feature newFeature = Feature.generateFeature(tokens[0], tokens[1], Collector.getCurrentUser(), false);
+                if (newFeature != null) {
+                    Collector.add(newFeature);
+                    coll.addObject(newFeature);
+                    newFeature.saveDefault();
+                    coll.saveDefault();
+                }
+            }
+        }
+        javax.swing.JOptionPane.showMessageDialog(null, "Finished importing features!", "Sequence View Import", JOptionPane.INFORMATION_MESSAGE);
+        return true;
     }
 
     /**
@@ -1642,57 +1626,6 @@ public class SequenceView {
         }
     }
 
-    /**
-     * Creates _mouseoverData from processed _highlightData. For the developer:
-     * _highlightDataIndividual(0) is name. 
-     * 1 is start search index. 
-     * 2 is end search index.
-     * 3 is the highlightPainter instantiated by highlightDataHelper's color.
-     * 4 is pattern (the sequence being highlighted).
-     * 5 is sender.
-     * @param highlightDataHelper
-     * @param sender
-     */
-    //commented
-    /*
-    public void makeHighlightData(ClothoHighlightData[] highlightDataHelper, String sender) {
-    for (int i=0; i<highlightDataHelper.length; i++) {
-    for (int j=0; j<highlightDataHelper[i].search[0].length; j++) {
-    _highlightDataIndividual = new SingleHighlight();
-    _highlightDataIndividual.add(highlightDataHelper[i].name);
-    _highlightDataIndividual.add(highlightDataHelper[i].search[0][j]);
-    _highlightDataIndividual.add(highlightDataHelper[i].search[1][j]);
-    _shrinkPainter = new ClothoHighlightPainter_Shrink(highlightDataHelper[i].color);
-    _highlightDataIndividual.add(_shrinkPainter);
-    _highlightDataIndividual.add(highlightDataHelper[i].pattern);
-    _highlightDataIndividual.add(sender);
-    //The following block sorts the arrayList if _highlightData is
-    // larger than one element.
-    if (_highlightData.size() > 1) {
-    boolean inserted = false;
-    for (int k=0; k<_highlightData.size(); k++) {
-    if ((Integer)_highlightData.get(k).get(1) >
-    (Integer)_highlightDataIndividual.get(1)) {
-    _highlightData.add(k, _highlightDataIndividual);
-    inserted = true;
-    break;
-    }
-    }
-    if (!inserted) {
-    _highlightData.add(_highlightDataIndividual);
-    inserted = true;
-    }
-    }
-    else
-    _highlightData.add(_highlightDataIndividual);
-    }
-    }
-    _highlightDataMade = true;
-    }
-    
-     *
-     *
-     */
     public void moveSequenceScrollPane() {
         JScrollPane is = _sequenceview.getIndexScroll();
         JScrollPane ss = _sequenceview.getSeqScroll();
@@ -2147,14 +2080,15 @@ public class SequenceView {
 
                     }
                 }
+                if (_annotationsArray.length > 0) {
+                    sequenceLabel.setVisible(true);
+                    sequenceName.setText(_mouseoverString);
+                } else {
+                    sequenceLabel.setVisible(false);
+                    sequenceName.setText(" ");
+                }
             }
-            if (_annotationsArray.length > 0) {
-                sequenceLabel.setVisible(true);
-                sequenceName.setText(_mouseoverString);
-            } else {
-                sequenceLabel.setVisible(false);
-                sequenceName.setText(" ");
-            }
+
         } else {
             sequenceLabel.setVisible(false);
             sequenceName.setText(" ");
@@ -3262,16 +3196,6 @@ public class SequenceView {
         updateSequenceCount(_sequenceview.getSeqCountLabel());
         configureBasePairBoth(_sequenceview.getColLabel());
         _sequence.changeSeq(_sequenceview.get_TextArea().getText());
-//        new SwingWorker() {
-//
-//            @Override
-//            protected Object doInBackground() throws Exception {
-//                Person user = Collector.getCurrentUser();
-//                _sequence.removeAnnotations();
-//                _sequence.autoAnnotate(user);
-//                return null;
-//            }
-//        }.execute();
     }
 
     /**
@@ -4025,7 +3949,7 @@ public class SequenceView {
     private HashSet _duplicates;
     private java.util.Hashtable _PoBoLHashRef;
     private int _hitCount;
-    private int _aHighlightIndex;
+//    private int _aHighlightIndex;
     private int[][] _search;
     private int _selectedHit;
     private int _seqViewNumber;

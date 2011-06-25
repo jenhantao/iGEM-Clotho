@@ -428,7 +428,7 @@ private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
     Format form = null;
     Collection coll = null;
-    if (objectTypeComboBox.getSelectedIndex() != 1) {
+    if (objectTypeComboBox.getSelectedIndex() != 1 && objectTypeComboBox.getSelectedIndex() != 0 ) {
         if (formatComboBox.getSelectedIndex() == -1) {
             statusLabel.setText("Warning: format not set");
             return;
@@ -486,7 +486,7 @@ private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
 private void objectTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_objectTypeComboBoxActionPerformed
     if (objectTypeComboBox.getSelectedItem() != null) {
-        if (!(objectTypeComboBox.getSelectedItem()).equals("Oligo")) {
+        if (!(objectTypeComboBox.getSelectedItem()).equals("Oligo") && !(objectTypeComboBox.getSelectedItem()).equals("Feature")) {
             formatLabel.setEnabled(true);
             formatComboBox.setEnabled(true);
         } else {

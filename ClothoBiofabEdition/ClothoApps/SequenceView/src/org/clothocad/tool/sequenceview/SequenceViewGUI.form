@@ -313,9 +313,6 @@
           </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="HighlightMenu">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Highlighting" noResource="true"/>
-          </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="HighlightMenuActionPerformed"/>
           </Events>
@@ -403,6 +400,29 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="editFeatureLibraryMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
+            <Menu class="javax.swing.JMenu" name="jMenu1">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Import Features"/>
+              </Properties>
+              <SubComponents>
+                <MenuItem class="javax.swing.JMenuItem" name="importGenbankMenuItem">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Import Genbank Features"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="importGenbankMenuItemActionPerformed"/>
+                  </Events>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="importApEMenuItem">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Import ApE Features"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="importApEMenuItemActionPerformed"/>
+                  </Events>
+                </MenuItem>
+              </SubComponents>
+            </Menu>
             <MenuItem class="javax.swing.JMenuItem" name="preferenceMenuItem">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Preferences" noResource="true"/>
