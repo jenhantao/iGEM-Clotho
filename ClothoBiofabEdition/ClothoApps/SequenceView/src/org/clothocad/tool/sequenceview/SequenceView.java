@@ -190,19 +190,19 @@ public class SequenceView {
 
 
 
-            JTextComponent.KeyBinding[] newBindings = {
-        new JTextComponent.KeyBinding(
-          KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK),
-          DefaultEditorKit.writableAction),
-        new JTextComponent.KeyBinding(
-          KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_MASK),
-          DefaultEditorKit.writableAction),
-        new JTextComponent.KeyBinding(
+        JTextComponent.KeyBinding[] newBindings = {
+            new JTextComponent.KeyBinding(
+            KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK),
+            DefaultEditorKit.writableAction),
+            new JTextComponent.KeyBinding(
+            KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_MASK),
+            DefaultEditorKit.writableAction),
+            new JTextComponent.KeyBinding(
             KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_MASK),
             DefaultEditorKit.writableAction)
-      };
+        };
 
-    Keymap k = _sequenceview.get_TextArea().getKeymap();
+        Keymap k = _sequenceview.get_TextArea().getKeymap();
         JTextComponent.loadKeymap(k, newBindings, _sequenceview.get_TextArea().getActions());
 
 
@@ -1556,24 +1556,21 @@ public class SequenceView {
                 if (inputLines.get(i).substring(inputLines.get(i).length() - 1).matches("\\d") && !inputLines.get(i).startsWith("/")) {
                     String[] tokens = inputLines.get(i).split("[\\s[\\p{Punct}]]+");
                     String seq = sequence.substring(Integer.parseInt(tokens[tokens.length - 2]) - 1, Integer.parseInt(tokens[tokens.length - 1]) - 1);
-//                                    System.out.println("I found a " + tokens[0] + " which is located at (" + tokens[tokens.length - 2] + ", " + tokens[tokens.length - 1] + ")");
-
-                    i++;
-                    while (!inputLines.get(i).contains("\"")) {
+                    if (!tokens[0].equalsIgnoreCase("source")) {//source is a feature that is the entire sequence. useless to retrieve this
                         i++;
-                    }
-                    String name = inputLines.get(i);//not actually the name yet
-//                    tokens = inputLines.get(i).split("[\\p{Punct}]+");
-//                    String name = tokens[tokens.length - 1];
-                    name = name.substring(name.indexOf("\"") + 1, name.lastIndexOf("\""));
-                    System.out.println("name: " + name);
-                    Feature newFeature = Feature.generateFeature(name, seq, Collector.getCurrentUser(), false);
-                    if (newFeature != null) {
-                        Collector.add(newFeature);
-                        coll.addObject(newFeature);
-                        newFeature.saveDefault();
-                        coll.saveDefault();
+                        while (!inputLines.get(i).contains("\"")) {
+                            i++;
+                        }
+                        String name = inputLines.get(i);
+                        name = name.substring(name.indexOf("\"") + 1, name.lastIndexOf("\""));
+                        Feature newFeature = Feature.generateFeature(name, seq, Collector.getCurrentUser(), false);
+                        if (newFeature != null) {
+                            Collector.add(newFeature);
+                            coll.addObject(newFeature);
+                            newFeature.saveDefault();
+                            coll.saveDefault();
 
+                        }
                     }
                 }
             }
