@@ -3,7 +3,7 @@
 <type>ClothoTool</type>
 <version>1.0</version>
 <classname>org-clothocad-tool-sequenceview-SequenceViewManager</classname>
-<description>Test app so that users can see how to make a very simple app.</description>
+<description>Sequence View is a fully featured editor for DNA sequences.</description>
 <displayname>Sequence View</displayname>
 <uuid>org.clothocad.tool.sequenceview</uuid>
 <!--<screenshotpath>none</screenshotpath>-->
