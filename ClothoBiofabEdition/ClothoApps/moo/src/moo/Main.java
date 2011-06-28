@@ -72,25 +72,27 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        JFileChooser chooser = new JFileChooser();
-        chooser.showOpenDialog(null);
-        chooser.getSelectedFile();
-        try {
-            java.io.BufferedReader inputFile = new java.io.BufferedReader(new java.io.FileReader(chooser.getSelectedFile()));
-            String line = inputFile.readLine();
-            while (line != null) {
-                String[] tokens = line.split("\\t");
-                System.out.print("Name: " + tokens[0]);
-                System.out.println(" Sequence: " + tokens[1]);
-                line = inputFile.readLine();
-            }
+//        JFileChooser chooser = new JFileChooser();
+//        chooser.showOpenDialog(null);
+//        chooser.getSelectedFile();
+//        try {
+//            java.io.BufferedReader inputFile = new java.io.BufferedReader(new java.io.FileReader(chooser.getSelectedFile()));
+//            String line = inputFile.readLine();
+//            while (line != null) {
+//                String[] tokens = line.split("\\t");
+//                System.out.print("Name: " + tokens[0]);
+//                System.out.println(" Sequence: " + tokens[1]);
+//                line = inputFile.readLine();
+//            }
+//
+//        } catch (java.io.IOException ex) {
+//            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+//        }
 
-        } catch (java.io.IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-
-
+//TestFrame tf = new TestFrame();
+//tf.setVisible(true);
+NoCopyPasteFrame nocp = new NoCopyPasteFrame();
+nocp.doit();
 
 
 

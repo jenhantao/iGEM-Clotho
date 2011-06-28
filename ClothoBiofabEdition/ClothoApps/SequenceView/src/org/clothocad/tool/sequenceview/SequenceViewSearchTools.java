@@ -35,12 +35,12 @@ public class SequenceViewSearchTools extends javax.swing.JFrame {
     public SequenceViewSearchTools() {
         initComponents();
     }
-    
+
    public SequenceViewSearchTools(SequenceView sv) {
         initComponents();
         _sv = sv;
     }
-   
+
    public String getBeginIndex()
    {
         return toTextField.getText();
@@ -48,35 +48,35 @@ public class SequenceViewSearchTools extends javax.swing.JFrame {
 
    public String getEndIndex()
    {
-      return fromTextField.getText(); 
+      return fromTextField.getText();
    }
-   
+
    public javax.swing.JTextField get_ReplaceFindField() {
        return replaceFindField;
    }
-   
+
    public javax.swing.JTextField get_ReplaceField() {
        return replaceField;
    }
-   
+
    public void store_ToolsFields() {
            _sv.setToolsFields(findField, goField, selectFromField,
             selectToField, replaceField, replaceFindField);
    }
-   
+
    public javax.swing.JTextField get_AddressField() {
        return addressTextField;
    }
-   
+
    public javax.swing.JCheckBox get_BothCheckBox() {
        return findBothCheck;
    }
-   
+
    public javax.swing.JComboBox get_connectionsComboBox()
    {
        return connectionsComboBox;
    }
-   
+
    public javax.swing.JTextField get_CurrentReplaceFindField() {
        return _currentReplaceFindField;
    }
@@ -84,35 +84,35 @@ public class SequenceViewSearchTools extends javax.swing.JFrame {
    public javax.swing.JTextField get_CurrentReplaceField() {
        return _currentReplaceField;
    }
-   
+
    public javax.swing.JCheckBox get_PasteRevCompCheckbox() {
        return pasteRevCompCheckbox;
    }
-   
+
    public javax.swing.JTabbedPane get_toolsTabbedPane()
    {
        return toolsTabbedPane;
    }
-   
+
    public javax.swing.JCheckBox get_RevCompCheckBox() {
        return findRevCompCheck;
    }
-   
+
    public boolean highlightSeqSel()
    {
         return selSeqRadioButton.isSelected();
    }
-    
+
    public boolean intervalSeqSel()
    {
         return intervalSeqRadioButton.isSelected();
    }
-   
+
    public boolean wholeSeqSel()
    {
         return wholeSeqRadioButton.isSelected();
    }
-   
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -779,7 +779,7 @@ replaceNextButtonActionPerformed(evt);
 private void replaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replaceButtonActionPerformed
     if (replaceField.getText().equalsIgnoreCase("Replace text goes here"))
         replaceField.setText("");
-    
+
     //_sv.setSearch(replaceFindField);
     _sv.processSearchToolAction(evt, "replaceButton");
     _sv.setToolsFields(findField, goField, selectFromField,
@@ -913,11 +913,11 @@ private void caseSensitiveCheckActionPerformed(java.awt.event.ActionEvent evt) {
             }
         });
     }
-    
+
     private SequenceView _sv;
     private javax.swing.JTextField _currentReplaceFindField;
     private javax.swing.JTextField _currentReplaceField;
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField addressTextField;
     private javax.swing.JCheckBox caseSensitiveCheck;

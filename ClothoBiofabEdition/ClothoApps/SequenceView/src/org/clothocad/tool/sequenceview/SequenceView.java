@@ -32,6 +32,12 @@ import java.awt.Event;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.InputEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -65,12 +71,15 @@ import javax.swing.JOptionPane;
 //import org.clothocad.core.ClothoCore;
 //import org.clothocad.core.ClothoCore.LogLevel;
 //import org.clothocad.databaseio.Datum;
+import javax.swing.KeyStroke;
 import javax.swing.SwingWorker;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
+import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter.Highlight;
 import javax.swing.text.JTextComponent;
+import javax.swing.text.Keymap;
 import org.clothocore.api.data.NucSeq;
 import org.clothocore.util.dialog.ClothoDialogBox;
 //import org.clothocad.util.ClothoDialogBox;
@@ -178,6 +187,25 @@ public class SequenceView {
         redoAction = new RedoAction();
         Document doc = _sequenceview.get_TextArea().getDocument();
         doc.addUndoableEditListener(new SequenceUndoableEditListener());
+
+
+
+            JTextComponent.KeyBinding[] newBindings = {
+        new JTextComponent.KeyBinding(
+          KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK),
+          DefaultEditorKit.writableAction),
+        new JTextComponent.KeyBinding(
+          KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_MASK),
+          DefaultEditorKit.writableAction),
+        new JTextComponent.KeyBinding(
+            KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_MASK),
+            DefaultEditorKit.writableAction)
+      };
+
+    Keymap k = _sequenceview.get_TextArea().getKeymap();
+        JTextComponent.loadKeymap(k, newBindings, _sequenceview.get_TextArea().getActions());
+
+
     }
 
     class SequenceUndoableEditListener
@@ -3615,12 +3643,6 @@ public class SequenceView {
      * @param evt
      */
     public void validateKeyPressed(KeyEvent evt) {
-        // Commented out these lines: don't know if it is required for debugging still
-        //if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-        //    System.out.println("Caret at: " + _sequenceview.get_TextArea().getCaretPosition());
-        //    System.out.println(_highlightData);
-        //}
-        //System.out.println(evt.paramString());
         if (evt.getKeyCode() == KeyEvent.VK_ENTER
                 || evt.getKeyCode() == KeyEvent.VK_TAB) {
             evt.consume();
@@ -3631,12 +3653,14 @@ public class SequenceView {
         if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
             _deleteKeyPressed = true;
         }
+        //pasting action occurs here
         if ((evt.getKeyCode() == KeyEvent.VK_V) && (evt.getModifiersEx() == KeyEvent.CTRL_DOWN_MASK)) {
             String newSeq = null;
-            java.awt.datatransfer.Transferable t = java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
+            Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
             try {
                 if (t != null && t.isDataFlavorSupported(java.awt.datatransfer.DataFlavor.stringFlavor)) {
                     newSeq = (String) t.getTransferData(java.awt.datatransfer.DataFlavor.stringFlavor);
+                    _sequenceview.get_TextArea().replaceSelection(newSeq);
                 }
             } catch (java.awt.datatransfer.UnsupportedFlavorException e) {
             } catch (java.io.IOException e) {
@@ -3646,10 +3670,21 @@ public class SequenceView {
                 return;
             }
             if (!this.checkValidSequence(newSeq, this.getDegeneracy())) {
-                //commented
-                //               ClothoCore.getCore().log("Sequence View: Cannot paste sequence with non nucleotide characters", LogLevel.MESSAGE);
                 evt.consume();
             }
+            return;
+        }
+        //copying action occurs here
+        if ((evt.getKeyCode() == KeyEvent.VK_C) && (evt.getModifiersEx() == KeyEvent.CTRL_DOWN_MASK)) {
+            StringSelection ss = new StringSelection(_sequenceview.get_TextArea().getSelectedText());
+            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
+        }
+        //cutting action occurs here
+        if ((evt.getKeyCode() == KeyEvent.VK_X) && (evt.getModifiersEx() == KeyEvent.CTRL_DOWN_MASK)) {
+            JTextPane jtp = _sequenceview.get_TextArea();
+            StringSelection ss = new StringSelection(jtp.getSelectedText());
+            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
+            jtp.replaceSelection("");
         }
     }
 
@@ -3764,22 +3799,40 @@ public class SequenceView {
 
     public String revCompFunctions(String Func, String SelectText) {
         if (Func.equals("CUT")) {
-            revCompClipBoard_Add(SelectText);
+            String text = _sequenceview.get_TextArea().getSelectedText();
+            text = revComp_String(text);
+            StringSelection ss = new StringSelection(text);
+            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
             return "";
+
         }
         if (Func.equalsIgnoreCase("COPY")) {
-            revCompClipBoard_Add(SelectText);
+            String text = _sequenceview.get_TextArea().getSelectedText();
+            text = revComp_String(text);
+            StringSelection ss = new StringSelection(text);
+            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
             return "";
         }
-        if (Func.equalsIgnoreCase("PASTE"));
-        {
-            if (_revComp.toString().length() > 0) {
-                return _revComp.toString();
-            } else {
+        if (Func.equalsIgnoreCase("PASTE")) {
+            Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
+            try {
+                if (t != null && t.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+                    String text = (String) t.getTransferData(DataFlavor.stringFlavor);
+                    text = revComp_String(text);
+                    return text;
+                }
+            } catch (UnsupportedFlavorException e) {
+                e.printStackTrace();
                 return "";
-            }
-        }
 
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "";
+
+            }
+            return "";
+        }
+        return "";
 
 
     }

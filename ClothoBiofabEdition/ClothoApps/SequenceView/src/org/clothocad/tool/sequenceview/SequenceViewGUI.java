@@ -26,6 +26,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import org.openide.windows.TopComponent;
 import java.awt.Component;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.FocusEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -1524,7 +1526,10 @@ private void revTranslateMenuItemActionPerformed(java.awt.event.ActionEvent evt)
 }//GEN-LAST:event_revTranslateMenuItemActionPerformed
 
 private void cutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cutMenuItemActionPerformed
-    SequenceTextPane.cut();
+//    SequenceTextPane.cut();
+    StringSelection ss = new StringSelection(SequenceTextPane.getSelectedText());
+    Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
+    SequenceTextPane.replaceSelection("");
 }//GEN-LAST:event_cutMenuItemActionPerformed
 
 private void revCompMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_revCompMenuItemActionPerformed
@@ -1532,29 +1537,44 @@ private void revCompMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//G
 }//GEN-LAST:event_revCompMenuItemActionPerformed
 
 private void copyMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyMenuItemActionPerformed
-    SequenceTextPane.copy();
+//    SequenceTextPane.copy();
+    StringSelection ss = new StringSelection(SequenceTextPane.getSelectedText());
+    Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
 }//GEN-LAST:event_copyMenuItemActionPerformed
 
 private void pasteMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pasteMenuItemActionPerformed
-    SequenceTextPane.paste();
+//    SequenceTextPane.paste();
+    String newSeq = null;
+    java.awt.datatransfer.Transferable t = java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
+    try {
+        if (t != null && t.isDataFlavorSupported(java.awt.datatransfer.DataFlavor.stringFlavor)) {
+            newSeq = (String) t.getTransferData(java.awt.datatransfer.DataFlavor.stringFlavor);
+            SequenceTextPane.replaceSelection(newSeq);
+        }
+    } catch (java.awt.datatransfer.UnsupportedFlavorException e) {
+    } catch (java.io.IOException e) {
+    }
+
+    if ((newSeq == null) || (newSeq.equalsIgnoreCase(""))) {
+        return;
+    }
+    if (!_sv.checkValidSequence(newSeq, _sv.getDegeneracy())) {
+        //commented
+        //               ClothoCore.getCore().log("Sequence View: Cannot paste sequence with non nucleotide characters", LogLevel.MESSAGE);
+        return;
+    }
 }//GEN-LAST:event_pasteMenuItemActionPerformed
 
 private void revCutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_revCutMenuItemActionPerformed
-    //SequenceTextPane.cut();
-    //_sv.revCompClipboard();
     _sv.revCompFunctions("CUT", SequenceTextPane.getSelectedText());
     SequenceTextPane.replaceSelection("");
 }//GEN-LAST:event_revCutMenuItemActionPerformed
 
 private void revCopyMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_revCopyMenuItemActionPerformed
-    //SequenceTextPane.copy();
-    //_sv.revCompClipboard();
     _sv.revCompFunctions("COPY", SequenceTextPane.getSelectedText());
 }//GEN-LAST:event_revCopyMenuItemActionPerformed
 
 private void revPasteMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_revPasteMenuItemActionPerformed
-    //_sv.revCompClipboard();
-    //SequenceTextPane.paste();
     if (_sv.revCompFunctions("PASTE", null).length() > 0) {
         SequenceTextPane.replaceSelection(_sv.revCompFunctions("PASTE", null));
     }
