@@ -96,25 +96,21 @@ public final class InventoryTopComponent extends TopComponent {
                 try
                 {
                     personalCollection = Collector.getCurrentUser().getHerCollection();
-//                    InventoryTopComponent itc = InventoryTopComponent.getDefault(); //finds instance of InventoryTopComponent
-//                    //Code for populating the Plasmid tab is below
-//                    ArrayList<ObjLink> allPlasmids = Collector.getAllLinksOf(ObjType.PLASMID);
-//                    JTable itcPlasmidTable = (JTable) ((JViewport) ((JScrollPane) ((JTabbedPane) itc.getComponent(0)).getComponent(0)).getComponent(0)).getComponent(0); //retrieves a reference to the plasmidTable JTable in the InventoryTopComponent class
-//                    Object[][] plasmidTableModel = new Object[allPlasmids.size()][2];
-//
-//                    for (int i = 0; i < allPlasmids.size(); i++)
-//                    {
-//                        plasmidTableModel[i][0] = allPlasmids.get(i).name;
-//                        Plasmid aplas = Collector.getPlasmid(allPlasmids.get(i).uuid);
-//                        Format aform = aplas.getFormat(); //get the Format of aplas
-//                        plasmidTableModel[i][1] = aform.generateSequencingRegion(aplas).getSeq(); //based on the Format, the sequence of the region of interest is retreieved and used to populate the table
-//                    }
-//
-//                    itcPlasmidTable.setModel(new javax.swing.table.DefaultTableModel(plasmidTableModel, new String[]{"Plasmid Name", "Sequence"}));
+                    //Populate the Plasmid tab is below
+                    ArrayList<ObjLink> allPlasmids = Collector.getAllLinksOf(ObjType.PLASMID);
+                    Object[][] plasmidTableModel = new Object[allPlasmids.size()][2];
+                    for (int i = 0; i < allPlasmids.size(); i++)
+                    {
+                        plasmidTableModel[i][0] = allPlasmids.get(i).name;
+                        Plasmid aplas = Collector.getPlasmid(allPlasmids.get(i).uuid);
+                        Format aform = aplas.getFormat(); //get the Format of aplas
+                        plasmidTableModel[i][1] = aform.getName(); //based on the Format, the sequence of the region of interest is retreieved and used to populate the table
+                    }
 
+                    plasmidsTable.setModel(new javax.swing.table.DefaultTableModel(plasmidTableModel, new String[]{"Plasmid Name", "Format"}));
 
+                    //populate the Oligo tab
                     ArrayList<ObjLink> allOligos = Collector.getAllLinksOf(ObjType.OLIGO);
-                    //JTable itcOligoTable = (JTable) ((JViewport) ((JScrollPane) ((JTabbedPane) itc.getComponent(0)).getComponent(1)).getComponent(0)).getComponent(0);
                     Object[][] oligoTableModel = new Object[allOligos.size()][2];
                     
                     for (int i = 0; i < allOligos.size(); i++)
@@ -122,43 +118,39 @@ public final class InventoryTopComponent extends TopComponent {
                         Oligo oligo = Collector.getOligo(allOligos.get(i).uuid);
                         oligoTableModel[i][0] = allOligos.get(i).name;
                         oligoTableModel[i][1] = oligo.getDescription();
-//                        oligoTableModel[i][2] = oligo.getLastModified().toString();
-//                        oligoTableModel[i][3] = oligo.getDateCreated().toString();
                     }
                     
-                    oligosTable.setModel(new javax.swing.table.DefaultTableModel(oligoTableModel, new String[]{"BIOFAB ID", "Description"}));
+                    oligosTable.setModel(new javax.swing.table.DefaultTableModel(oligoTableModel, new String[]{"Name", "Description"}));
 
-                    //Code for populating the Vectors tab is below
-//                    ArrayList<ObjLink> allVectors = Collector.getAllLinksOf(ObjType.VECTOR);
-//                    JTable itcVectorTable = (JTable) ((JViewport) ((JScrollPane) ((JTabbedPane) itc.getComponent(0)).getComponent(2)).getComponent(0)).getComponent(0);
-//                    Object[][] vectorTableModel = new Object[allVectors.size()][2];
-//
-//                    for (int i = 0; i < allVectors.size(); i++) {
-//                        vectorTableModel[i][0] = allVectors.get(i).name;
-//                        Vector avec = Collector.getVector(allVectors.get(i).uuid);
-//                        vectorTableModel[i][1] = avec.getSeq(); //based on the Format, the sequence of the region of interest is retreieved and used to populate the table
-//                    }
-//                    itcVectorTable.setModel(new javax.swing.table.DefaultTableModel(vectorTableModel, new String[]{"Vector Name", "Sequence"}));
+                    //populate the Vectors tab is below
+                    ArrayList<ObjLink> allVectors = Collector.getAllLinksOf(ObjType.VECTOR);
+                    Object[][] vectorTableModel = new Object[allVectors.size()][2];
+                    for (int i = 0; i < allVectors.size(); i++) {
+                        vectorTableModel[i][0] = allVectors.get(i).name;
+                        Vector avec = Collector.getVector(allVectors.get(i).uuid);
+                        vectorTableModel[i][1] = avec.getFormat().toString(); //based on the Format, the sequence of the region of interest is retreieved and used to populate the table
+                    }
+                    vectorsTable.setModel(new javax.swing.table.DefaultTableModel(vectorTableModel, new String[]{"Vector Name", "Format"}));
 
-                    //Code for populating the Features tab is below
+////                    Code for populating the Features tab is below
 //                    ArrayList<ObjLink> allFeatures = Collector.getAllLinksOf(ObjType.FEATURE);
-//                    JTable itcFeatureTable = (JTable) ((JViewport) ((JScrollPane) ((JTabbedPane) itc.getComponent(0)).getComponent(3)).getComponent(0)).getComponent(0);
 //                    Object[][] featureTableModel = new Object[allFeatures.size()][2];
 //                    for (int i = 0; i < allFeatures.size(); i++) {
 //                        featureTableModel[i][0] = allFeatures.get(i).name;
 //                        Feature afeat = Collector.getFeature(allFeatures.get(i).uuid);
 //                        featureTableModel[i][1] = afeat.getSeq(); //based on the Format, the sequence of the region of interest is retreieved and used to populate the table
 //                    }
-//                    itcFeatureTable.setModel(new javax.swing.table.DefaultTableModel(featureTableModel, new String[]{"Feature Name", "Sequence"}));
+//                    featuresTable.setModel(new javax.swing.table.DefaultTableModel(featureTableModel, new String[]{"Feature Name", "Sequence"}));
 
                     //Code for populating the Parts tab is below
-//                    ArrayList<ObjLink> allParts = Collector.getAllLinksOf(ObjType.PART);
-//                    JTable itcPartTable = (JTable) ((JViewport) ((JScrollPane) ((JTabbedPane) itc.getComponent(0)).getComponent(4)).getComponent(0)).getComponent(0);
-//                    Object[][] partTableModel = new Object[allParts.size()][1];
-//                    for (int i = 0; i < allParts.size(); i++) {
-//                        partTableModel[i][0] = allParts.get(i).name;
-//                    }
-//                    itcPartTable.setModel(new javax.swing.table.DefaultTableModel(partTableModel, new String[]{"Part Name"}));
+                    ArrayList<ObjLink> allParts = Collector.getAllLinksOf(ObjType.PART);
+                    Object[][] partTableModel = new Object[allParts.size()][2];
+                    for (int i = 0; i < allParts.size(); i++) {
+                        Part aPart= Collector.getPart(allParts.get(i).uuid);
+                        partTableModel[i][0] = aPart.getName();
+                        partTableModel[i][1]= aPart.getFormat().toString();
+                    }
+                    partsTable.setModel(new javax.swing.table.DefaultTableModel(partTableModel, new String[]{"Part Name"}));
 
 
 
@@ -213,6 +205,12 @@ public final class InventoryTopComponent extends TopComponent {
         inventoryTabbedPane = new javax.swing.JTabbedPane();
         oligosScrollPane = new javax.swing.JScrollPane();
         oligosTable = new javax.swing.JTable();
+        partsScrollPane = new javax.swing.JScrollPane();
+        partsTable = new javax.swing.JTable();
+        vectorsScrollPane = new javax.swing.JScrollPane();
+        vectorsTable = new javax.swing.JTable();
+        plasmidsScrollPane = new javax.swing.JScrollPane();
+        plasmidsTable = new javax.swing.JTable();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -244,15 +242,115 @@ public final class InventoryTopComponent extends TopComponent {
         });
         oligosTable.setFillsViewportHeight(true);
         oligosScrollPane.setViewportView(oligosTable);
+        oligosTable.getAccessibleContext().setAccessibleParent(inventoryTabbedPane);
 
         inventoryTabbedPane.addTab(org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.oligosScrollPane.TabConstraints.tabTitle_1"), oligosScrollPane); // NOI18N
 
-        add(inventoryTabbedPane, java.awt.BorderLayout.CENTER);
+        partsTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "Identifier", "Description"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        partsTable.setFillsViewportHeight(true);
+        partsScrollPane.setViewportView(partsTable);
+
+        inventoryTabbedPane.addTab(org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.partsScrollPane.TabConstraints.tabTitle"), partsScrollPane); // NOI18N
+
+        vectorsTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "Identifier", "Description"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        vectorsTable.setFillsViewportHeight(true);
+        vectorsScrollPane.setViewportView(vectorsTable);
+
+        inventoryTabbedPane.addTab(org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.vectorsScrollPane.TabConstraints.tabTitle"), vectorsScrollPane); // NOI18N
+
+        plasmidsTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "Identifier", "Description"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        plasmidsTable.setFillsViewportHeight(true);
+        plasmidsScrollPane.setViewportView(plasmidsTable);
+
+        inventoryTabbedPane.addTab(org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.plasmidsScrollPane.TabConstraints.tabTitle"), plasmidsScrollPane); // NOI18N
+
+        add(inventoryTabbedPane, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JTabbedPane inventoryTabbedPane;
     protected javax.swing.JScrollPane oligosScrollPane;
     protected javax.swing.JTable oligosTable;
+    private javax.swing.JScrollPane partsScrollPane;
+    protected javax.swing.JTable partsTable;
+    private javax.swing.JScrollPane plasmidsScrollPane;
+    protected javax.swing.JTable plasmidsTable;
+    private javax.swing.JScrollPane vectorsScrollPane;
+    protected javax.swing.JTable vectorsTable;
     // End of variables declaration//GEN-END:variables
 
     /**

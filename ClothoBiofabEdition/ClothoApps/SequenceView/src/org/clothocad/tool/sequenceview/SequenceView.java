@@ -22,16 +22,12 @@ ENHANCEMENTS, OR MODIFICATIONS..
  */
 package org.clothocad.tool.sequenceview;
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.Color;
-import java.awt.Event;
-import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
@@ -39,18 +35,14 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.InputEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -60,17 +52,12 @@ import javax.swing.event.CaretEvent;
 import javax.swing.text.Caret;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Highlighter.HighlightPainter;
 import javax.swing.text.Position;
 import javax.swing.undo.*;
 import javax.swing.JOptionPane;
-//commented
-//import org.clothocad.core.ClothoCore;
-//import org.clothocad.core.ClothoCore.LogLevel;
-//import org.clothocad.databaseio.Datum;
 import javax.swing.KeyStroke;
 import javax.swing.SwingWorker;
 import javax.swing.event.UndoableEditEvent;
@@ -82,30 +69,8 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.Keymap;
 import org.clothocore.api.data.NucSeq;
 import org.clothocore.util.dialog.ClothoDialogBox;
-//import org.clothocad.util.ClothoDialogBox;
 import org.clothocore.util.chooser.ClothoOpenChooser;
 import org.clothocore.util.chooser.ClothoSaveChooser;
-
-//import org.clothocad.util.ClothoOpenChooser;
-//import org.clothocad.util.ClothoSaveChooser;
-//import org.clothocad.util.ClothoSearchUtil;
-//import org.clothocad.util.SequenceUtils;
-//import org.clothocad.util.highlight.ClothoHighlightData;
-//import org.clothocad.util.highlight.ClothoHighlightPainter;
-//import org.clothocad.util.highlight.ClothoHighlightPainter_Shrink;
-//import org.clothocad.util.highlight.ClothoHighlightPainter_Underline;
-//import org.clothocad.util.undo.ClothoRedoAction;
-//import org.clothocad.util.undo.ClothoUndoAction;
-//import org.clothocad.util.undo.ClothoUndoableActionListener;
-//import org.java.plugin.PluginManager;
-//import org.java.plugin.registry.Extension;
-//import org.java.plugin.registry.ExtensionPoint;
-//import org.java.plugin.registry.PluginDescriptor;
-//import tool.enzymelibrary.EnzymeLibraryTool;
-//import tool.featureslibrary.FeatureLibraryTool;
-//import tool.partsmanager.ClothoPartsManagerTool;
-//import tool.partsmanager.PartsManagerEnums;
-import org.clothocad.tool.sequenceview.ClothoSearchUtil;
 import org.clothocore.api.core.Collator;
 import org.clothocore.api.core.Collector;
 import org.clothocore.api.core.wrapper.ToolWrapper;
@@ -113,7 +78,6 @@ import org.clothocore.api.data.Annotation;
 import org.clothocore.api.data.Collection;
 import org.clothocore.api.data.Feature;
 import org.clothocore.api.data.ObjLink;
-import org.clothocore.api.data.ObjType;
 import org.clothocore.api.data.Person;
 import org.clothocore.util.misc.BareBonesBrowserLaunch;
 import org.openide.util.Exceptions;
@@ -121,6 +85,8 @@ import org.openide.util.Exceptions;
 /**
  * The sequence view of the design. An editable view for raw DNA data.
  * @author Douglas Densmore
+ * @author Jenhan Tao
+ * @author Roza
  * @author Nade Sritanyaratana
  * @author Matthew Johnson
  * @author Thien Nguyen
@@ -129,13 +95,12 @@ public class SequenceView {
 
     private static int numOfSeqViews = 0;
 
-    public SequenceView(String n, String d, SequenceViewManager m, int index, HashMap<String, SequenceViewPlugInInterface> pi) {
+    public SequenceView(String n, String d, SequenceViewManager m, int index) {
         _manager = m;
         _myIndex = index;
         _annotationsOn = false;
         _REOn = false;
         _featuresOn = false;
-        _plugIns = pi;
         _sequenceview = new SequenceViewGUI(this);
         _sequence = new NucSeq(_sequenceview.get_TextArea().getText());
         new SwingWorker() {
@@ -165,7 +130,6 @@ public class SequenceView {
         _fileOpenerInstantiated = false;
         _fileSaverInstantiated = false;
 //        _highlightDataMade = false;
-        _highlightStored = false;
         _insertIsInsideAHighlight = false;
         _keyTypedAtLeastOnce = false;
         _locked = false;
@@ -180,7 +144,6 @@ public class SequenceView {
         _seqViewNumber = numOfSeqViews;
         //FIXME
         //_partData = new ClothoPartsData();
-        _PoBoLHashRef = null;
         //mechanisms for undo
         _undo = new UndoManager();
         undoAction = new UndoAction();
@@ -313,10 +276,15 @@ public class SequenceView {
      * they haven't, calculates them.
      */
     public void checkORFs() {
-        if (!(_ORFsCalculated)) {
+        if (!(_ORFsCalculated) && _sequenceview.get_TextArea().getText() != null) {
 //comment            _ORFs = (HashMap) _sequenceUtils.findORFs(_sequenceview.get_TextArea().getText(), _circular, _allowDegeneracy, true, _multipleStartCodons, _dnaType);
             NucSeq ns = new NucSeq(_sequenceview.get_TextArea().getText());
-            _ORFs = ns.findORFs(true, _multipleStartCodons);
+            try {
+                _ORFs = ns.findORFs(true, _multipleStartCodons);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             _ORFsCalculated = true;
 
         }
@@ -549,7 +517,7 @@ public class SequenceView {
      * newly created SequenceViewConnection
      */
     public Integer createNewWindow() {
-        SequenceView seqView = new SequenceView("SequenceView", "SequenceView", _manager, _manager.getSequenceViewArray().size(), _plugIns);
+        SequenceView seqView = new SequenceView("SequenceView", "SequenceView", _manager, _manager.getSequenceViewArray().size());
         //seqView.activate();
         _manager.add(seqView);
         _manager.setMainSequenceView(seqView);
@@ -682,8 +650,15 @@ public class SequenceView {
         _h = textArea.getHighlighter();
         HashMap<Integer, Integer> hm;
         checkORFs();
+        _sequenceview.getOutputTextArea().setText("Finding orf");
         hm = _ORFs;
-
+//        if (textArea.getText().length()>10) {
+//            try {
+//                _h.addHighlight(0, 9, _painter);
+//            } catch (BadLocationException ex) {
+//                Exceptions.printStackTrace(ex);
+//            }
+//        }
         if (hm != null && !(hm.isEmpty())) {
             ArrayList<Integer> startPositions = new ArrayList();
             if (textArea.getSelectedText() != null && currentORFStart == 0) {
@@ -729,6 +704,7 @@ public class SequenceView {
                             if (lastORFHighlightTag != null) {
                                 _h.removeHighlight(lastORFHighlightTag);
                             }
+//                            _sequenceview.getOutputTextArea().setText("Found circular orf");
                             _h.addHighlight(currentORFStart, seq.length(), _painter);
                             _h.addHighlight(0, Math.min(seq.toLowerCase().indexOf("tag"), Math.min(seq.toLowerCase().indexOf("taa"), seq.toLowerCase().indexOf("tga"))) + 3, _painter);
                             currentORFStart = startPositions.get(0); //reset start to first ORF start to allow looping
@@ -747,6 +723,7 @@ public class SequenceView {
                                 }
                             }
                             this.removeORFHighlights();
+//                            _sequenceview.getOutputTextArea().setText("Found last orf");
                             lastORFHighlightTag = _h.addHighlight(currentORFStart, hm.get(currentORFStart), _painter);
                             textArea.setCaretPosition(currentORFStart);
                             currentORFStart++;
@@ -765,6 +742,7 @@ public class SequenceView {
                             }
                         }
                         this.removeORFHighlights();
+//                        _sequenceview.getOutputTextArea().setText("Found orf");
                         lastORFHighlightTag = _h.addHighlight(currentORFStart, hm.get(currentORFStart), _painter);
                         textArea.setCaretPosition(currentORFStart);
                         currentORFStart++;
@@ -784,6 +762,7 @@ public class SequenceView {
      * Finds the previous Open Reading Frame in the SequenceView
      */
     public void findPrevORF() {
+        _sequenceview.getOutputTextArea().setText("Finding orf");
         _painter = new ORFPainter(ORFColor);
         JTextComponent textArea = _sequenceview.get_TextArea();
         if (textArea.getCaretPosition() == 0) {
@@ -831,7 +810,7 @@ public class SequenceView {
 
                             this.removeORFHighlights();
                             String seq = textArea.getText();
-
+                            _sequenceview.getOutputTextArea().setText("Fournd circular orf");
                             _h.addHighlight(startPositions.get(startPositions.size() - 1), seq.length(), _painter);
                             _h.addHighlight(0, Math.min(seq.toLowerCase().indexOf("tag"), Math.min(seq.toLowerCase().indexOf("taa"), seq.toLowerCase().indexOf("tga"))) + 3, _painter);
                             currentORFStart = startPositions.get(startPositions.size() - 1); //reset start to first ORF start to allow looping
@@ -852,6 +831,7 @@ public class SequenceView {
                             }
 
                             this.removeORFHighlights();
+                            _sequenceview.getOutputTextArea().setText("Found last orf");
                             lastORFHighlightTag = _h.addHighlight(currentORFStart, hm.get(currentORFStart), _painter);
                             textArea.setCaretPosition(currentORFStart);
                             currentORFStart--; //reset start to first ORF start to allow looping
@@ -870,6 +850,7 @@ public class SequenceView {
                             }
                         }
                         this.removeORFHighlights();
+                        _sequenceview.getOutputTextArea().setText("Found orf");
                         lastORFHighlightTag = _h.addHighlight(currentORFStart, hm.get(currentORFStart), _painter);
                         textArea.setCaretPosition(currentORFStart);
                         currentORFStart--;
@@ -889,6 +870,8 @@ public class SequenceView {
      * Finds the next Open Reading Frame in the reverse of the SequenceView
      */
     public void findNextRevORF() {
+        _sequenceview.getOutputTextArea().setText("Finding reverse orf");
+
         _painter = new ORFPainter(ORFColor);
         JTextComponent textArea = _sequenceview.get_TextArea();
         _h = textArea.getHighlighter();
@@ -934,6 +917,7 @@ public class SequenceView {
 
                             this.removeORFHighlights();
                             String seq = textArea.getText();
+                            _sequenceview.getOutputTextArea().setText("Found circular reverse orf");
                             _h.addHighlight(currentORFStart, seq.length(), _painter);
                             _h.addHighlight(0, Math.min(seq.toLowerCase().indexOf("cta"), Math.min(seq.toLowerCase().indexOf("tta"), seq.toLowerCase().indexOf("tca"))) + 3, _painter);
                             currentORFStart = endPositions.get(0); //reset start to first ORF start to allow looping
@@ -954,6 +938,7 @@ public class SequenceView {
                             }
 
                             this.removeORFHighlights();
+                            _sequenceview.getOutputTextArea().setText("Found last reverse orf");
                             lastORFHighlightTag = _h.addHighlight(hm.get(currentORFStart), currentORFStart, _painter);
                             textArea.setCaretPosition(hm.get(currentORFStart));
                             currentORFStart++;
@@ -973,6 +958,7 @@ public class SequenceView {
                         }
 
                         this.removeORFHighlights();
+                        _sequenceview.getOutputTextArea().setText("Found reverse orf");
                         lastORFHighlightTag = _h.addHighlight(hm.get(currentORFStart), currentORFStart, _painter);
                         textArea.setCaretPosition(hm.get(currentORFStart));
                         currentORFStart++;
@@ -993,6 +979,7 @@ public class SequenceView {
      * Finds the previous Open Reading Frame in the reverse of the SequenceView
      */
     public void findPrevRevORF() {
+        _sequenceview.getOutputTextArea().setText("Finding reverse orf");
         _painter = new ORFPainter(ORFColor);
         JTextComponent textArea = _sequenceview.get_TextArea();
         if (textArea.getCaretPosition() == 0) {
@@ -1042,6 +1029,7 @@ public class SequenceView {
                             String seq = textArea.getText();
                             _h.addHighlight(endPositions.get(endPositions.size() - 1), seq.length(), _painter);
                             _h.addHighlight(0, Math.min(seq.toLowerCase().indexOf("cta"), Math.min(seq.toLowerCase().indexOf("tta"), seq.toLowerCase().indexOf("tca"))) + 3, _painter);
+                            _sequenceview.getOutputTextArea().setText("Found circular reverse orf");
                             currentORFStart = endPositions.get(endPositions.size() - 1); //reset start to first ORF start to allow looping
                             textArea.setCaretPosition(hm.get(currentORFStart));
                             currentORFStart--;
@@ -1061,6 +1049,7 @@ public class SequenceView {
 
                             this.removeORFHighlights();
                             lastORFHighlightTag = _h.addHighlight(hm.get(currentORFStart), currentORFStart, _painter);
+                            _sequenceview.getOutputTextArea().setText("Found last reverse orf");
                             textArea.setCaretPosition(hm.get(currentORFStart));
                             currentORFStart--; //reset start to first ORF start to allow looping
                             for (Highlight h : shuffledHighlights) {
@@ -1079,6 +1068,7 @@ public class SequenceView {
                         }
 
                         this.removeORFHighlights();
+                        _sequenceview.getOutputTextArea().setText("Found reverse orf");
                         lastORFHighlightTag = _h.addHighlight(hm.get(currentORFStart), currentORFStart, _painter);
                         textArea.setCaretPosition(hm.get(currentORFStart));
                         currentORFStart--;
@@ -2260,39 +2250,43 @@ public class SequenceView {
     
     }
      */
+    @Deprecated
+    /*
+     * no plugin support implemented
+     */
     public void callPlugIns() {
-        if (_plugIns == null) {
-            JOptionPane.showMessageDialog(null, "PlugIns null!!", "PlugIn error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        if (_plugIns.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "No plugIns found.", "No plugIns", JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
-        String analyzerName = (String) JOptionPane.showInputDialog(null,
-                "Please choose a plugIn from the list below...",
-                "Choose a plugIn",
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                _plugIns.keySet().toArray(),
-                _plugIns.keySet().toArray()[0]);
-        if (analyzerName != null) {
-            SequenceViewPlugInInterface analyzerObj = _plugIns.get(analyzerName);
-            //Provides analyzer with this connection
-            analyzerObj.setSequenceViewConnection(this);
-
-            //Analyzes Sequence
-            String sequence;
-            if (_sequenceview.get_TextArea().getSelectedText() != null) {
-                sequence = _sequenceview.get_TextArea().getSelectedText();
-            } else {
-                sequence = _sequenceview.get_TextArea().getText();
-            }
-            String result = analyzerObj.analyzeSequence(sequence);
-            //Outputs analysis
-            this._sequenceview.getOutputTextArea().append(result + "\n");
-        }
+//        if (_plugIns == null) {
+//            JOptionPane.showMessageDialog(null, "PlugIns null!!", "PlugIn error", JOptionPane.ERROR_MESSAGE);
+//            return;
+//        }
+//
+//        if (_plugIns.isEmpty()) {
+//            JOptionPane.showMessageDialog(null, "No plugIns found.", "No plugIns", JOptionPane.INFORMATION_MESSAGE);
+//            return;
+//        }
+//        String analyzerName = (String) JOptionPane.showInputDialog(null,
+//                "Please choose a plugIn from the list below...",
+//                "Choose a plugIn",
+//                JOptionPane.PLAIN_MESSAGE,
+//                null,
+//                _plugIns.keySet().toArray(),
+//                _plugIns.keySet().toArray()[0]);
+//        if (analyzerName != null) {
+//            SequenceViewPlugInInterface analyzerObj = _plugIns.get(analyzerName);
+//            //Provides analyzer with this connection
+//            analyzerObj.setSequenceViewConnection(this);
+//
+//            //Analyzes Sequence
+//            String sequence;
+//            if (_sequenceview.get_TextArea().getSelectedText() != null) {
+//                sequence = _sequenceview.get_TextArea().getSelectedText();
+//            } else {
+//                sequence = _sequenceview.get_TextArea().getText();
+//            }
+//            String result = analyzerObj.analyzeSequence(sequence);
+//            //Outputs analysis
+//            this._sequenceview.getOutputTextArea().append(result + "\n");
+//        }
     }
 
     /**
@@ -3755,7 +3749,6 @@ public class SequenceView {
         }
 
         if (!_keyTypedAtLeastOnce) {
-            _attr = _sequenceview.get_TextArea().getParagraphAttributes();
             _keyTypedAtLeastOnce = true;
         }
     }
@@ -3957,7 +3950,6 @@ public class SequenceView {
     private Object[] _annotationsArray;
     private Object lastORFHighlightTag;
     private int currentORFStart;
-    private int currentORFEnd;
     NucSeq _revComp = new NucSeq("");
 //    private ArrayList<SingleHighlight> _highlightData;
 //    private ArrayList<SingleHighlight> _highlightDataClone;
@@ -3972,8 +3964,6 @@ public class SequenceView {
     private boolean _dnaType;
     private boolean _fileOpenerInstantiated;
     private boolean _fileSaverInstantiated;
-//    private boolean _hasAtLeastOneHighlight;  //allows for the possibility of labelling two highlight names if they overlap in the sequenceview.
-//    private boolean _highlightDataMade;
     private boolean _insertIsInsideAHighlight;
     private boolean _locked;
     private boolean _longTimeHighlightWarned;
@@ -3987,19 +3977,12 @@ public class SequenceView {
     private boolean _threeLetterCode;
     private ClothoOpenChooser _fileOpener;
     private ClothoSaveChooser _fileSaver;
-    private SingleHighlight _highlightDataIndividual;
     private ClothoSearchUtil _searcher;
-//    private ClothoHighlightPainter _highlightPainter;
-//    private ClothoHighlightPainter_Shrink _shrinkPainter;
-//    private ClothoHighlightPainter_Underline _underlinePainter;
-    //FIXMEprivate ClothoPartsData _partData;
     private File _filePath;
     private HashMap<Integer, Integer> _ORFs;
     private HashMap<Integer, Integer> _revORFs;
     private HashSet _duplicates;
-    private java.util.Hashtable _PoBoLHashRef;
     private int _hitCount;
-//    private int _aHighlightIndex;
     private int[][] _search;
     private int _selectedHit;
     private int _seqViewNumber;
@@ -4013,7 +3996,6 @@ public class SequenceView {
     private SequenceViewGUI _sequenceview;
     private SequenceViewManager _manager;
     private SequenceViewSearchTools _sequenceviewtools;
-//    private SequenceViewPreferences _preferencesFrame;
     private String _caseSensitiveOption;
     private String _gcString;
     private String _mouseoverString;
@@ -4021,20 +4003,11 @@ public class SequenceView {
     private String _revCompSequence;
     private String _seqType;
     private String _tmString;
-//    private ClothoHighlightData[] _highlightDataUtil;
-    private HashMap<String, SequenceViewPlugInInterface> _plugIns;
     private int _logicalLineCnt;
     private int _logicalCol;
     private int _myIndex;
-//    private Preferences _preferences;
-    private String _database;
-    private String _table;
     private boolean _keyTypedAtLeastOnce;
-    private AttributeSet _attr;
-    private int _startOffset;
-    private int _endOffset;
     private HighlightPainter _painter;
-    private boolean _highlightStored;
     private UndoManager _undo;
     private UndoAction undoAction;
     private RedoAction redoAction;
@@ -4044,7 +4017,4 @@ public class SequenceView {
     private Color userHighlightColor;
     private boolean magicHighlight;
     private Object lastUserHighlightTag;
-//    private ClothoUndoAction _undoAction;
-//    private ClothoRedoAction _redoAction;
-//    private SequenceUtils _sequenceUtils;
 }

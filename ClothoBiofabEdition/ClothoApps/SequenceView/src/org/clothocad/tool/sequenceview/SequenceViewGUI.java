@@ -22,23 +22,15 @@ ENHANCEMENTS, OR MODIFICATIONS..
  */
 package org.clothocad.tool.sequenceview;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import org.openide.windows.TopComponent;
-import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.FocusEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import org.clothocore.util.dialog.ClothoDialogBox;
-//.util.ClothoDialogBox; //commented
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
-import javax.swing.JInternalFrame;
 import javax.swing.JRootPane;
-import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 import javax.swing.text.*;
 import org.clothocore.api.core.Collator;
 import org.clothocore.api.core.wrapper.ToolWrapper;

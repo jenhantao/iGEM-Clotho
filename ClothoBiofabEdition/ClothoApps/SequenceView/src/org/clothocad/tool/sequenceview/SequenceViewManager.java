@@ -117,7 +117,7 @@ public class SequenceViewManager implements ClothoTool {
         //activate(); commented
 
         _sequenceViewArray = new ArrayList<SequenceView>();
-        _sequenceViewArray.add(new SequenceView("SequenceView", "SequenceView", this, 0, _plugIns));
+        _sequenceViewArray.add(new SequenceView("SequenceView", "SequenceView", this, 0));
         _currentSequenceViewIndex = 0;
         _sequenceViewArray.get(_currentSequenceViewIndex).setTitle("Clotho: Sequence View (Address: " + _currentSequenceViewIndex + ") New Sequence");
         // _help = new ClothoHelp(); commented
@@ -136,7 +136,7 @@ public class SequenceViewManager implements ClothoTool {
         //copy
 
         _sequenceViewArray = new ArrayList<SequenceView>();
-        _sequenceViewArray.add(new SequenceView("SequenceView", "SequenceView", this, 0, _plugIns));
+        _sequenceViewArray.add(new SequenceView("SequenceView", "SequenceView", this, 0));
         _currentSequenceViewIndex = 0;
         _sequenceViewArray.get(_currentSequenceViewIndex).setTitle("Clotho: Sequence View (Address: " + _currentSequenceViewIndex + ") New Sequence");
         //
@@ -223,7 +223,7 @@ public class SequenceViewManager implements ClothoTool {
     private ArrayList<SequenceView> _sequenceViewArray;
 //    private ClothoHelp _help;
     private int _currentSequenceViewIndex;
-    private HashMap<String, SequenceViewPlugInInterface> _plugIns;
+//    private HashMap<String, SequenceViewPlugInInterface> _plugIns;
 
     @Override
     public void launch(ObjBase o) {
@@ -265,7 +265,7 @@ public class SequenceViewManager implements ClothoTool {
 //                _currentSequenceViewIndex=0;
 //            }
             _sequenceViewArray = new ArrayList<SequenceView>();
-            _sequenceViewArray.add(new SequenceView("SequenceView", "SequenceView", this, _currentSequenceViewIndex, _plugIns));
+            _sequenceViewArray.add(new SequenceView("SequenceView", "SequenceView", this, _currentSequenceViewIndex));
 
             _sequenceViewArray.get(_currentSequenceViewIndex).setTitle("Clotho: Sequence View (Address: " + _currentSequenceViewIndex + ") " + o.getName());
             _sequenceViewArray.get(_currentSequenceViewIndex).setSequence(sequence);
