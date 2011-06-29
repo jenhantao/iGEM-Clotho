@@ -2026,24 +2026,38 @@ public class SequenceView {
 
             lengthValue.setText(len.toString());
 
-//            String selectedText = _sequenceview.get_TextArea().getSelectedText();
+            String selectedText = _sequenceview.get_TextArea().getSelectedText().toUpperCase();
+            int atCount = 0;
+            Double gcCount = 0.0;
+            for (int i = 0; i < selectedText.length(); i++) {
+                if (selectedText.charAt(i) == 'G' || selectedText.charAt(i) == 'C') {
+                    gcCount++;
+                }
+                if (selectedText.charAt(i) == 'A' || selectedText.charAt(i) == 'T') {
+                    atCount++;
+                }
+            }
+            Double tm = 0.0;
 
-            //FIXME d.set_circular(_circular);
-            double[] gc = new double[2];
-            //comment= (double[]) _sequenceUtils.gcContent(selectedText);
-            Double gcMin = Math.floor(gc[0] * 100);
-            Double gcMax = Math.floor(gc[1] * 100);
-            _gcString = gcMin.intValue() + " (" + gcMax.intValue() + ")";
-            gcValue.setText(_gcString);
-
-            Double tm = 55.0;
-            //comment(Double) _sequenceUtils.meltingTemp(selectedText, _dnaType);
+            if (selectedText.length() > 0) {
+                if (selectedText.length() < 15) {
+                    tm = 4 * gcCount + 2 * atCount;
+                } else {
+                    tm = 64.9 + 41 * (gcCount - 16.4) / selectedText.length();
+                }
+            }
             tm = Math.floor(tm);
             if (tm < 0) {
-                _tmString = "< 0";
+                _tmString = "< 0 C";
             } else {
-                _tmString = tm.toString();
+                _tmString = tm.toString()+" C";
             }
+            gcCount = Math.floor(gcCount / selectedText.length() * 100);
+            _gcString = gcCount + " %";
+            gcValue.setText(_gcString);
+
+            //comment(Double) _sequenceUtils.meltingTemp(selectedText, _dnaType);
+
 
             tmValue.setText(_tmString);
         }

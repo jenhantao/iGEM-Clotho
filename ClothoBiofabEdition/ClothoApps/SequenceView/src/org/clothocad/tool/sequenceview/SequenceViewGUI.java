@@ -552,7 +552,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         jLabel26.setText("0 (0)"); // NOI18N
         jLabel26.setToolTipText("GC Content - Minimum (Maximum)"); // NOI18N
 
-        jLabel27.setFont(new java.awt.Font("Tahoma", 1, 11));
+        jLabel27.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel27.setText("Tm"); // NOI18N
         jLabel27.setToolTipText("Oligo Annealing Temperature"); // NOI18N
 
@@ -561,7 +561,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
 
         mouseLocationJLabel.setText("0"); // NOI18N
 
-        jLabel30.setFont(new java.awt.Font("Tahoma", 1, 11));
+        jLabel30.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel30.setText("Feature"); // NOI18N
 
         featureNameJLabel.setText(" "); // NOI18N
@@ -777,7 +777,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
                     .addContainerGap(22, Short.MAX_VALUE)))
         );
 
-        SequenceTextPane.setFont(new java.awt.Font("Courier New", 0, 11));
+        SequenceTextPane.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
         SequenceTextPane.setDragEnabled(true);
         SequenceTextPane.setMargin(new java.awt.Insets(0, 0, 0, 0));
         SequenceTextPane.addCaretListener(new javax.swing.event.CaretListener() {
@@ -1139,7 +1139,6 @@ public class SequenceViewGUI extends javax.swing.JFrame {
 
         SequenceViewMenuBar.add(ORFMenu);
 
-        HighlightMenu.setText("Highlighting"); // NOI18N
         HighlightMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 HighlightMenuActionPerformed(evt);
