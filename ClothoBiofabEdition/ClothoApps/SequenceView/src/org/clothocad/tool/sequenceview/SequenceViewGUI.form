@@ -313,6 +313,9 @@
           </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="HighlightMenu">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Highlighting"/>
+          </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="HighlightMenuActionPerformed"/>
           </Events>
@@ -430,8 +433,6 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="preferenceMenuItemActionPerformed"/>
               </Events>
-            </MenuItem>
-            <MenuItem class="javax.swing.JSeparator" name="jSeparator5">
             </MenuItem>
           </SubComponents>
         </Menu>

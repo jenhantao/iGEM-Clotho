@@ -331,7 +331,6 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         importGenbankMenuItem = new javax.swing.JMenuItem();
         importApEMenuItem = new javax.swing.JMenuItem();
         preferenceMenuItem = new javax.swing.JMenuItem();
-        jSeparator5 = new javax.swing.JSeparator();
         WindowMenu = new javax.swing.JMenu();
         HelpMenu = new javax.swing.JMenu();
         helpMenuItem = new javax.swing.JMenuItem();
@@ -552,7 +551,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         jLabel26.setText("0 (0)"); // NOI18N
         jLabel26.setToolTipText("GC Content - Minimum (Maximum)"); // NOI18N
 
-        jLabel27.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel27.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel27.setText("Tm"); // NOI18N
         jLabel27.setToolTipText("Oligo Annealing Temperature"); // NOI18N
 
@@ -561,7 +560,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
 
         mouseLocationJLabel.setText("0"); // NOI18N
 
-        jLabel30.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel30.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel30.setText("Feature"); // NOI18N
 
         featureNameJLabel.setText(" "); // NOI18N
@@ -777,7 +776,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
                     .addContainerGap(22, Short.MAX_VALUE)))
         );
 
-        SequenceTextPane.setFont(new java.awt.Font("Courier New", 0, 11)); // NOI18N
+        SequenceTextPane.setFont(new java.awt.Font("Courier New", 0, 11));
         SequenceTextPane.setDragEnabled(true);
         SequenceTextPane.setMargin(new java.awt.Insets(0, 0, 0, 0));
         SequenceTextPane.addCaretListener(new javax.swing.event.CaretListener() {
@@ -1139,6 +1138,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
 
         SequenceViewMenuBar.add(ORFMenu);
 
+        HighlightMenu.setText("Highlighting");
         HighlightMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 HighlightMenuActionPerformed(evt);
@@ -1243,7 +1243,6 @@ public class SequenceViewGUI extends javax.swing.JFrame {
             }
         });
         HighlightMenu.add(preferenceMenuItem);
-        HighlightMenu.add(jSeparator5);
 
         SequenceViewMenuBar.add(HighlightMenu);
 
@@ -1773,7 +1772,6 @@ private void importApEMenuItemActionPerformed(java.awt.event.ActionEvent evt) {/
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
-    private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
     private javax.swing.JButton lowerCaseButton;
     private javax.swing.JToolBar mainToolBar;

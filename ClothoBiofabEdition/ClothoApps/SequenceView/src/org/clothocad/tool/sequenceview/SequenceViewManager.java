@@ -72,75 +72,20 @@ public class SequenceViewManager implements ClothoTool {
         svm.init();
         svm.launch();
     }
-
-    /*public void activate(){
-
-    try {
-    PluginManager manager;
-    PluginDescriptor desc;
-
-    manager = ClothoCore.getCore().get_plugin_manager();
-    desc = manager.getPlugin("sequenceview").getDescriptor();
-
-
-    _plugIns = new HashMap<String, SequenceViewPlugInInterface>();
-    ExtensionPoint analyzerExtPoint =
-    manager.getRegistry().getExtensionPoint(
-    desc.getId(), "SequenceViewPlugInExtensionPoint");
-    for (Object e: analyzerExtPoint.getConnectedExtensions()) {
-    Extension ext = (Extension) e;
-    String name = ext.getParameter("name").valueAsString();
-    try{
-    manager.activatePlugin(
-    ext.getDeclaringPluginDescriptor().getId());
-    // Get plug-in class loader.
-    ClassLoader classLoader = manager.getPluginClassLoader(
-    ext.getDeclaringPluginDescriptor());
-    // Load Tool class.
-    Class analyzerCls = classLoader.loadClass(
-    ext.getParameter("class").valueAsString());
-    // Create Tool instance.
-    SequenceViewPlugInInterface analyzer = (SequenceViewPlugInInterface) analyzerCls.newInstance();
-    _plugIns.put(name, analyzer);
-    }
-    catch(Exception ex){
-    System.out.println("ERROR MAKING PLUGIN: " + ex.getMessage());
-    }
-
-    }
-
-    }catch(Exception e) { System.out.println("PLUGIN EXCEPTION: " + e.getMessage());}
-
-    }
-     */
     public void init() {
-        //activate(); commented
-
         _sequenceViewArray = new ArrayList<SequenceView>();
         _sequenceViewArray.add(new SequenceView("SequenceView", "SequenceView", this, 0));
         _currentSequenceViewIndex = 0;
         _sequenceViewArray.get(_currentSequenceViewIndex).setTitle("Clotho: Sequence View (Address: " + _currentSequenceViewIndex + ") New Sequence");
-        // _help = new ClothoHelp(); commented
 
-        /*commented
-        try {
-        _help.addArticle("ClothoSequenceViewHelp.html", "Sequence View Help");
-        } catch (FileNotFoundException ex) {
-        //  Exceptions.printStackTrace(ex);
-        }
-         *
-         */
     }
 
     public void launch() {
-        //copy
 
         _sequenceViewArray = new ArrayList<SequenceView>();
         _sequenceViewArray.add(new SequenceView("SequenceView", "SequenceView", this, 0));
         _currentSequenceViewIndex = 0;
         _sequenceViewArray.get(_currentSequenceViewIndex).setTitle("Clotho: Sequence View (Address: " + _currentSequenceViewIndex + ") New Sequence");
-        //
-        //commented _sequenceViewArray.get(_currentSequenceViewIndex).load_preferences();
         _sequenceViewArray.get(_currentSequenceViewIndex).getSequenceView().setVisible(true);
         _sequenceViewArray.get(_currentSequenceViewIndex).getSequenceView().requestFocus();
     }
@@ -153,30 +98,6 @@ public class SequenceViewManager implements ClothoTool {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /**Use by other tools to send data to Sequence View*/
-    /*commented
-    public void sendData(Object data, ClothoTool sender, int opcode) {
-
-    if(opcode == SequenceViewEnums.enzymeHighlight.ordinal())
-    _sequenceViewArray.get(_currentSequenceViewIndex).highlightFeaturesEnzymeAction((ClothoHighlightData[]) data);
-
-    if(opcode == SequenceViewEnums.displayNewSequence.ordinal())
-    {
-    _sequenceViewArray.get(_currentSequenceViewIndex).setSequence((String) data);
-    }
-
-    if(opcode == SequenceViewEnums.featureHighlight.ordinal())
-    _sequenceViewArray.get(_currentSequenceViewIndex).highlightFeaturesEnzymeAction((ClothoHighlightData[]) data);
-
-    }
-     */
-    /*commented
-    public void openHelp()
-    {
-    _help.launch();
-    }
-     *
-     */
     public void add(SequenceView sv) {
         _sequenceViewArray.add(sv);
     }

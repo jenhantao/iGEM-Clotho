@@ -78,8 +78,7 @@ public final class InventoryTopComponent extends TopComponent {
         System.out.println(_chosenType);
     }
 
-    private void fetchInventoryInformation()
-    {
+    private void fetchInventoryInformation() {
         new SwingWorker() {
 
             Collection personalCollection = null;
@@ -87,20 +86,17 @@ public final class InventoryTopComponent extends TopComponent {
             @Override
             protected Object doInBackground() throws Exception {
                 System.out.println("################################ FabDash connecting");
-                
-                if (!Collector.isConnected())
-                {
+
+                if (!Collector.isConnected()) {
                     return null;
                 }
 
-                try
-                {
+                try {
                     personalCollection = Collector.getCurrentUser().getHerCollection();
                     //Populate the Plasmid tab is below
                     ArrayList<ObjLink> allPlasmids = Collector.getAllLinksOf(ObjType.PLASMID);
                     Object[][] plasmidTableModel = new Object[allPlasmids.size()][2];
-                    for (int i = 0; i < allPlasmids.size(); i++)
-                    {
+                    for (int i = 0; i < allPlasmids.size(); i++) {
                         plasmidTableModel[i][0] = allPlasmids.get(i).name;
                         Plasmid aplas = Collector.getPlasmid(allPlasmids.get(i).uuid);
                         Format aform = aplas.getFormat(); //get the Format of aplas
@@ -112,14 +108,13 @@ public final class InventoryTopComponent extends TopComponent {
                     //populate the Oligo tab
                     ArrayList<ObjLink> allOligos = Collector.getAllLinksOf(ObjType.OLIGO);
                     Object[][] oligoTableModel = new Object[allOligos.size()][2];
-                    
-                    for (int i = 0; i < allOligos.size(); i++)
-                    {
+
+                    for (int i = 0; i < allOligos.size(); i++) {
                         Oligo oligo = Collector.getOligo(allOligos.get(i).uuid);
                         oligoTableModel[i][0] = allOligos.get(i).name;
                         oligoTableModel[i][1] = oligo.getDescription();
                     }
-                    
+
                     oligosTable.setModel(new javax.swing.table.DefaultTableModel(oligoTableModel, new String[]{"Name", "Description"}));
 
                     //populate the Vectors tab is below
@@ -146,17 +141,15 @@ public final class InventoryTopComponent extends TopComponent {
                     ArrayList<ObjLink> allParts = Collector.getAllLinksOf(ObjType.PART);
                     Object[][] partTableModel = new Object[allParts.size()][2];
                     for (int i = 0; i < allParts.size(); i++) {
-                        Part aPart= Collector.getPart(allParts.get(i).uuid);
+                        Part aPart = Collector.getPart(allParts.get(i).uuid);
                         partTableModel[i][0] = aPart.getName();
-                        partTableModel[i][1]= aPart.getFormat().toString();
+                        partTableModel[i][1] = aPart.getFormat().toString();
                     }
-                    partsTable.setModel(new javax.swing.table.DefaultTableModel(partTableModel, new String[]{"Part Name"}));
+                    partsTable.setModel(new javax.swing.table.DefaultTableModel(partTableModel, new String[]{"Part Name", "Format"}));
 
 
 
-                } 
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -190,8 +183,8 @@ public final class InventoryTopComponent extends TopComponent {
 //        itcPartTable.repaint();
 //    }
     //refreshes and populates Plasmid Tab
-    public static void refreshPlasmidTab() {
 
+    public static void refreshPlasmidTab() {
     }
 
     /** This method is called from within the constructor to
@@ -426,7 +419,6 @@ public final class InventoryTopComponent extends TopComponent {
     protected String preferredID() {
         return PREFERRED_ID;
     }
-
     ///////////////////////////////////////////////////////////////////
     ////                      private variables                    ////
     private ObjType _chosenType = ObjType.PART;

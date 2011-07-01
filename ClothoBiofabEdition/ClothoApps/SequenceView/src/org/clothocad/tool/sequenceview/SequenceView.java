@@ -704,7 +704,7 @@ public class SequenceView {
                             if (lastORFHighlightTag != null) {
                                 _h.removeHighlight(lastORFHighlightTag);
                             }
-//                            _sequenceview.getOutputTextArea().setText("Found circular orf");
+                            _sequenceview.getOutputTextArea().setText("Found circular orf");
                             _h.addHighlight(currentORFStart, seq.length(), _painter);
                             _h.addHighlight(0, Math.min(seq.toLowerCase().indexOf("tag"), Math.min(seq.toLowerCase().indexOf("taa"), seq.toLowerCase().indexOf("tga"))) + 3, _painter);
                             currentORFStart = startPositions.get(0); //reset start to first ORF start to allow looping
@@ -723,7 +723,7 @@ public class SequenceView {
                                 }
                             }
                             this.removeORFHighlights();
-//                            _sequenceview.getOutputTextArea().setText("Found last orf");
+                            _sequenceview.getOutputTextArea().setText("Found last orf");
                             lastORFHighlightTag = _h.addHighlight(currentORFStart, hm.get(currentORFStart), _painter);
                             textArea.setCaretPosition(currentORFStart);
                             currentORFStart++;
@@ -742,7 +742,7 @@ public class SequenceView {
                             }
                         }
                         this.removeORFHighlights();
-//                        _sequenceview.getOutputTextArea().setText("Found orf");
+                        _sequenceview.getOutputTextArea().setText("Found orf");
                         lastORFHighlightTag = _h.addHighlight(currentORFStart, hm.get(currentORFStart), _painter);
                         textArea.setCaretPosition(currentORFStart);
                         currentORFStart++;
@@ -1258,7 +1258,8 @@ public class SequenceView {
 
                     } else if (userHighlightColor.equals(Color.YELLOW)) {
                         this.changeUserHighlightColor(Color.CYAN);
-
+                    } else {
+                        this.changeUserHighlightColor(Color.CYAN);
                     }
                 }
                 lastUserHighlightTag = _h.addHighlight(start, end, new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(userHighlightColor));
