@@ -59,8 +59,10 @@ public class SearchBar extends JPanel {
        _lister.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+
                 if(e.getClickCount()==2) {
                     try {
+                        System.out.println(mainPane.getComponent(0));
                         ObjBase obj = (ObjBase) _lister.getSelectedValue();
                         obj.launchDefaultViewer();
                     } catch(Exception ex) {
@@ -163,7 +165,7 @@ public class SearchBar extends JPanel {
                 dynScroller.setViewportView(dynLister);         // put the list in the scroller
                 setResults(outcoll,myObj,dynLister);          // set the results for lister
                 mainPane.addTab(myObj.toString(), dynScroller);    // add a pane for the user
-                ObjBasePopup obp = new ObjBasePopup(dynLister,(ObjBase) result.get(0));
+//                _obp = new ObjBasePopup(dynLister,(ObjBase) result.get(0));
 
             }
 

@@ -23,6 +23,8 @@ ENHANCEMENTS, OR MODIFICATIONS..
  */
 package org.clothocore.widget.fabdash;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import javax.swing.JScrollPane;
@@ -30,18 +32,23 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.SwingWorker;
+import org.clothocore.api.core.Collator;
 
 import org.clothocore.api.core.Collector;
+import org.clothocore.api.core.wrapper.ViewerWrapper;
 import org.clothocore.api.data.Collection;
-import org.clothocore.api.data.Feature;
+//import org.clothocore.api.data.Feature;
 import org.clothocore.api.data.Format;
+import org.clothocore.api.data.ObjBase;
 import org.clothocore.api.data.ObjLink;
 import org.clothocore.api.data.ObjType;
 import org.clothocore.api.data.Oligo;
 import org.clothocore.api.data.Part;
 import org.clothocore.api.data.Plasmid;
 import org.clothocore.api.data.Vector;
-import org.clothocore.widget.fabdash.browser.ObjTypeChooser;
+//import org.clothocore.widget.fabdash.browser.ObjTypeChooser;
+import org.clothocore.util.basic.ObjBasePopup;
+import org.clothocore.util.def.DefaultViewer;
 import org.clothocore.widget.fabdash.browser.SearchBar;
 
 import org.openide.util.NbBundle;
@@ -70,7 +77,43 @@ public final class InventoryTopComponent extends TopComponent {
         setToolTipText(NbBundle.getMessage(InventoryTopComponent.class, "HINT_InventoryTopComponent"));
 //        setIcon(ImageUtilities.loadImage(ICON_PATH, true));
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
+        partsTable.addMouseListener(new MouseAdapter() {
 
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+//                    ObjBasePopup obp = new ObjBasePopup(partsTable, Collector.getPart(((ObjLink) partsTable.getValueAt(partsTable.getSelectedRow(), 0)).uuid));
+                    System.out.println(Collector.getPart(((ObjLink) partsTable.getValueAt(partsTable.getSelectedRow(), 0)).uuid));
+                }
+            }
+        });
+//        vectorsTable.addMouseListener(new MouseAdapter() {
+//
+//            @Override
+//            public void mouseClicked(MouseEvent e) {
+//                if (e.getClickCount() == 2) {
+//                    ObjBasePopup obp = new ObjBasePopup(vectorsTable, Collector.getPart(((ObjLink) vectorsTable.getValueAt(vectorsTable.getSelectedRow(), 0)).uuid));
+//                }
+//            }
+//        });
+//        plasmidsTable.addMouseListener(new MouseAdapter() {
+//
+//            @Override
+//            public void mouseClicked(MouseEvent e) {
+//                if (e.getClickCount() == 2) {
+//                    ObjBasePopup obp = new ObjBasePopup(plasmidsTable, Collector.getPart(((ObjLink) plasmidsTable.getValueAt(plasmidsTable.getSelectedRow(), 0)).uuid));
+//                }
+//            }
+//        });
+//        oligosTable.addMouseListener(new MouseAdapter() {
+//
+//            @Override
+//            public void mouseClicked(MouseEvent e) {
+//                if (e.getClickCount() == 2) {
+//                    ObjBasePopup obp = new ObjBasePopup(vectorsTable, Collector.getPart(((ObjLink) vectorsTable.getValueAt(vectorsTable.getSelectedRow(), 0)).uuid));
+//                }
+//            }
+//        });
     }
 
     public void changeObjType(ObjType type) {
@@ -96,6 +139,9 @@ public final class InventoryTopComponent extends TopComponent {
                     //Populate the Plasmid tab is below
                     ArrayList<ObjLink> allPlasmids = Collector.getAllLinksOf(ObjType.PLASMID);
                     Object[][] plasmidTableModel = new Object[allPlasmids.size()][2];
+                    if (allPlasmids.size() > 0) {
+                        ObjBasePopup obp = new ObjBasePopup(plasmidsTable, Collector.getPlasmid(allPlasmids.get(0).uuid));
+                    }
                     for (int i = 0; i < allPlasmids.size(); i++) {
                         plasmidTableModel[i][0] = allPlasmids.get(i).name;
                         Plasmid aplas = Collector.getPlasmid(allPlasmids.get(i).uuid);
@@ -103,12 +149,15 @@ public final class InventoryTopComponent extends TopComponent {
                         plasmidTableModel[i][1] = aform.getName(); //based on the Format, the sequence of the region of interest is retreieved and used to populate the table
                     }
 
+
                     plasmidsTable.setModel(new javax.swing.table.DefaultTableModel(plasmidTableModel, new String[]{"Plasmid Name", "Format"}));
 
                     //populate the Oligo tab
                     ArrayList<ObjLink> allOligos = Collector.getAllLinksOf(ObjType.OLIGO);
                     Object[][] oligoTableModel = new Object[allOligos.size()][2];
-
+                    if (allOligos.size() > 0) {
+                        ObjBasePopup obp = new ObjBasePopup(oligosTable, Collector.getOligo(allOligos.get(0).uuid));
+                    }
                     for (int i = 0; i < allOligos.size(); i++) {
                         Oligo oligo = Collector.getOligo(allOligos.get(i).uuid);
                         oligoTableModel[i][0] = allOligos.get(i).name;
@@ -120,6 +169,9 @@ public final class InventoryTopComponent extends TopComponent {
                     //populate the Vectors tab is below
                     ArrayList<ObjLink> allVectors = Collector.getAllLinksOf(ObjType.VECTOR);
                     Object[][] vectorTableModel = new Object[allVectors.size()][2];
+                    if (allVectors.size() > 0) {
+                        ObjBasePopup obp = new ObjBasePopup(vectorsTable, Collector.getVector(allVectors.get(0).uuid));
+                    }
                     for (int i = 0; i < allVectors.size(); i++) {
                         vectorTableModel[i][0] = allVectors.get(i).name;
                         Vector avec = Collector.getVector(allVectors.get(i).uuid);
@@ -140,6 +192,9 @@ public final class InventoryTopComponent extends TopComponent {
                     //Code for populating the Parts tab is below
                     ArrayList<ObjLink> allParts = Collector.getAllLinksOf(ObjType.PART);
                     Object[][] partTableModel = new Object[allParts.size()][2];
+                    if (allParts.size() > 0) {
+                        ObjBasePopup obp = new ObjBasePopup(partsTable, Collector.getPart(allParts.get(0).uuid));
+                    }
                     for (int i = 0; i < allParts.size(); i++) {
                         Part aPart = Collector.getPart(allParts.get(i).uuid);
                         partTableModel[i][0] = aPart.getName();
