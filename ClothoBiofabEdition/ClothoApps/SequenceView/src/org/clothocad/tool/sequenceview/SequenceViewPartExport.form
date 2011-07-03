@@ -88,7 +88,7 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="jScrollPane1" alignment="1" pref="232" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" alignment="1" pref="270" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="wsRadioButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -107,12 +107,12 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="objectTypeComboBox" linkSize="6" alignment="3" pref="23" max="32767" attributes="1"/>
+                          <Component id="objectTypeComboBox" linkSize="6" alignment="3" max="32767" attributes="1"/>
                           <Component id="jLabel2" linkSize="6" alignment="3" min="-2" max="-2" attributes="1"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="formatComboBox" linkSize="6" alignment="3" pref="23" max="32767" attributes="1"/>
+                          <Component id="formatComboBox" linkSize="6" alignment="3" max="32767" attributes="1"/>
                           <Component id="formatLabel" linkSize="6" alignment="3" min="-2" max="-2" attributes="1"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>

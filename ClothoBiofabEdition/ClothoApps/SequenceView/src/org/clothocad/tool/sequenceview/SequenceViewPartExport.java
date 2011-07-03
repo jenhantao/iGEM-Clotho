@@ -447,7 +447,7 @@ private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
     Boolean saved = false;
     ObjBase newObject = null;
-    if (form != null && coll != null) {
+    if (coll != null) {
         if (objectTypeComboBox.getSelectedIndex() == 0) {
             //feature
             if (seq.toUpperCase().indexOf("ATG") != -1) {
@@ -457,10 +457,10 @@ private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             }
         } else if (objectTypeComboBox.getSelectedIndex() == 1) {
             newObject = new Oligo(name, desc, Collector.getCurrentUser(), seq);
-        } else if (objectTypeComboBox.getSelectedIndex() == 2) {
+        } else if (form != null && objectTypeComboBox.getSelectedIndex() == 2) {
             //part
             newObject = Part.generateBasic(name, desc, seq, form, Collector.getCurrentUser());
-        } else if (objectTypeComboBox.getSelectedIndex() == 3) {
+        } else if (form != null && objectTypeComboBox.getSelectedIndex() == 3) {
             Vector.generateVector(name, desc, seq, form, Collector.getCurrentUser());
         } else {
             statusLabel.setText("error saving new Clotho object, check selected fields");

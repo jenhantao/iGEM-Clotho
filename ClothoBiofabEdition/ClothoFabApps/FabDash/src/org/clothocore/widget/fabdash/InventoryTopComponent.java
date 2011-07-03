@@ -141,7 +141,7 @@ public final class InventoryTopComponent extends TopComponent {
                     Object[][] plasmidTableModel = new Object[allPlasmids.size()][2];
                     if (allPlasmids.size() > 0) {
                         ObjBasePopup obp = new ObjBasePopup(plasmidsTable, Collector.getPlasmid(allPlasmids.get(0).uuid));
-                    }
+                                      }
                     for (int i = 0; i < allPlasmids.size(); i++) {
                         plasmidTableModel[i][0] = allPlasmids.get(i).name;
                         Plasmid aplas = Collector.getPlasmid(allPlasmids.get(i).uuid);
