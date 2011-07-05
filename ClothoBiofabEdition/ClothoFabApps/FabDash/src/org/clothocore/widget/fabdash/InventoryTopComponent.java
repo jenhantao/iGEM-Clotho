@@ -78,42 +78,48 @@ public final class InventoryTopComponent extends TopComponent {
 //        setIcon(ImageUtilities.loadImage(ICON_PATH, true));
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
         partsTable.addMouseListener(new MouseAdapter() {
-
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
-//                    ObjBasePopup obp = new ObjBasePopup(partsTable, Collector.getPart(((ObjLink) partsTable.getValueAt(partsTable.getSelectedRow(), 0)).uuid));
-                    System.out.println(Collector.getPart(((ObjLink) partsTable.getValueAt(partsTable.getSelectedRow(), 0)).uuid));
+                if (partsTable.getSelectedRow() > 0 && partsTable.getSelectedRow() < partsTable.getHeight()) {
+                    if (e.getButton() == MouseEvent.BUTTON1) {
+                        _obp = new ObjBasePopup(partsTable, Part.retrieveByName((String) partsTable.getValueAt(partsTable.getSelectedRow(), 0)));
+                    }
                 }
             }
         });
-//        vectorsTable.addMouseListener(new MouseAdapter() {
-//
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                if (e.getClickCount() == 2) {
-//                    ObjBasePopup obp = new ObjBasePopup(vectorsTable, Collector.getPart(((ObjLink) vectorsTable.getValueAt(vectorsTable.getSelectedRow(), 0)).uuid));
-//                }
-//            }
-//        });
-//        plasmidsTable.addMouseListener(new MouseAdapter() {
-//
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                if (e.getClickCount() == 2) {
-//                    ObjBasePopup obp = new ObjBasePopup(plasmidsTable, Collector.getPart(((ObjLink) plasmidsTable.getValueAt(plasmidsTable.getSelectedRow(), 0)).uuid));
-//                }
-//            }
-//        });
-//        oligosTable.addMouseListener(new MouseAdapter() {
-//
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                if (e.getClickCount() == 2) {
-//                    ObjBasePopup obp = new ObjBasePopup(vectorsTable, Collector.getPart(((ObjLink) vectorsTable.getValueAt(vectorsTable.getSelectedRow(), 0)).uuid));
-//                }
-//            }
-//        });
+        vectorsTable.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    if (vectorsTable.getSelectedRow() > 0 && vectorsTable.getSelectedRow() < vectorsTable.getHeight()) {
+                        _obp = new ObjBasePopup(vectorsTable, Vector.retrieveByName((String) vectorsTable.getValueAt(vectorsTable.getSelectedRow(), 0)));
+                    }
+                }
+            }
+        });
+        plasmidsTable.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (plasmidsTable.getSelectedRow() > 0 && plasmidsTable.getSelectedRow() < plasmidsTable.getHeight()) {
+                    if (e.getButton() == MouseEvent.BUTTON1) {
+                        _obp = new ObjBasePopup(plasmidsTable, Plasmid.retrieveByName((String) plasmidsTable.getValueAt(plasmidsTable.getSelectedRow(), 0)));
+                    }
+                }
+            }
+        });
+        oligosTable.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    if (oligosTable.getSelectedRow() > 0 && oligosTable.getSelectedRow() < oligosTable.getHeight()) {
+                        _obp = new ObjBasePopup(oligosTable, Oligo.retrieveByName((String) oligosTable.getValueAt(oligosTable.getSelectedRow(), 0)));
+                    }
+                }
+            }
+        });
     }
 
     public void changeObjType(ObjType type) {
@@ -141,7 +147,7 @@ public final class InventoryTopComponent extends TopComponent {
                     Object[][] plasmidTableModel = new Object[allPlasmids.size()][2];
                     if (allPlasmids.size() > 0) {
                         ObjBasePopup obp = new ObjBasePopup(plasmidsTable, Collector.getPlasmid(allPlasmids.get(0).uuid));
-                                      }
+                    }
                     for (int i = 0; i < allPlasmids.size(); i++) {
                         plasmidTableModel[i][0] = allPlasmids.get(i).name;
                         Plasmid aplas = Collector.getPlasmid(allPlasmids.get(i).uuid);
@@ -261,6 +267,8 @@ public final class InventoryTopComponent extends TopComponent {
         plasmidsTable = new javax.swing.JTable();
 
         setLayout(new java.awt.BorderLayout());
+
+        inventoryTabbedPane.setPreferredSize(new java.awt.Dimension(300, 440));
 
         oligosTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -477,4 +485,5 @@ public final class InventoryTopComponent extends TopComponent {
     ///////////////////////////////////////////////////////////////////
     ////                      private variables                    ////
     private ObjType _chosenType = ObjType.PART;
+    private ObjBasePopup _obp;
 }
