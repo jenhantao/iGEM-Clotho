@@ -2806,16 +2806,13 @@ public class SequenceView {
      * LOSE JTextPane INFORMATION SUCH AS CARET POSITION.
      */
     public void refreshHighlights() {
-        System.out.print("refreshing! ");
         Boolean re = _REOn;
         Boolean fe = _featuresOn;
         removeFeatureEnzymeHighlights();
         if (fe) {
-            System.out.println("features");
             highlightFeatures();
         }
         if (re) {
-            System.out.println("enzymes");
             highlightRestrictionSites();
         }
     }
@@ -3850,7 +3847,6 @@ public class SequenceView {
 
     public void highlightRestrictionSites() {
         new SwingWorker() {
-
             @Override
             protected Object doInBackground() throws Exception {
                 Person user = Collector.getCurrentUser();

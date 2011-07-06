@@ -612,19 +612,16 @@ private void dataTextPaneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRS
 
         @Override
         public void insertUpdate(DocumentEvent e) {
-            System.out.println("inserting");
             updateSelection();
         }
 
         @Override
         public void removeUpdate(DocumentEvent e) {
-            System.out.println("removing");
             updateSelection();
         }
 
         @Override
         public void changedUpdate(DocumentEvent e) {
-            System.out.println("change update");
             updateSelection();
         }
     }

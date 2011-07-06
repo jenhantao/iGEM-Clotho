@@ -34,7 +34,7 @@ import org.clothocore.api.plugin.ClothoTool;
 
 /**
  *
- * @author J. Christopher Anderson
+ * @author Jenhan Tao
  */
 public class connect implements ClothoTool {
 
@@ -50,7 +50,10 @@ public class connect implements ClothoTool {
         someFrame.setVisible(true);
         pig.add(new WeakReference(someFrame));
     }
-
+/**
+ * Use this launch method to launch from other apps
+ * @param o
+ */
     @Override
     public void launch(ObjBase o) {
     }

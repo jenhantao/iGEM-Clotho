@@ -1,5 +1,19 @@
 package org.clothocad.tool.primerdesigner;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.HashMap;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
+import javax.swing.text.Highlighter;
+import org.clothocore.api.core.Collector;
+import org.clothocore.api.data.ObjLink;
+import org.clothocore.api.data.ObjType;
+import org.openide.util.Exceptions;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -10,23 +24,36 @@ package org.clothocad.tool.primerdesigner;
  *
  * Created on Jul 5, 2011, 5:06:34 PM
  */
-
 /**
- *
- * @author jenhan
+ * View for PrimerDesignController
+ * @author Jenhan Tao
  */
 public class DesignFrame extends javax.swing.JFrame {
 
     /** Creates new form DesignFrame */
     public DesignFrame() {
         initComponents();
-        
+
     }
-        public DesignFrame(String s) {
+
+    public DesignFrame(String s) {
         initComponents();
         sequenceTextField.setText(s);
         sequenceTextField.setCaretPosition(0);
-
+        endLabel.setText(Integer.toString(s.length()));
+        _controller = new PrimerDesignController(this);
+        ArrayList<ObjLink> featureList = Collector.getAllLinksOf(ObjType.FEATURE);
+        insertComboBox1.removeAllItems();
+        insertComboBox2.removeAllItems();
+        insertComboBox1.addItem("none");
+        insertComboBox2.addItem("none");
+        for (ObjLink ol : featureList) {
+            insertComboBox1.addItem(ol.name);
+            insertComboBox2.addItem(ol.name);
+        }
+        insertComboBox1.setSize(50, 28);
+        insertComboBox2.setSize(50, 28);
+        sequenceTextField.getDocument().addDocumentListener(new PrimerDesignerListener(this));
     }
 
     /** This method is called from within the constructor to
@@ -51,13 +78,20 @@ public class DesignFrame extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        positionLabel = new javax.swing.JLabel();
+        startLabel = new javax.swing.JLabel();
+        endLabel = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        tmTextField = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        lengthTextField = new javax.swing.JTextField();
         statusLabel = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         generateButton.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.generateButton.text")); // NOI18N
         generateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -67,18 +101,41 @@ public class DesignFrame extends javax.swing.JFrame {
         });
 
         cancelButton.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.cancelButton.text")); // NOI18N
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
 
         insertComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        insertComboBox2.setSelectedIndex(-1);
+        insertComboBox2.setToolTipText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.insertComboBox2.toolTipText")); // NOI18N
+        insertComboBox2.setMaximumSize(new java.awt.Dimension(50, 28));
+        insertComboBox2.setMinimumSize(new java.awt.Dimension(50, 28));
+        insertComboBox2.setPreferredSize(new java.awt.Dimension(50, 28));
 
         insertComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        insertComboBox1.setSelectedIndex(-1);
+        insertComboBox1.setToolTipText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.insertComboBox1.toolTipText")); // NOI18N
+        insertComboBox1.setMaximumSize(new java.awt.Dimension(50, 28));
+        insertComboBox1.setMinimumSize(new java.awt.Dimension(50, 28));
+        insertComboBox1.setPreferredSize(new java.awt.Dimension(50, 28));
 
         spacerTextField1.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.spacerTextField1.text")); // NOI18N
+        spacerTextField1.setToolTipText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.spacerTextField1.toolTipText")); // NOI18N
 
         spacerTextField2.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.spacerTextField2.text")); // NOI18N
+        spacerTextField2.setToolTipText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.spacerTextField2.toolTipText")); // NOI18N
 
         sequenceTextField.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.sequenceTextField.text")); // NOI18N
+        sequenceTextField.setMaximumSize(new java.awt.Dimension(200, 30));
         sequenceTextField.setMinimumSize(new java.awt.Dimension(100, 30));
         sequenceTextField.setPreferredSize(new java.awt.Dimension(200, 30));
+        sequenceTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                sequenceTextFieldMouseClicked(evt);
+            }
+        });
         sequenceTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 sequenceTextFieldActionPerformed(evt);
@@ -86,11 +143,21 @@ public class DesignFrame extends javax.swing.JFrame {
         });
 
         navigatorPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        navigatorPanel.setToolTipText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.navigatorPanel.toolTipText")); // NOI18N
+        navigatorPanel.setMaximumSize(new java.awt.Dimension(200, 30));
         navigatorPanel.setMinimumSize(new java.awt.Dimension(100, 30));
         navigatorPanel.setPreferredSize(new java.awt.Dimension(200, 30));
         navigatorPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 navigatorPanelMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                navigatorPanelMouseEntered(evt);
+            }
+        });
+        navigatorPanel.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                navigatorPanelMouseMoved(evt);
             }
         });
 
@@ -98,7 +165,7 @@ public class DesignFrame extends javax.swing.JFrame {
         navigatorPanel.setLayout(navigatorPanelLayout);
         navigatorPanelLayout.setHorizontalGroup(
             navigatorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 474, Short.MAX_VALUE)
+            .addGap(0, 513, Short.MAX_VALUE)
         );
         navigatorPanelLayout.setVerticalGroup(
             navigatorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -112,8 +179,8 @@ public class DesignFrame extends javax.swing.JFrame {
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(navigatorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 478, Short.MAX_VALUE)
-                    .addComponent(sequenceTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 478, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(navigatorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 517, Short.MAX_VALUE)
+                    .addComponent(sequenceTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 517, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -124,7 +191,8 @@ public class DesignFrame extends javax.swing.JFrame {
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addComponent(navigatorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sequenceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(sequenceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         backgroundPanelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {navigatorPanel, sequenceTextField});
@@ -136,6 +204,38 @@ public class DesignFrame extends javax.swing.JFrame {
         jLabel4.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.jLabel4.text")); // NOI18N
 
         jLabel5.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.jLabel5.text")); // NOI18N
+
+        positionLabel.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.positionLabel.text")); // NOI18N
+
+        startLabel.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.startLabel.text")); // NOI18N
+        startLabel.setMaximumSize(new java.awt.Dimension(40, 30));
+        startLabel.setMinimumSize(new java.awt.Dimension(40, 30));
+
+        endLabel.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.endLabel.text")); // NOI18N
+        endLabel.setMaximumSize(new java.awt.Dimension(40, 30));
+        endLabel.setMinimumSize(new java.awt.Dimension(40, 30));
+
+        jLabel7.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.jLabel7.text")); // NOI18N
+
+        tmTextField.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.tmTextField.text")); // NOI18N
+        tmTextField.setMinimumSize(new java.awt.Dimension(35, 28));
+        tmTextField.setPreferredSize(new java.awt.Dimension(35, 28));
+        tmTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tmTextFieldActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.jLabel8.text")); // NOI18N
+
+        lengthTextField.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.lengthTextField.text")); // NOI18N
+        lengthTextField.setMinimumSize(new java.awt.Dimension(35, 28));
+        lengthTextField.setPreferredSize(new java.awt.Dimension(35, 28));
+        lengthTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                lengthTextFieldActionPerformed(evt);
+            }
+        });
 
         statusLabel.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.statusLabel.text")); // NOI18N
 
@@ -155,33 +255,54 @@ public class DesignFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(spacerTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))
+                            .addComponent(jLabel5)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tmTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(insertComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(32, 32, 32)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(insertComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(spacerTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4)
+                                    .addComponent(insertComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(insertComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel2))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addComponent(spacerTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel8)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lengthTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(15, 15, 15))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(generateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cancelButton)))
-                .addContainerGap())
+                        .addComponent(cancelButton)
+                        .addGap(56, 56, 56))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addComponent(startLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(187, 187, 187)
+                        .addComponent(positionLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 195, Short.MAX_VALUE)
+                        .addComponent(endLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(34, 34, 34))))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {spacerTextField1, spacerTextField2});
@@ -192,9 +313,14 @@ public class DesignFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(startLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(endLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(positionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
@@ -203,23 +329,27 @@ public class DesignFrame extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(spacerTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(insertComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel2)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(insertComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(spacerTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel3)
-                            .addGap(34, 34, 34))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(insertComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spacerTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(34, 34, 34)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(cancelButton)
-                        .addComponent(generateButton))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(tmTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8)
+                    .addComponent(lengthTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cancelButton)
+                    .addComponent(generateButton)
                     .addComponent(statusLabel))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {insertComboBox1, insertComboBox2});
@@ -229,32 +359,121 @@ public class DesignFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_generateButtonActionPerformed
+    void updateLabels() {
+        endLabel.setText("" + sequenceTextField.getText().length());
+    }
 
+    private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
+
+        String seq = sequenceTextField.getText();
+        HashMap<Integer, Integer> reLocations = _controller.checkForRESites();
+
+        if (reLocations == null) {
+//            _controller.generatePrimers(String seq, Double tm, int length, String insert1, String insert2, String spacer1, String spacer2);
+        } else {
+            Highlighter h = sequenceTextField.getHighlighter();
+            DefaultHighlightPainter painter = new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.RED);
+            java.awt.Graphics g = navigatorPanel.getGraphics().create();
+            g.setColor(Color.RED);
+
+            for (Integer i : reLocations.keySet()) {
+                try {
+                    h.addHighlight(i, reLocations.get(i), painter);
+                    Double placement = new Double(i / sequenceTextField.getText().length());
+                    placement = Math.floor(placement * navigatorPanel.getWidth());
+                    g.fillRect(placement.intValue(), 0, 3, navigatorPanel.getHeight());
+                } catch (BadLocationException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+            g.dispose();
+
+        }
+//        java.awt.Graphics g = navigatorPanel.getGraphics().create();
+//        g.setColor(Color.red);
+//        for (int i = 0; i < 100; i++) {
+//            System.out.println(i);
+//            g.fillRect(i, 0, 3, navigatorPanel.getHeight());
+//
+//            i = i + 20;
+//        }
+//        g.dispose();
+    }//GEN-LAST:event_generateButtonActionPerformed
+    /**
+     * Retrieves the text in sequence text field
+     * @return
+     */
+    public String getText() {
+        return sequenceTextField.getText();
+    }
+
+    public JTextField getSequenceTextField() {
+        return sequenceTextField;
+    }
+
+    /**
+     * returns value in Tm text field
+     * @return
+     */
+    public Double getTm() {
+        Double.parseDouble(tmTextField.getText());
+        return null;
+    }
     private void sequenceTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sequenceTextFieldActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_sequenceTextFieldActionPerformed
 
     private void navigatorPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_navigatorPanelMouseClicked
-        // TODO add your handling code here:
+        Double width = new Double(navigatorPanel.getWidth());
+        Double position = new Double(evt.getX());
+        int sequenceLength = sequenceTextField.getText().length();
+        Double newPosition = position / width * sequenceLength;
+        positionLabel.setText("Position: " + newPosition.intValue());
+        if (newPosition < sequenceLength) {
+            sequenceTextField.setCaretPosition(newPosition.intValue());
+        
+        }
+
+
     }//GEN-LAST:event_navigatorPanelMouseClicked
 
+    private void tmTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tmTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tmTextFieldActionPerformed
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        this.dispose();
+}//GEN-LAST:event_cancelButtonActionPerformed
+
+    private void lengthTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lengthTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lengthTextFieldActionPerformed
+
+    private void navigatorPanelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_navigatorPanelMouseEntered
+    }//GEN-LAST:event_navigatorPanelMouseEntered
+
+    private void navigatorPanelMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_navigatorPanelMouseMoved
+    }//GEN-LAST:event_navigatorPanelMouseMoved
+
+    private void sequenceTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sequenceTextFieldMouseClicked
+positionLabel.setText("Position: "+sequenceTextField.getCaretPosition());    }//GEN-LAST:event_sequenceTextFieldMouseClicked
+
     /**
-    * @param args the command line arguments
-    */
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new DesignFrame().setVisible(true);
             }
         });
     }
-
+    private PrimerDesignController _controller;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JLabel endLabel;
     private javax.swing.JButton generateButton;
     private javax.swing.JComboBox insertComboBox1;
     private javax.swing.JComboBox insertComboBox2;
@@ -262,15 +481,20 @@ public class DesignFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JTextField lengthTextField;
     private javax.swing.JPanel navigatorPanel;
+    private javax.swing.JLabel positionLabel;
     private javax.swing.JTextField sequenceTextField;
     private javax.swing.JTextField spacerTextField1;
     private javax.swing.JTextField spacerTextField2;
+    private javax.swing.JLabel startLabel;
     private javax.swing.JLabel statusLabel;
+    private javax.swing.JTextField tmTextField;
     // End of variables declaration//GEN-END:variables
-
 }
