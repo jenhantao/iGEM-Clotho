@@ -46,7 +46,7 @@ public class connect implements ClothoTool {
                                            "Not connected", JOptionPane.ERROR_MESSAGE );
             return;
         }
-        JFrame someFrame = new JFrame();
+        DesignFrame someFrame = new DesignFrame("");
         someFrame.setVisible(true);
         pig.add(new WeakReference(someFrame));
     }
