@@ -21,7 +21,7 @@
 <!--<screenshotpath>org/clothocad/tool/registryimporter/screenshot.png</screenshotpath>-->
 <author>Jenhan Tao</author>
 <!--<dependency>org.clothocad.tool.helloworld</dependency>-->
-<!--<iconpath>org/clothocad/tool/registryimporter/logo.png</iconpath>-->
+<iconpath>org/clothocad/tool/primerdesigner/logo.png</iconpath>
     <help>
 <!--        <helpurl>http://wiki.bu.edu/ece-clotho/index.php/Registry_Importer</helpurl>-->
         <helpdescription>For more information please see the help url</helpdescription>

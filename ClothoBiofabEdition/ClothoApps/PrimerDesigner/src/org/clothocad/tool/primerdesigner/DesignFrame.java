@@ -93,6 +93,7 @@ public class DesignFrame extends javax.swing.JFrame {
         switchViewMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.title")); // NOI18N
 
         generateButton.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.generateButton.text")); // NOI18N
         generateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -308,16 +309,16 @@ public class DesignFrame extends javax.swing.JFrame {
                                     .addComponent(lengthTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(15, 15, 15))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
+                        .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(497, 497, 497))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(14, 14, 14)
                         .addComponent(startLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(187, 187, 187)
                         .addComponent(positionLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 195, Short.MAX_VALUE)
+                        .addGap(199, 199, 199)
                         .addComponent(endLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(34, 34, 34))))
+                        .addContainerGap(88, Short.MAX_VALUE))))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {spacerTextField1, spacerTextField2});
@@ -330,8 +331,8 @@ public class DesignFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(startLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(endLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(positionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(positionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(endLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -382,9 +383,26 @@ public class DesignFrame extends javax.swing.JFrame {
 
         String seq = sequenceTextField.getText();
         HashMap<Integer, Integer> reLocations = _controller.checkForRESites();
-
+        Double tm;
+        int length;
         if (reLocations == null) {
-//            _controller.generatePrimers(String seq, Double tm, int length, String insert1, String insert2, String spacer1, String spacer2);
+            try {
+                tm = Double.parseDouble(tmTextField.getText());
+            } catch (NumberFormatException e) {
+                statusLabel.setText("Warning: invalid target melting temperature");
+                return;
+            }
+            try {
+                length = Integer.parseInt(lengthTextField.getText());
+            } catch (NumberFormatException e) {
+                statusLabel.setText("Warning: invalid target primer length");
+                return;
+            }
+            String insert1 = (String) insertComboBox1.getSelectedItem();
+            String insert2 = (String) insertComboBox2.getSelectedItem();
+            String spacer1 = spacerTextField1.getText();
+            String spacer2 = spacerTextField2.getSelectedText();
+            _controller.generatePrimers(seq, tm, length, insert1, insert2, spacer1, spacer2);
         } else {
             Highlighter h = sequenceTextField.getHighlighter();
             DefaultHighlightPainter painter = new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.RED);
@@ -456,7 +474,7 @@ public class DesignFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_tmTextFieldActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        this.dispose();
+        _controller.close();
 }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void lengthTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lengthTextFieldActionPerformed
@@ -478,7 +496,7 @@ positionLabel.setText("Position: "+sequenceTextField.getCaretPosition());    }//
 
     private void switchViewMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switchViewMenuItemActionPerformed
         _controller.switchViews();
-        
+
     }//GEN-LAST:event_switchViewMenuItemActionPerformed
 
     /**

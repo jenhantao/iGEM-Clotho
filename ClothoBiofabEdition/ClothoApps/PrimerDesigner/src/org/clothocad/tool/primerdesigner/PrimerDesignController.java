@@ -12,6 +12,7 @@ import java.util.HashSet;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
@@ -40,6 +41,32 @@ public class PrimerDesignController {
     }
 
     public void generatePrimers(String seq, Double tm, int length, String insert1, String insert2, String spacer1, String spacer2) {
+        System.out.println("Sequence: " + seq);
+        System.out.println("Target tm: " + tm);
+        System.out.println("Target length: " + length);
+        System.out.println("Inserts: " + insert1 + ", " + insert2);
+        System.out.println("Spacers: " + spacer1 + ", " + spacer2);
+        if (seq.length() < 60) {
+            String[] yesNoOpt = {"Yes", "No"};
+            if (javax.swing.JOptionPane.showOptionDialog(new JFrame(), "Template is less than 60 basepairs in length.\nProceed anyways?", "Primer Designer: Warning", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, null, yesNoOpt, yesNoOpt[1]) == 1) {
+                return;
+            }
+        }
+        if (length < 15) {
+            String[] yesNoOpt = {"Yes", "No"};
+            if (javax.swing.JOptionPane.showOptionDialog(new JFrame(), "Preferred primer length may be too short to allow for specific annealing.\nProceed anyways?", "Primer Designer: Warning", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, null, yesNoOpt, yesNoOpt[1]) == 1) {
+                return;
+            }
+        }
+        if (spacer1.length() > 5 || spacer2.length() > 5) {
+            String[] yesNoOpt = {"Yes", "No"};
+            if (javax.swing.JOptionPane.showOptionDialog(new JFrame(), "Spacers seem to be large.\nProceed anyways?", "Primer Designer: Warning", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, null, yesNoOpt, yesNoOpt[1]) == 1) {
+                return;
+            }
+        }
+
+
+
     }
 
     /**
@@ -63,6 +90,20 @@ public class PrimerDesignController {
         if (toReturn.isEmpty()) {
             toReturn = null;
         }
+        return toReturn;
+    }
+
+    public Double calcMeltingTemp(String seq) {
+        NucSeq ns = new NucSeq(seq);
+        Double toReturn = ns.meltingTemp();
+        ns = null;
+        return toReturn;
+    }
+
+    public Double calcGCContent(String seq) {
+        NucSeq ns = new NucSeq(seq);
+        Double toReturn = ns.gcContent()[1];
+        ns = null;
         return toReturn;
     }
 
@@ -102,6 +143,14 @@ public class PrimerDesignController {
             isTC = true;
         }
 
+    }
+
+    void close() {
+        if (isTC) {
+            _tcView.close();
+        } else {
+            _frameView.dispose();
+        }
     }
     private String _sequence;
     private JFrame _frameView;

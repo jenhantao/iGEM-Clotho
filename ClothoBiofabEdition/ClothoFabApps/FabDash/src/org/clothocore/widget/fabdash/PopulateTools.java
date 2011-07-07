@@ -54,17 +54,6 @@ public class PopulateTools extends AbstractAction implements Presenter.Menu {
         }
         Collections.sort(listyNames);
 
-//        for(final ToolWrapper tw : listy)
-//        {
-//           JMenuItem toolitem = new JMenuItem(tw.getDisplayName());
-//           toolitem.addActionListener(new ActionListener() {
-//                @Override
-//                public void actionPerformed(ActionEvent e) {
-//                    tw.launchTool();
-//                }
-//                } );
-//            m.add(toolitem);
-//        }
         for (final String name : listyNames) {
             final ToolWrapper wrappedTool = hm.get(name);
             JMenuItem toolitem = new JMenuItem(wrappedTool.getDisplayName());
