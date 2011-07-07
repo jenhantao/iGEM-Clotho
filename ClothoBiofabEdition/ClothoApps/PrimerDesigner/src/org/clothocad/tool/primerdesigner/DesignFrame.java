@@ -90,6 +90,7 @@ public class DesignFrame extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        switchViewMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -108,14 +109,12 @@ public class DesignFrame extends javax.swing.JFrame {
         });
 
         insertComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        insertComboBox2.setSelectedIndex(-1);
         insertComboBox2.setToolTipText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.insertComboBox2.toolTipText")); // NOI18N
         insertComboBox2.setMaximumSize(new java.awt.Dimension(50, 28));
         insertComboBox2.setMinimumSize(new java.awt.Dimension(50, 28));
         insertComboBox2.setPreferredSize(new java.awt.Dimension(50, 28));
 
         insertComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        insertComboBox1.setSelectedIndex(-1);
         insertComboBox1.setToolTipText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.insertComboBox1.toolTipText")); // NOI18N
         insertComboBox1.setMaximumSize(new java.awt.Dimension(50, 28));
         insertComboBox1.setMinimumSize(new java.awt.Dimension(50, 28));
@@ -242,11 +241,25 @@ public class DesignFrame extends javax.swing.JFrame {
         jMenu1.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.jMenu1.text")); // NOI18N
 
         jMenuItem1.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.jMenuItem1.text")); // NOI18N
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem1);
 
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.jMenu2.text")); // NOI18N
+
+        switchViewMenuItem.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.switchViewMenuItem.text")); // NOI18N
+        switchViewMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                switchViewMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu2.add(switchViewMenuItem);
+
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -286,15 +299,17 @@ public class DesignFrame extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel8)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lengthTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(12, 12, 12)
+                                        .addComponent(generateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(cancelButton))
+                                    .addComponent(lengthTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(15, 15, 15))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(generateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cancelButton)
-                        .addGap(56, 56, 56))
+                        .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
+                        .addGap(497, 497, 497))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(14, 14, 14)
                         .addComponent(startLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -344,12 +359,12 @@ public class DesignFrame extends javax.swing.JFrame {
                     .addComponent(tmTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8)
                     .addComponent(lengthTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cancelButton)
+                    .addComponent(statusLabel)
                     .addComponent(generateButton)
-                    .addComponent(statusLabel))
-                .addContainerGap())
+                    .addComponent(cancelButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {insertComboBox1, insertComboBox2});
@@ -420,7 +435,6 @@ public class DesignFrame extends javax.swing.JFrame {
         return null;
     }
     private void sequenceTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sequenceTextFieldActionPerformed
-
     }//GEN-LAST:event_sequenceTextFieldActionPerformed
 
     private void navigatorPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_navigatorPanelMouseClicked
@@ -431,7 +445,7 @@ public class DesignFrame extends javax.swing.JFrame {
         positionLabel.setText("Position: " + newPosition.intValue());
         if (newPosition < sequenceLength) {
             sequenceTextField.setCaretPosition(newPosition.intValue());
-        
+
         }
 
 
@@ -457,6 +471,15 @@ public class DesignFrame extends javax.swing.JFrame {
 
     private void sequenceTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sequenceTextFieldMouseClicked
 positionLabel.setText("Position: "+sequenceTextField.getCaretPosition());    }//GEN-LAST:event_sequenceTextFieldMouseClicked
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void switchViewMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switchViewMenuItemActionPerformed
+        _controller.switchViews();
+        
+    }//GEN-LAST:event_switchViewMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -495,6 +518,7 @@ positionLabel.setText("Position: "+sequenceTextField.getCaretPosition());    }//
     private javax.swing.JTextField spacerTextField2;
     private javax.swing.JLabel startLabel;
     private javax.swing.JLabel statusLabel;
+    private javax.swing.JMenuItem switchViewMenuItem;
     private javax.swing.JTextField tmTextField;
     // End of variables declaration//GEN-END:variables
 }

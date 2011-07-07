@@ -23,20 +23,30 @@ public class PrimerDesignerListener implements DocumentListener {
         Highlight[] highlights = hl.getHighlights();
         for (int i = 0; i < highlights.length; i++) {
             javax.swing.text.Highlighter.Highlight u = highlights[i];
-            //modified only when the evt is add at the end of the old ORF hightlight, thus end of evt is end of u
+            //modified only when the evt is add at the end of the old hightlight, thus end of evt is end of u
             if ((u.getStartOffset() < e.getOffset())
-                    && (u.getEndOffset() == e.getOffset() + e.getLength()) //&& (u.getPainter() instanceof org.clothocad.util.highlight.ClothoHighlightPainter_Underline) //commented
+                    && (u.getEndOffset() == e.getOffset() + e.getLength())
                     ) {
+                                    System.out.println("end");
+
                 try {
                     hl.changeHighlight(u, u.getStartOffset(), u.getEndOffset() - e.getLength());
                 } catch (javax.swing.text.BadLocationException ble) {
                     ble.printStackTrace();
                 }
-            } //if add in the middle of the ORF hightlight, delete the hightlight
+//add in front of highlight
+            } else  if ((u.getStartOffset() >=e.getOffset())) {
+                try {
+                    hl.changeHighlight(u, u.getStartOffset()+e.getLength(), u.getEndOffset() + e.getLength());
+                } catch (javax.swing.text.BadLocationException ble) {
+                    ble.printStackTrace();
+                }
+            }//if add in the middle of the ORF hightlight, delete the hightlight
             else if ((u.getStartOffset() < e.getOffset())
-                    && (u.getEndOffset() > e.getOffset() + e.getLength()) //commented
-                    //&& (u.getPainter() instanceof org.clothocad.util.highlight.ClothoHighlightPainter_Underline)
+                    && (u.getEndOffset() > e.getOffset() + e.getLength())
                     ) {
+                                    System.out.println("mmiddle");
+
                 hl.removeHighlight(u);
             }
         }
