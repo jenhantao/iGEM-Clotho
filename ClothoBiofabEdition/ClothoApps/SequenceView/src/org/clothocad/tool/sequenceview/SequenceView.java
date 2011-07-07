@@ -22,11 +22,14 @@ ENHANCEMENTS, OR MODIFICATIONS..
  */
 package org.clothocad.tool.sequenceview;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
@@ -43,9 +46,12 @@ import java.util.HashSet;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.event.CaretEvent;
@@ -59,6 +65,7 @@ import javax.swing.text.Position;
 import javax.swing.undo.*;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
@@ -81,6 +88,7 @@ import org.clothocore.api.data.ObjLink;
 import org.clothocore.api.data.Person;
 import org.clothocore.util.misc.BareBonesBrowserLaunch;
 import org.openide.util.Exceptions;
+import org.openide.windows.TopComponent;
 
 /**
  * The sequence view of the design. An editable view for raw DNA data.
@@ -96,6 +104,7 @@ public class SequenceView {
     private static int numOfSeqViews = 0;
 
     public SequenceView(String n, String d, SequenceViewManager m, int index) {
+        isTC = false; //sequence view launches into frame by default
         _manager = m;
         _myIndex = index;
         _annotationsOn = false;
@@ -169,6 +178,39 @@ public class SequenceView {
         JTextComponent.loadKeymap(k, newBindings, _sequenceview.get_TextArea().getActions());
 
 
+    }
+
+    public void switchView() {
+        if (isTC) {
+            Component[] components = _tcView.getComponents();
+            _sequenceview.setContentPane((Container) components[1]);
+            _sequenceview.setJMenuBar((JMenuBar) components[0]);
+            _sequenceview.pack();
+            _sequenceview.setVisible(true);
+            isTC = false;
+            _tcView.close();
+        } else {
+            final JComponent guiContentPane = (JComponent) _sequenceview.getContentPane();
+//            JRootPane guiRootPane = _frameView.getRootPane();
+            final JMenuBar menu = _sequenceview.getJMenuBar();
+            SwingUtilities.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    _tcView = new TopComponent();
+                    _tcView.setLayout(new BorderLayout());
+                    JScrollPane sp = new JScrollPane(guiContentPane);
+                    _tcView.add(menu, BorderLayout.NORTH);
+                    _tcView.add(sp, BorderLayout.CENTER);
+                    _tcView.setName("Sequence View");
+                    _tcView.open();
+                    _tcView.requestActive();
+
+                }
+            });
+            _sequenceview.setVisible(false);
+            isTC = true;
+        }
     }
 
     class SequenceUndoableEditListener
@@ -1091,8 +1133,12 @@ public class SequenceView {
     public void focusOnSeqViewWindow(int addr) {
         SequenceView c = _manager.getSpecificSV(addr);
         if (c != null) {
-            c.getSequenceView().setVisible(true);
-            c.getSequenceView().requestFocus();
+            if (c.getIsTC()) {
+                c.getTCView().requestActive();
+            } else {
+                c.getSequenceView().setVisible(true);
+                c.getSequenceView().requestFocus();
+            }
             _manager.setMainSequenceView(c);
         } else {
             System.out.println("No Sequence View found at address " + addr);
@@ -2051,7 +2097,7 @@ public class SequenceView {
             if (tm < 0) {
                 _tmString = "< 0 C";
             } else {
-                _tmString = tm.toString()+" C";
+                _tmString = tm.toString() + " C";
             }
             gcCount = Math.floor(gcCount / selectedText.length() * 100);
             _gcString = gcCount + " %";
@@ -3623,7 +3669,9 @@ public class SequenceView {
         for (int i = 0; i < _manager.getSequenceViewArray().size(); i++) {
             SequenceView seq = _manager.getSpecificSV(i);
             SequenceViewGUI seqView = seq.getSequenceView();
+            JMenuItem switchItem = seqView.getWindowMenu().getItem(0); //don't want to clear this item which allows view switching
             seqView.getWindowMenu().removeAll();
+            seqView.getWindowMenu().add(switchItem);
             for (int j = 0; j < windows.size(); j++) {
                 String name = windows.get(j);
                 seqView.getWindowMenu().add(new javax.swing.JMenuItem(name.substring(32, name.length())));
@@ -3631,8 +3679,12 @@ public class SequenceView {
 
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         // Parses the window selected from the name of the menu item selected
-                        int addrSelected = Integer.parseInt(evt.getActionCommand().split("\\)")[0]);
-                        focusOnSeqViewWindow(addrSelected);
+                        try {
+                            int addrSelected = Integer.parseInt(evt.getActionCommand().split("\\)")[0]);
+                            focusOnSeqViewWindow(addrSelected);
+                        } catch (NumberFormatException e) {
+                            //first item selected, expected exception
+                        }
                     }
                 });
 
@@ -3847,6 +3899,7 @@ public class SequenceView {
 
     public void highlightRestrictionSites() {
         new SwingWorker() {
+
             @Override
             protected Object doInBackground() throws Exception {
                 Person user = Collector.getCurrentUser();
@@ -3954,8 +4007,18 @@ public class SequenceView {
     public void setMagicHighlight(Boolean b) {
         magicHighlight = b;
     }
+
+    public boolean getIsTC() {
+        return isTC;
+    }
+
+    public TopComponent getTCView() {
+        return _tcView;
+    }
     ///////////////////////////////////////////////////////////////////
     ////                         private variables                 ////
+    private boolean isTC;
+    private TopComponent _tcView;
     private NucSeq _sequence;
     private HashSet<Annotation> _annotations;
     private Object[] _annotationsArray;

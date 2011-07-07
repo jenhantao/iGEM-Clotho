@@ -332,6 +332,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         importApEMenuItem = new javax.swing.JMenuItem();
         preferenceMenuItem = new javax.swing.JMenuItem();
         WindowMenu = new javax.swing.JMenu();
+        switchViewMenuItem = new javax.swing.JMenuItem();
         HelpMenu = new javax.swing.JMenu();
         helpMenuItem = new javax.swing.JMenuItem();
 
@@ -614,7 +615,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(1177, Short.MAX_VALUE)
+                .addContainerGap(1313, Short.MAX_VALUE)
                 .addComponent(jLabel20)
                 .addGap(64, 64, 64))
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -694,7 +695,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(CircularCheckBox))
                         .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addComponent(featureNameJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 561, Short.MAX_VALUE)
+                            .addComponent(featureNameJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 644, Short.MAX_VALUE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(columnCountJLabel)))
                     .addContainerGap()))
@@ -702,7 +703,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(34, Short.MAX_VALUE)
+                .addContainerGap(40, Short.MAX_VALUE)
                 .addComponent(jLabel20)
                 .addGap(22, 22, 22))
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -849,26 +850,26 @@ public class SequenceViewGUI extends javax.swing.JFrame {
                         .addGap(28, 28, 28)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1167, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1326, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(19, 19, 19)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 650, Short.MAX_VALUE)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 728, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel32, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(32, 32, 32)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel33, javax.swing.GroupLayout.DEFAULT_SIZE, 536, Short.MAX_VALUE)
+                                .addComponent(jLabel33, javax.swing.GroupLayout.DEFAULT_SIZE, 615, Short.MAX_VALUE)
                                 .addGap(83, 83, 83))
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)))
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 698, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(mainToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 1288, Short.MAX_VALUE))))
+                            .addComponent(mainToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 1445, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -1252,6 +1253,16 @@ public class SequenceViewGUI extends javax.swing.JFrame {
                 WindowMenuActionPerformed(evt);
             }
         });
+
+        switchViewMenuItem.setText("Switch View");
+        switchViewMenuItem.setToolTipText("Switch between top component view and frame view");
+        switchViewMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                switchViewMenuItemActionPerformed(evt);
+            }
+        });
+        WindowMenu.add(switchViewMenuItem);
+
         SequenceViewMenuBar.add(WindowMenu);
 
         HelpMenu.setText("Help");
@@ -1378,6 +1389,9 @@ private void ExitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             _sv.updateWindowMenus();
 
             //FIXME _sv.loadPart(new clothodata.ClothoPartsData());
+            if (_sv.getIsTC()) {
+                _sv.getTCView().close();
+            }
             this.dispose();
         } else if (chosen == javax.swing.JOptionPane.NO_OPTION) {
             this.requestFocus();
@@ -1385,9 +1399,15 @@ private void ExitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             this.requestFocus();
             _sv.saveSequence();
         } else if (chosen == 3) {
+            if (_sv.getIsTC()) {
+                _sv.getTCView().close();
+            }
             this.dispose();
         }
     } else {
+        if (_sv.getIsTC()) {
+                _sv.getTCView().close();
+            }
         this.dispose();
     }
 }//GEN-LAST:event_ExitMenuItemActionPerformed
@@ -1658,6 +1678,10 @@ private void importApEMenuItemActionPerformed(java.awt.event.ActionEvent evt) {/
     _sv.importApEFeatures();
 }//GEN-LAST:event_importApEMenuItemActionPerformed
 
+private void switchViewMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switchViewMenuItemActionPerformed
+_sv.switchView();
+}//GEN-LAST:event_switchViewMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1793,6 +1817,7 @@ private void importApEMenuItemActionPerformed(java.awt.event.ActionEvent evt) {/
     private javax.swing.JButton revTransButton;
     private javax.swing.JMenuItem revTranslateMenuItem;
     private javax.swing.JButton switchButton;
+    private javax.swing.JMenuItem switchViewMenuItem;
     private javax.swing.JButton transButton;
     private javax.swing.JMenuItem undoMenuItem;
     private javax.swing.JButton uppperCaseButton;
