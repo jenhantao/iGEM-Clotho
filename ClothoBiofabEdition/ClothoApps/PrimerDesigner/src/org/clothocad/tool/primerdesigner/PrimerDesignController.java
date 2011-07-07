@@ -46,6 +46,12 @@ public class PrimerDesignController {
         System.out.println("Target length: " + length);
         System.out.println("Inserts: " + insert1 + ", " + insert2);
         System.out.println("Spacers: " + spacer1 + ", " + spacer2);
+        if (spacer1==null) {
+            spacer1="";
+        }
+        if (spacer2==null) {
+            spacer2="";
+        }
         if (seq.length() < 60) {
             String[] yesNoOpt = {"Yes", "No"};
             if (javax.swing.JOptionPane.showOptionDialog(new JFrame(), "Template is less than 60 basepairs in length.\nProceed anyways?", "Primer Designer: Warning", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, null, yesNoOpt, yesNoOpt[1]) == 1) {

@@ -95,7 +95,7 @@ public class BrowsePanel extends JScrollPane {
             int xpos = (190 - img.getIconWidth()) / 2;
             button.setBounds(xpos + 10, 7, img.getIconWidth(), img.getIconHeight());
             add(button);
-
+            button.setToolTipText(tw.getDescription());
             TransparentButton deleteMe = new TransparentButton(deletebtn);
             deleteMe.setExitAlpha(0.5f);
             deleteMe.setEnterAlpha(1.0f);
@@ -111,16 +111,9 @@ public class BrowsePanel extends JScrollPane {
                 }
             });
             add(deleteMe);
-
             JLabel label = new JLabel(tw.getDisplayName());
             label.setBounds(15, 120, 190, 25);
             add(label);
-
-
-
-            this.setToolTipText(tw.getDescription());
-
-
             button.addMouseListener(new MouseListener() {
 
                 @Override

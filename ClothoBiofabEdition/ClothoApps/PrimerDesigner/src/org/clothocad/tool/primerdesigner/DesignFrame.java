@@ -491,7 +491,7 @@ public class DesignFrame extends javax.swing.JFrame {
 positionLabel.setText("Position: "+sequenceTextField.getCaretPosition());    }//GEN-LAST:event_sequenceTextFieldMouseClicked
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        this.dispose();
+        _controller.close();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void switchViewMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switchViewMenuItemActionPerformed
