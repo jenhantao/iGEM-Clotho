@@ -3,6 +3,7 @@ package org.clothocad.tool.primerdesigner;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -218,6 +219,7 @@ public class DesignFrame extends javax.swing.JFrame {
         jLabel7.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.jLabel7.text")); // NOI18N
 
         tmTextField.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.tmTextField.text")); // NOI18N
+        tmTextField.setToolTipText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.tmTextField.toolTipText")); // NOI18N
         tmTextField.setMinimumSize(new java.awt.Dimension(35, 28));
         tmTextField.setPreferredSize(new java.awt.Dimension(35, 28));
         tmTextField.addActionListener(new java.awt.event.ActionListener() {
@@ -229,6 +231,7 @@ public class DesignFrame extends javax.swing.JFrame {
         jLabel8.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.jLabel8.text")); // NOI18N
 
         lengthTextField.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.lengthTextField.text")); // NOI18N
+        lengthTextField.setToolTipText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.lengthTextField.toolTipText")); // NOI18N
         lengthTextField.setMinimumSize(new java.awt.Dimension(35, 28));
         lengthTextField.setPreferredSize(new java.awt.Dimension(35, 28));
         lengthTextField.addActionListener(new java.awt.event.ActionListener() {
@@ -400,8 +403,8 @@ public class DesignFrame extends javax.swing.JFrame {
             }
             String insert1 = (String) insertComboBox1.getSelectedItem();
             String insert2 = (String) insertComboBox2.getSelectedItem();
-            String spacer1 = spacerTextField1.getText();
-            String spacer2 = spacerTextField2.getSelectedText();
+            String spacer1 = spacerTextField1.getText().toUpperCase();
+            String spacer2 = spacerTextField2.getText().toUpperCase();
             _controller.generatePrimers(seq, tm, length, insert1, insert2, spacer1, spacer2);
         } else {
             Highlighter h = sequenceTextField.getHighlighter();

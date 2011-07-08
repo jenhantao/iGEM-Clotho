@@ -70,7 +70,7 @@ public final class InventoryTopComponent extends TopComponent {
 
         initComponents();
         //add(new ObjTypeChooser(this), java.awt.BorderLayout.NORTH);
-        add(new SearchBar(), java.awt.BorderLayout.SOUTH);
+//        add(new SearchBar(), java.awt.BorderLayout.SOUTH);
 
 
         setName(NbBundle.getMessage(InventoryTopComponent.class, "CTL_InventoryTopComponent"));
@@ -265,6 +265,7 @@ public final class InventoryTopComponent extends TopComponent {
         vectorsTable = new javax.swing.JTable();
         plasmidsScrollPane = new javax.swing.JScrollPane();
         plasmidsTable = new javax.swing.JTable();
+        searchBar1 = new org.clothocore.widget.fabdash.browser.SearchBar();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -396,6 +397,7 @@ public final class InventoryTopComponent extends TopComponent {
         inventoryTabbedPane.addTab(org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.plasmidsScrollPane.TabConstraints.tabTitle"), plasmidsScrollPane); // NOI18N
 
         add(inventoryTabbedPane, java.awt.BorderLayout.PAGE_START);
+        add(searchBar1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JTabbedPane inventoryTabbedPane;
@@ -405,6 +407,7 @@ public final class InventoryTopComponent extends TopComponent {
     protected javax.swing.JTable partsTable;
     private javax.swing.JScrollPane plasmidsScrollPane;
     protected javax.swing.JTable plasmidsTable;
+    private org.clothocore.widget.fabdash.browser.SearchBar searchBar1;
     private javax.swing.JScrollPane vectorsScrollPane;
     protected javax.swing.JTable vectorsTable;
     // End of variables declaration//GEN-END:variables
