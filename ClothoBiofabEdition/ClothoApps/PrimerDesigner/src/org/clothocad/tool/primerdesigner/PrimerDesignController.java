@@ -270,7 +270,7 @@ public class PrimerDesignController {
                     JScrollPane sp = new JScrollPane(guiContentPane);
                     _tcView.add(menu, BorderLayout.NORTH);
                     _tcView.add(sp, BorderLayout.CENTER);
-                    _tcView.setName("Sequence View");
+                    _tcView.setName("Primer Designer");
                     _tcView.open();
                     _tcView.requestActive();
 
