@@ -266,6 +266,12 @@ public final class InventoryTopComponent extends TopComponent {
         plasmidsScrollPane = new javax.swing.JScrollPane();
         plasmidsTable = new javax.swing.JTable();
         searchBar1 = new org.clothocore.widget.fabdash.browser.SearchBar();
+        connectionPanel = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        changeVariableButton = new javax.swing.JButton();
+        connectButton = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        configureConnectionButton = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -396,11 +402,84 @@ public final class InventoryTopComponent extends TopComponent {
 
         inventoryTabbedPane.addTab(org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.plasmidsScrollPane.TabConstraints.tabTitle"), plasmidsScrollPane); // NOI18N
 
-        add(inventoryTabbedPane, java.awt.BorderLayout.PAGE_START);
-        add(searchBar1, java.awt.BorderLayout.CENTER);
+        add(inventoryTabbedPane, java.awt.BorderLayout.CENTER);
+        add(searchBar1, java.awt.BorderLayout.SOUTH);
+
+        connectionPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        connectionPanel.setMinimumSize(new java.awt.Dimension(150, 30));
+        connectionPanel.setPreferredSize(new java.awt.Dimension(150, 100));
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.jLabel1.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(changeVariableButton, org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.changeVariableButton.text")); // NOI18N
+        changeVariableButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeVariableButtonActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(connectButton, org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.connectButton.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.jLabel2.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(configureConnectionButton, org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.configureConnectionButton.text")); // NOI18N
+        configureConnectionButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                configureConnectionButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout connectionPanelLayout = new javax.swing.GroupLayout(connectionPanel);
+        connectionPanel.setLayout(connectionPanelLayout);
+        connectionPanelLayout.setHorizontalGroup(
+            connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(connectionPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(connectButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
+                .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(configureConnectionButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(changeVariableButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        connectionPanelLayout.setVerticalGroup(
+            connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(connectionPanelLayout.createSequentialGroup()
+                .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(changeVariableButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(configureConnectionButton)
+                    .addGroup(connectionPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(connectButton)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        add(connectionPanel, java.awt.BorderLayout.NORTH);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void changeVariableButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeVariableButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_changeVariableButtonActionPerformed
+
+    private void configureConnectionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_configureConnectionButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_configureConnectionButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton changeVariableButton;
+    private javax.swing.JButton configureConnectionButton;
+    private javax.swing.JButton connectButton;
+    private javax.swing.JPanel connectionPanel;
     protected javax.swing.JTabbedPane inventoryTabbedPane;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     protected javax.swing.JScrollPane oligosScrollPane;
     protected javax.swing.JTable oligosTable;
     private javax.swing.JScrollPane partsScrollPane;
