@@ -48,22 +48,22 @@ public class connect implements ClothoTool {
                     "Not connected", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        final DesignFrame someFrame = new DesignFrame("");
-//        someFrame.setVisible(true);
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                TopComponent tc = new TopComponent();
-                tc.setLayout(new BorderLayout());
-                tc.add(someFrame.getJMenuBar(), BorderLayout.NORTH);
-                tc.add(someFrame.getContentPane(), BorderLayout.CENTER);
-                tc.setName("Primer Designer");
-                tc.open();
-                tc.requestActive();
-
-            }
-        });
+        DesignFrame someFrame = new DesignFrame("");
+        someFrame.setVisible(true);
+//        SwingUtilities.invokeLater(new Runnable() {
+//
+//            @Override
+//            public void run() {
+//                TopComponent tc = new TopComponent();
+//                tc.setLayout(new BorderLayout());
+//                tc.add(someFrame.getJMenuBar(), BorderLayout.NORTH);
+//                tc.add(someFrame.getContentPane(), BorderLayout.CENTER);
+//                tc.setName("Primer Designer");
+//                tc.open();
+//                tc.requestActive();
+//
+//            }
+//        });
         pig.add(new WeakReference(someFrame));
     }
 

@@ -14,6 +14,7 @@ import org.clothocore.api.core.Collector;
 import org.clothocore.api.data.ObjLink;
 import org.clothocore.api.data.ObjType;
 import org.openide.util.Exceptions;
+import org.openide.windows.TopComponent;
 
 /*
  * To change this template, choose Tools | Templates
@@ -378,7 +379,7 @@ public class DesignFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    void updateLabels() {
+    public void updateLabels() {
         endLabel.setText("" + sequenceTextField.getText().length());
     }
 
