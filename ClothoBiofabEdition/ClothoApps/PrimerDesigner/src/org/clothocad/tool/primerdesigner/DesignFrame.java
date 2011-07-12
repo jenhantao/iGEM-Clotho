@@ -88,6 +88,7 @@ public class DesignFrame extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         lengthTextField = new javax.swing.JTextField();
         statusLabel = new javax.swing.JLabel();
+        reCheckButton = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -98,6 +99,9 @@ public class DesignFrame extends javax.swing.JFrame {
         setTitle(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.title")); // NOI18N
 
         generateButton.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.generateButton.text")); // NOI18N
+        generateButton.setMaximumSize(new java.awt.Dimension(140, 30));
+        generateButton.setMinimumSize(new java.awt.Dimension(140, 30));
+        generateButton.setPreferredSize(new java.awt.Dimension(140, 30));
         generateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 generateButtonActionPerformed(evt);
@@ -125,9 +129,30 @@ public class DesignFrame extends javax.swing.JFrame {
 
         spacerTextField1.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.spacerTextField1.text")); // NOI18N
         spacerTextField1.setToolTipText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.spacerTextField1.toolTipText")); // NOI18N
+        spacerTextField1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                spacerTextField1MousePressed(evt);
+            }
+        });
+        spacerTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                spacerTextField1KeyTyped(evt);
+            }
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                spacerTextField1KeyPressed(evt);
+            }
+        });
 
         spacerTextField2.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.spacerTextField2.text")); // NOI18N
         spacerTextField2.setToolTipText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.spacerTextField2.toolTipText")); // NOI18N
+        spacerTextField2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                spacerTextField2KeyTyped(evt);
+            }
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                spacerTextField2KeyPressed(evt);
+            }
+        });
 
         sequenceTextField.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.sequenceTextField.text")); // NOI18N
         sequenceTextField.setMaximumSize(new java.awt.Dimension(200, 30));
@@ -143,8 +168,18 @@ public class DesignFrame extends javax.swing.JFrame {
                 sequenceTextFieldActionPerformed(evt);
             }
         });
+        sequenceTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                sequenceTextFieldKeyTyped(evt);
+            }
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                sequenceTextFieldKeyPressed(evt);
+            }
+        });
 
+        navigatorPanel.setBackground(java.awt.Color.gray);
         navigatorPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        navigatorPanel.setForeground(java.awt.Color.gray);
         navigatorPanel.setToolTipText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.navigatorPanel.toolTipText")); // NOI18N
         navigatorPanel.setMaximumSize(new java.awt.Dimension(200, 30));
         navigatorPanel.setMinimumSize(new java.awt.Dimension(100, 30));
@@ -228,6 +263,11 @@ public class DesignFrame extends javax.swing.JFrame {
                 tmTextFieldActionPerformed(evt);
             }
         });
+        tmTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tmTextFieldKeyTyped(evt);
+            }
+        });
 
         jLabel8.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.jLabel8.text")); // NOI18N
 
@@ -240,8 +280,20 @@ public class DesignFrame extends javax.swing.JFrame {
                 lengthTextFieldActionPerformed(evt);
             }
         });
+        lengthTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                lengthTextFieldKeyTyped(evt);
+            }
+        });
 
         statusLabel.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.statusLabel.text")); // NOI18N
+
+        reCheckButton.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.reCheckButton.text")); // NOI18N
+        reCheckButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reCheckButtonActionPerformed(evt);
+            }
+        });
 
         jMenu1.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.jMenu1.text")); // NOI18N
 
@@ -277,9 +329,6 @@ public class DesignFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(spacerTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5)
@@ -288,7 +337,7 @@ public class DesignFrame extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tmTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel4)
@@ -304,14 +353,14 @@ public class DesignFrame extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel8)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(12, 12, 12)
-                                        .addComponent(generateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(cancelButton))
-                                    .addComponent(lengthTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(15, 15, 15))
+                                .addComponent(lengthTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(reCheckButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(generateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cancelButton)))
+                        .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(497, 497, 497))
@@ -322,7 +371,10 @@ public class DesignFrame extends javax.swing.JFrame {
                         .addComponent(positionLabel)
                         .addGap(199, 199, 199)
                         .addComponent(endLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(88, Short.MAX_VALUE))))
+                        .addContainerGap(88, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {spacerTextField1, spacerTextField2});
@@ -359,17 +411,20 @@ public class DesignFrame extends javax.swing.JFrame {
                         .addComponent(jLabel3)
                         .addGap(34, 34, 34)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(tmTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8)
-                    .addComponent(lengthTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(statusLabel)
-                    .addComponent(generateButton)
-                    .addComponent(cancelButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(tmTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8)
+                            .addComponent(lengthTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(statusLabel))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(reCheckButton)
+                        .addComponent(generateButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cancelButton)))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {insertComboBox1, insertComboBox2});
@@ -386,7 +441,7 @@ public class DesignFrame extends javax.swing.JFrame {
     private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
 
         String seq = sequenceTextField.getText();
-        HashMap<Integer, Integer> reLocations = _controller.checkForRESites();
+        reLocations = _controller.checkForRESites();
         Double tm;
         int length;
         if (reLocations == null) {
@@ -412,7 +467,7 @@ public class DesignFrame extends javax.swing.JFrame {
             DefaultHighlightPainter painter = new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.RED);
             java.awt.Graphics g = navigatorPanel.getGraphics().create();
             g.setColor(Color.RED);
-
+            h.removeAllHighlights();
             for (Integer i : reLocations.keySet()) {
                 try {
                     h.addHighlight(i, reLocations.get(i), painter);
@@ -467,9 +522,28 @@ public class DesignFrame extends javax.swing.JFrame {
         positionLabel.setText("Position: " + newPosition.intValue());
         if (newPosition < sequenceLength) {
             sequenceTextField.setCaretPosition(newPosition.intValue());
-
         }
+        if (sequenceTextField.getText().length() > 0) {
+            java.awt.Graphics g = navigatorPanel.getGraphics().create();
+            g.clearRect(0, 0, navigatorPanel.getWidth(), navigatorPanel.getWidth());
+            g.setColor(Color.GREEN);
+            Double placement = sequenceTextField.getCaretPosition() / (sequenceTextField.getText().length() + 0.0);
+            placement = Math.floor(placement * navigatorPanel.getWidth());
+            g.fillRect(placement.intValue(), 0, 3, navigatorPanel.getHeight());
 
+            if (reLocations != null) {
+                g.setColor(Color.red);
+                for (Integer i : reLocations.keySet()) {
+                    placement = new Double(i / sequenceTextField.getText().length());
+                    placement = Math.floor(placement * navigatorPanel.getWidth());
+                    g.fillRect(placement.intValue(), 0, 3, navigatorPanel.getHeight());
+
+                }
+            }
+
+            g.dispose();
+        positionLabel.setText("Position: "+sequenceTextField.getCaretPosition());
+        }
 
     }//GEN-LAST:event_navigatorPanelMouseClicked
 
@@ -482,7 +556,6 @@ public class DesignFrame extends javax.swing.JFrame {
 }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void lengthTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lengthTextFieldActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_lengthTextFieldActionPerformed
 
     private void navigatorPanelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_navigatorPanelMouseEntered
@@ -492,16 +565,94 @@ public class DesignFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_navigatorPanelMouseMoved
 
     private void sequenceTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sequenceTextFieldMouseClicked
-positionLabel.setText("Position: "+sequenceTextField.getCaretPosition());    }//GEN-LAST:event_sequenceTextFieldMouseClicked
+        if (sequenceTextField.getText().length() > 0) {
+            java.awt.Graphics g = navigatorPanel.getGraphics().create();
+            g.clearRect(0, 0, navigatorPanel.getWidth(), navigatorPanel.getWidth());
+            g.setColor(Color.GREEN);
+            Double placement = sequenceTextField.getCaretPosition() / (sequenceTextField.getText().length() + 0.0);
+            placement = Math.floor(placement * navigatorPanel.getWidth());
+            g.fillRect(placement.intValue(), 0, 3, navigatorPanel.getHeight());
+            if (reLocations != null) {
+                g.setColor(Color.red);
+                for (Integer i : reLocations.keySet()) {
+                    placement = new Double(i / sequenceTextField.getText().length());
+                    placement = Math.floor(placement * navigatorPanel.getWidth());
+                    g.fillRect(placement.intValue(), 0, 3, navigatorPanel.getHeight());
 
+                }
+            }
+            g.dispose();
+
+        }
+positionLabel.setText("Position: "+sequenceTextField.getCaretPosition());    }//GEN-LAST:event_sequenceTextFieldMouseClicked
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         _controller.close();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
-
     private void switchViewMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switchViewMenuItemActionPerformed
         _controller.switchViews();
 
     }//GEN-LAST:event_switchViewMenuItemActionPerformed
+
+    private void reCheckButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reCheckButtonActionPerformed
+        String seq = sequenceTextField.getText();
+        reLocations = _controller.checkForRESites();
+        if (reLocations == null) {
+            return;
+        } else {
+            Highlighter h = sequenceTextField.getHighlighter();
+            DefaultHighlightPainter painter = new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.RED);
+            java.awt.Graphics g = navigatorPanel.getGraphics().create();
+            g.clearRect(0, 0, navigatorPanel.getWidth(), navigatorPanel.getHeight());
+            g.setColor(Color.RED);
+            h.removeAllHighlights();
+            for (Integer i : reLocations.keySet()) {
+                try {
+                    h.addHighlight(i, reLocations.get(i), painter);
+                    Double placement = new Double(i / sequenceTextField.getText().length());
+                    placement = Math.floor(placement * navigatorPanel.getWidth());
+                    g.fillRect(placement.intValue(), 0, 3, navigatorPanel.getHeight());
+                } catch (BadLocationException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+            g.dispose();
+        }    }//GEN-LAST:event_reCheckButtonActionPerformed
+
+    private void sequenceTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sequenceTextFieldKeyPressed
+        _controller.validateKeyPressed(evt);
+    }//GEN-LAST:event_sequenceTextFieldKeyPressed
+
+    private void spacerTextField1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_spacerTextField1MousePressed
+    }//GEN-LAST:event_spacerTextField1MousePressed
+
+    private void spacerTextField2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_spacerTextField2KeyPressed
+        _controller.validateKeyPressed(evt);
+    }//GEN-LAST:event_spacerTextField2KeyPressed
+
+    private void spacerTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_spacerTextField1KeyPressed
+        _controller.validateKeyPressed(evt);
+    }//GEN-LAST:event_spacerTextField1KeyPressed
+
+    private void spacerTextField1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_spacerTextField1KeyTyped
+        _controller.validateKeyTyped(evt);
+    }//GEN-LAST:event_spacerTextField1KeyTyped
+
+    private void spacerTextField2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_spacerTextField2KeyTyped
+        _controller.validateKeyTyped(evt);
+    }//GEN-LAST:event_spacerTextField2KeyTyped
+
+    private void sequenceTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sequenceTextFieldKeyTyped
+        _controller.validateKeyTyped(evt);
+    }//GEN-LAST:event_sequenceTextFieldKeyTyped
+
+    private void tmTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tmTextFieldKeyTyped
+
+        _controller.validateNumTyped(evt);
+    }//GEN-LAST:event_tmTextFieldKeyTyped
+
+    private void lengthTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lengthTextFieldKeyTyped
+        _controller.validateNumTyped(evt);
+    }//GEN-LAST:event_lengthTextFieldKeyTyped
 
     /**
      * @param args the command line arguments
@@ -511,9 +662,14 @@ positionLabel.setText("Position: "+sequenceTextField.getCaretPosition());    }//
 
             public void run() {
                 new DesignFrame().setVisible(true);
+
+
             }
         });
+
+
     }
+    private HashMap<Integer, Integer> reLocations;
     private PrimerDesignController _controller;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
@@ -535,6 +691,7 @@ positionLabel.setText("Position: "+sequenceTextField.getCaretPosition());    }//
     private javax.swing.JTextField lengthTextField;
     private javax.swing.JPanel navigatorPanel;
     private javax.swing.JLabel positionLabel;
+    private javax.swing.JButton reCheckButton;
     private javax.swing.JTextField sequenceTextField;
     private javax.swing.JTextField spacerTextField1;
     private javax.swing.JTextField spacerTextField2;

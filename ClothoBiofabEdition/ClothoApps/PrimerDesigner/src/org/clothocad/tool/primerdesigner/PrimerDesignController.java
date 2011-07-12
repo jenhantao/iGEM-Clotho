@@ -7,6 +7,7 @@ package org.clothocad.tool.primerdesigner;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -104,18 +105,13 @@ public class PrimerDesignController {
             }
             fwdPrimer = spacer1 + fwdPrimer;
             fwdSequences.add(fwdPrimer);
-//            _ns.changeSeq(seq.substring(seq.length() - i));
-//            revPrimer = _ns.revComp();
             revPrimer = this.flip(seq.substring(seq.length() - i));
             if (!insert2.equalsIgnoreCase("none")) {
                 Feature afeat = Feature.retrieveByName(insert2);
-//                revPrimer = afeat.getSeq().revComp() + revPrimer;
                 revPrimer = this.flip(afeat.getSeq().toString()) + revPrimer;
             }
             revPrimer = spacer2 + revPrimer;
             revSequences.add(revPrimer);
-            System.out.println("fwd: " + fwdPrimer);
-            System.out.println("rev: " + revPrimer);
         }
         PrimerResultFrame prf = new PrimerResultFrame(this, fwdSequences, revSequences);
         prf.pack();
@@ -165,9 +161,9 @@ public class PrimerDesignController {
         if (_sequence == null) {
             return null;
         }
-        NucSeq ns = new NucSeq(_sequence);
+        _ns.changeSeq(_sequence);
         HashMap<Integer, Integer> toReturn = new HashMap<Integer, Integer>();
-        HashSet<Annotation> hs = ns.getAnnotations();
+        HashSet<Annotation> hs = _ns.getAnnotations();
 
         for (Annotation an : hs) {
             if (an.getFeature().getSearchTags().contains("restriction enzyme")) {
@@ -241,9 +237,11 @@ public class PrimerDesignController {
 
         return 0.00;
     }
+
     public void checkForDimers(PrimerResultFrame rpf) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
+
     public void switchViews() {
         if (isTC) {
             Component[] components = _tcView.getComponents();
@@ -282,11 +280,46 @@ public class PrimerDesignController {
 
     }
 
-    void close() {
+    public void close() {
         if (isTC) {
             _tcView.close();
         } else {
             _frameView.dispose();
+        }
+    }
+
+    public void validateKeyPressed(KeyEvent evt) {
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER || evt.getKeyCode() == KeyEvent.VK_TAB) {
+            evt.consume();
+        }
+        return;
+    }
+
+    public void validateKeyTyped(KeyEvent evt) {
+        if (evt.getKeyChar() != 'a'
+                && evt.getKeyChar() != 'g'
+                && evt.getKeyChar() != 't'
+                && evt.getKeyChar() != 'c'
+                && evt.getKeyChar() != 'A'
+                && evt.getKeyChar() != 'G'
+                && evt.getKeyChar() != 'T'
+                && evt.getKeyChar() != 'C') {
+            evt.consume();
+        }
+    }
+
+    public void validateNumTyped(KeyEvent evt) {
+        if (evt.getKeyChar() != '1'
+                && evt.getKeyChar() != '2'
+                && evt.getKeyChar() != '3'
+                && evt.getKeyChar() != '4'
+                && evt.getKeyChar() != '5'
+                && evt.getKeyChar() != '6'
+                && evt.getKeyChar() != '7'
+                && evt.getKeyChar() != '8'
+                && evt.getKeyChar() != '9'
+                && evt.getKeyChar() != '0') {
+            evt.consume();
         }
     }
     private String _sequence;
@@ -294,6 +327,4 @@ public class PrimerDesignController {
     private boolean isTC;
     private TopComponent _tcView;
     private NucSeq _ns;
-
-
 }

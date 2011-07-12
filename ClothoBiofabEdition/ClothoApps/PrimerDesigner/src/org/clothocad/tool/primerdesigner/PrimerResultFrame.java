@@ -185,11 +185,26 @@ public class PrimerResultFrame extends javax.swing.JFrame {
         jLabel2.setText(org.openide.util.NbBundle.getMessage(PrimerResultFrame.class, "PrimerResultFrame.jLabel2.text")); // NOI18N
 
         revSequenceTextField.setText(org.openide.util.NbBundle.getMessage(PrimerResultFrame.class, "PrimerResultFrame.revSequenceTextField.text")); // NOI18N
+        revSequenceTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                revSequenceTextFieldActionPerformed(evt);
+            }
+        });
+        revSequenceTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                revSequenceTextFieldKeyTyped(evt);
+            }
+        });
 
         fwdSequenceTextField.setText(org.openide.util.NbBundle.getMessage(PrimerResultFrame.class, "PrimerResultFrame.fwdSequenceTextField.text")); // NOI18N
         fwdSequenceTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fwdSequenceTextFieldActionPerformed(evt);
+            }
+        });
+        fwdSequenceTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                fwdSequenceTextFieldKeyTyped(evt);
             }
         });
 
@@ -208,7 +223,7 @@ public class PrimerResultFrame extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabel3)
-                .addContainerGap(618, Short.MAX_VALUE))
+                .addContainerGap(621, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -226,7 +241,7 @@ public class PrimerResultFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(fwdSequenceTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(6, 6, 6)
@@ -250,7 +265,7 @@ public class PrimerResultFrame extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jScrollPane1, jScrollPane2, revSequenceTextField});
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {fwdSequenceTextField, jScrollPane1, jScrollPane2, revSequenceTextField});
 
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -341,6 +356,18 @@ public class PrimerResultFrame extends javax.swing.JFrame {
         g.drawString("Click", evt.getX(), evt.getY());
         g.dispose();
     }//GEN-LAST:event_jPanel1MouseClicked
+
+    private void fwdSequenceTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fwdSequenceTextFieldKeyTyped
+        _controller.validateKeyTyped(evt);
+    }//GEN-LAST:event_fwdSequenceTextFieldKeyTyped
+
+    private void revSequenceTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_revSequenceTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_revSequenceTextFieldActionPerformed
+
+    private void revSequenceTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_revSequenceTextFieldKeyTyped
+        _controller.validateKeyTyped(evt);
+    }//GEN-LAST:event_revSequenceTextFieldKeyTyped
 
     /**
      * @param args the command line arguments
