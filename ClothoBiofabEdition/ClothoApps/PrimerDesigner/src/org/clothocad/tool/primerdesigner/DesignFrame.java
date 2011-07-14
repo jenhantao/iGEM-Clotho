@@ -431,15 +431,19 @@ public class DesignFrame extends javax.swing.JFrame {
 
         layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {spacerTextField1, spacerTextField2});
 
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cancelButton, generateButton, reCheckButton});
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+public PrimerDesignController getController () {
+    return _controller;
+}
     public void updateLabels() {
         endLabel.setText("" + sequenceTextField.getText().length());
     }
 
     private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
-
+statusLabel.setText("Status: Generating primers....");
         String seq = sequenceTextField.getText();
         reLocations = _controller.checkForRESites();
         Double tm;
@@ -597,6 +601,7 @@ positionLabel.setText("Position: "+sequenceTextField.getCaretPosition());    }//
         String seq = sequenceTextField.getText();
         reLocations = _controller.checkForRESites();
         if (reLocations == null) {
+            statusLabel.setText("No restriction sites found");
             return;
         } else {
             Highlighter h = sequenceTextField.getHighlighter();
@@ -615,6 +620,7 @@ positionLabel.setText("Position: "+sequenceTextField.getCaretPosition());    }//
                     Exceptions.printStackTrace(ex);
                 }
             }
+            statusLabel.setText("Restriction sites found");
             g.dispose();
         }    }//GEN-LAST:event_reCheckButtonActionPerformed
 

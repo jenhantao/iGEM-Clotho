@@ -186,9 +186,9 @@
                       <Component id="statusLabel" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="reCheckButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="generateButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="cancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="reCheckButton" linkSize="13" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="generateButton" linkSize="13" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cancelButton" linkSize="13" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace pref="24" max="32767" attributes="0"/>

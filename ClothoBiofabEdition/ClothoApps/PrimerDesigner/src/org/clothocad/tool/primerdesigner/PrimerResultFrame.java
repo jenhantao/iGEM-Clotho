@@ -10,8 +10,12 @@
  */
 package org.clothocad.tool.primerdesigner;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import org.clothocore.api.core.Collector;
+import org.clothocore.api.data.Oligo;
 
 /**
  *
@@ -28,7 +32,7 @@ public class PrimerResultFrame extends javax.swing.JFrame {
         }
     }
 
-    public PrimerResultFrame(PrimerDesignController pdc, ArrayList<String> fwd, ArrayList<String> rev) {
+    public PrimerResultFrame(PrimerDesignController pdc, ArrayList<String> fwd, ArrayList<String> rev, ArrayList<Double> fwdG, ArrayList<Double> revG) {
         try {
             _controller = pdc;
             fwdSequences = fwd;
@@ -38,7 +42,8 @@ public class PrimerResultFrame extends javax.swing.JFrame {
             for (int i = 0; i < fwdSequences.size(); i++) {
                 fwdTableModel[i][0] = fwdSequences.get(i);
                 fwdTableModel[i][1] = fwdSequences.get(i).length();
-                fwdTableModel[i][2] = _controller.calcDeltaG(fwdSequences.get(i));
+//                fwdTableModel[i][2] = _controller.calcDeltaG(fwdSequences.get(i));
+                fwdTableModel[i][2] = fwdG.get(i);
                 fwdTableModel[i][3] = _controller.calcGCContent(fwdSequences.get(i));
                 fwdTableModel[i][4] = _controller.calcMeltingTemp(fwdSequences.get(i));
 
@@ -47,7 +52,8 @@ public class PrimerResultFrame extends javax.swing.JFrame {
             for (int i = 0; i < revSequences.size(); i++) {
                 revTableModel[i][0] = revSequences.get(i);
                 revTableModel[i][1] = revSequences.get(i).length();
-                revTableModel[i][2] = _controller.calcDeltaG(revSequences.get(i));
+//                revTableModel[i][2] = _controller.calcDeltaG(revSequences.get(i));
+                revTableModel[i][2] = revG.get(i);
                 revTableModel[i][3] = _controller.calcGCContent(revSequences.get(i));
                 revTableModel[i][4] = _controller.calcMeltingTemp(revSequences.get(i));
 
@@ -74,7 +80,6 @@ public class PrimerResultFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         revResultsTable = new javax.swing.JTable();
         saveAllButton = new javax.swing.JButton();
-        dimerRiskButton = new javax.swing.JButton();
         csvButton = new javax.swing.JButton();
         closeButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -84,10 +89,12 @@ public class PrimerResultFrame extends javax.swing.JFrame {
         deltaGDifferenceLabel = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        revSequenceTextField = new javax.swing.JTextField();
-        fwdSequenceTextField = new javax.swing.JTextField();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        fwdSequenceTextField = new javax.swing.JTextArea();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        revSequenceTextField = new javax.swing.JTextArea();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        dimerTextArea = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(org.openide.util.NbBundle.getMessage(PrimerResultFrame.class, "PrimerResultFrame.title")); // NOI18N
@@ -123,14 +130,6 @@ public class PrimerResultFrame extends javax.swing.JFrame {
         saveAllButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveAllButtonActionPerformed(evt);
-            }
-        });
-
-        dimerRiskButton.setText(org.openide.util.NbBundle.getMessage(PrimerResultFrame.class, "PrimerResultFrame.dimerRiskButton.text")); // NOI18N
-        dimerRiskButton.setToolTipText(org.openide.util.NbBundle.getMessage(PrimerResultFrame.class, "PrimerResultFrame.dimerRiskButton.toolTipText")); // NOI18N
-        dimerRiskButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                dimerRiskButtonActionPerformed(evt);
             }
         });
 
@@ -184,125 +183,93 @@ public class PrimerResultFrame extends javax.swing.JFrame {
 
         jLabel2.setText(org.openide.util.NbBundle.getMessage(PrimerResultFrame.class, "PrimerResultFrame.jLabel2.text")); // NOI18N
 
-        revSequenceTextField.setText(org.openide.util.NbBundle.getMessage(PrimerResultFrame.class, "PrimerResultFrame.revSequenceTextField.text")); // NOI18N
-        revSequenceTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                revSequenceTextFieldActionPerformed(evt);
-            }
-        });
-        revSequenceTextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                revSequenceTextFieldKeyTyped(evt);
-            }
-        });
+        jScrollPane3.setHorizontalScrollBar(null);
 
-        fwdSequenceTextField.setText(org.openide.util.NbBundle.getMessage(PrimerResultFrame.class, "PrimerResultFrame.fwdSequenceTextField.text")); // NOI18N
-        fwdSequenceTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fwdSequenceTextFieldActionPerformed(evt);
-            }
-        });
-        fwdSequenceTextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                fwdSequenceTextFieldKeyTyped(evt);
-            }
-        });
+        fwdSequenceTextField.setColumns(20);
+        fwdSequenceTextField.setLineWrap(true);
+        fwdSequenceTextField.setRows(5);
+        jScrollPane3.setViewportView(fwdSequenceTextField);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jPanel1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jPanel1MouseClicked(evt);
-            }
-        });
+        jScrollPane4.setHorizontalScrollBar(null);
 
-        jLabel3.setText(org.openide.util.NbBundle.getMessage(PrimerResultFrame.class, "PrimerResultFrame.jLabel3.text")); // NOI18N
+        revSequenceTextField.setColumns(20);
+        revSequenceTextField.setLineWrap(true);
+        revSequenceTextField.setRows(5);
+        jScrollPane4.setViewportView(revSequenceTextField);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel3)
-                .addContainerGap(621, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel3)
-                .addContainerGap(103, Short.MAX_VALUE))
-        );
+        dimerTextArea.setColumns(20);
+        dimerTextArea.setRows(5);
+        jScrollPane6.setViewportView(dimerTextArea);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(fwdSequenceTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(6, 6, 6)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel2)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)
-                            .addComponent(revSequenceTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tmDifferenceLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(deltaGDifferenceLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(lengthDifferenceLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 190, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 684, Short.MAX_VALUE)
+                    .addComponent(tmDifferenceLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(deltaGDifferenceLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lengthDifferenceLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(297, 297, 297)
                         .addComponent(closeButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dimerRiskButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(csvButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(saveAllButton)))
+                        .addComponent(saveAllButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jScrollPane3)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
 
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {fwdSequenceTextField, jScrollPane1, jScrollPane2, revSequenceTextField});
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jScrollPane1, jScrollPane2, jScrollPane4});
 
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, 0, 0, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(revSequenceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(fwdSequenceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, 0, 0, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(tmDifferenceLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lengthDifferenceLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(deltaGDifferenceLabel)
-                        .addGap(2, 2, 2))
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(csvButton)
-                            .addComponent(closeButton)
-                            .addComponent(saveAllButton)
-                            .addComponent(dimerRiskButton))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(deltaGDifferenceLabel))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(csvButton)
+                        .addComponent(saveAllButton)
+                        .addComponent(closeButton)))
+                .addGap(8, 8, 8)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {fwdSequenceTextField, revSequenceTextField});
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jScrollPane1, jScrollPane2});
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -315,10 +282,6 @@ public class PrimerResultFrame extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_closeButtonActionPerformed
 
-    private void fwdSequenceTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fwdSequenceTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_fwdSequenceTextFieldActionPerformed
-
     private void fwdResultsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fwdResultsTableMouseClicked
         int fwdIndex = fwdResultsTable.getSelectedRow();
         int revIndex = revResultsTable.getSelectedRow();
@@ -328,6 +291,12 @@ public class PrimerResultFrame extends javax.swing.JFrame {
             deltaGDifferenceLabel.setText("Delta G Diff: " + Math.abs(((Double) fwdTableModel[fwdIndex][2]) - ((Double) revTableModel[revIndex][2])));
             fwdSequenceTextField.setText(((String) fwdTableModel[fwdIndex][0]));
             revSequenceTextField.setText(((String) revTableModel[revIndex][0]));
+            dimerTextArea.setBackground(Color.pink);
+            dimerTextArea.setText("forward Sequence: " + fwdTableModel[fwdIndex][0] + "\n" + "reverse Sequence: " + revTableModel[revIndex][0]
+                    + "\nForward Delta G: " + fwdTableModel[fwdIndex][2] + "\nReverse delta g: " + revTableModel[revIndex][2]);
+
+            String results = _controller.checkForDimers((String) fwdTableModel[fwdIndex][0], (String) revTableModel[revIndex][0], (Double) fwdTableModel[fwdIndex][2], (Double) revTableModel[revIndex][2]);
+            dimerTextArea.setText(results);
         }
 
     }//GEN-LAST:event_fwdResultsTableMouseClicked
@@ -341,33 +310,27 @@ public class PrimerResultFrame extends javax.swing.JFrame {
             deltaGDifferenceLabel.setText("Delta G Diff: " + Math.abs(((Double) fwdTableModel[fwdIndex][2]) - ((Double) revTableModel[revIndex][2])));
             fwdSequenceTextField.setText(((String) fwdTableModel[fwdIndex][0]));
             revSequenceTextField.setText(((String) revTableModel[revIndex][0]));
+            dimerTextArea.setBackground(Color.pink);
+            dimerTextArea.setText("forward Sequence: " + fwdTableModel[fwdIndex][0] + "\n" + "reverse Sequence: " + revTableModel[revIndex][0]
+                    + "\nForward Delta G: " + fwdTableModel[fwdIndex][2] + "\nReverse delta g: " + revTableModel[revIndex][2]);
+
+            String results = _controller.checkForDimers((String) fwdTableModel[fwdIndex][0], (String) revTableModel[revIndex][0], (Double) fwdTableModel[fwdIndex][2], (Double) revTableModel[revIndex][2]);
+            dimerTextArea.setText(results);
+
         }    }//GEN-LAST:event_revResultsTableMouseClicked
 
     private void saveAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAllButtonActionPerformed
+        String nameBase = JOptionPane.showInputDialog("Enter oligo name root");
+        for (int i = 0; i < fwdSequences.size(); i++) {
+            Oligo ol = new Oligo(nameBase + "F" + i, "primer", Collector.getCurrentUser(), fwdSequences.get(i));
+            ol.saveDefault();
+        }
+        for (int i = 0; i < revSequences.size(); i++) {
+            Oligo ol = new Oligo(nameBase + "R" + i, "primer", Collector.getCurrentUser(), revSequences.get(i));
+            ol.saveDefault();
+        }
         // TODO add your handling code here:
     }//GEN-LAST:event_saveAllButtonActionPerformed
-
-    private void dimerRiskButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dimerRiskButtonActionPerformed
-        _controller.checkForDimers(this);
-    }//GEN-LAST:event_dimerRiskButtonActionPerformed
-
-    private void jPanel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseClicked
-        Graphics g = jPanel1.getGraphics().create();
-        g.drawString("Click", evt.getX(), evt.getY());
-        g.dispose();
-    }//GEN-LAST:event_jPanel1MouseClicked
-
-    private void fwdSequenceTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fwdSequenceTextFieldKeyTyped
-        _controller.validateKeyTyped(evt);
-    }//GEN-LAST:event_fwdSequenceTextFieldKeyTyped
-
-    private void revSequenceTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_revSequenceTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_revSequenceTextFieldActionPerformed
-
-    private void revSequenceTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_revSequenceTextFieldKeyTyped
-        _controller.validateKeyTyped(evt);
-    }//GEN-LAST:event_revSequenceTextFieldKeyTyped
 
     /**
      * @param args the command line arguments
@@ -389,18 +352,19 @@ public class PrimerResultFrame extends javax.swing.JFrame {
     private javax.swing.JButton closeButton;
     private javax.swing.JButton csvButton;
     private javax.swing.JLabel deltaGDifferenceLabel;
-    private javax.swing.JButton dimerRiskButton;
+    private javax.swing.JTextArea dimerTextArea;
     private javax.swing.JTable fwdResultsTable;
-    private javax.swing.JTextField fwdSequenceTextField;
+    private javax.swing.JTextArea fwdSequenceTextField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JLabel lengthDifferenceLabel;
     private javax.swing.JTable revResultsTable;
-    private javax.swing.JTextField revSequenceTextField;
+    private javax.swing.JTextArea revSequenceTextField;
     private javax.swing.JButton saveAllButton;
     private javax.swing.JLabel tmDifferenceLabel;
     // End of variables declaration//GEN-END:variables

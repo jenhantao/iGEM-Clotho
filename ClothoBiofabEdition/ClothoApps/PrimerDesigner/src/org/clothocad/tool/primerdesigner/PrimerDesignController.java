@@ -11,11 +11,12 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
-import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import org.clothocore.api.data.Annotation;
@@ -63,6 +64,8 @@ public class PrimerDesignController {
 //        System.out.println("Spacers: " + spacer1 + ", " + spacer2);
         ArrayList<String> fwdSequences = new ArrayList<String>();
         ArrayList<String> revSequences = new ArrayList<String>();
+        ArrayList<Double> fwdG = new ArrayList<Double>();
+        ArrayList<Double> revG = new ArrayList<Double>();
         if (spacer1 == null) {
             spacer1 = "";
         }
@@ -99,21 +102,23 @@ public class PrimerDesignController {
         //generates primer sequences with length +/-3 of target length excluding the insert length
         for (int i = length - 3; i <= length + 3; i++) {
             fwdPrimer = this.complementSequence(seq.substring(0, i));
+            fwdG.add(calcDeltaG(fwdPrimer));
             if (!insert1.equalsIgnoreCase("none")) {
                 Feature afeat = Feature.retrieveByName(insert1);
                 fwdPrimer = this.complementSequence(afeat.getSeq().toString()) + fwdPrimer;
             }
             fwdPrimer = spacer1 + fwdPrimer;
-            fwdSequences.add(fwdPrimer);
+            fwdSequences.add(fwdPrimer.toUpperCase());
             revPrimer = this.flip(seq.substring(seq.length() - i));
+            revG.add(calcDeltaG(revPrimer));
             if (!insert2.equalsIgnoreCase("none")) {
                 Feature afeat = Feature.retrieveByName(insert2);
                 revPrimer = this.flip(afeat.getSeq().toString()) + revPrimer;
             }
             revPrimer = spacer2 + revPrimer;
-            revSequences.add(revPrimer);
+            revSequences.add(revPrimer.toUpperCase());
         }
-        PrimerResultFrame prf = new PrimerResultFrame(this, fwdSequences, revSequences);
+        PrimerResultFrame prf = new PrimerResultFrame(this, fwdSequences, revSequences, fwdG, revG);
         prf.pack();
         prf.setVisible(true);
     }
@@ -194,7 +199,7 @@ public class PrimerDesignController {
      * @param s
      * @return
      */
-    public Double calcDeltaG(String s) {
+    public static Double calcDeltaG(String s) {
         Double toReturn = 0.0;
         if (s != null) {
             s = s.toUpperCase();
@@ -238,8 +243,74 @@ public class PrimerDesignController {
         return 0.00;
     }
 
-    public void checkForDimers(PrimerResultFrame rpf) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public String checkForDimers(String fwdSeq, String revSeq, Double fwdG, Double revG) {
+        String result = "";
+        String alignString = "";
+        Pattern p;
+        Matcher m;
+        Double dG = 0.0;
+        //check for self dimers
+        result = result + "SELF DIMERS\nfwd primer:";
+        alignString = Aligner.align(fwdSeq, fwdSeq);
+        result = result + "\n" + alignString;
+        p = Pattern.compile("[|]+");
+        m = p.matcher(dimerCheckHelper(alignString));
+        while (m.find()) {
+            dG = dG + calcDeltaG(alignString.substring(m.start() - 1, m.end() - 1));
+        }
+        result = result + "\nDelta G: " + dG;
+        if (dG < fwdG) {
+            result = result + "\nWarning: self dimer is likely in forward primer";
+        }
+
+        result = result + "\nrev primer:";
+        alignString = Aligner.align(revSeq, revSeq);
+        result = result + "\n" + alignString;
+        p = Pattern.compile("[|]+");
+        m = p.matcher(dimerCheckHelper(alignString));
+        while (m.find()) {
+            dG = dG + calcDeltaG(alignString.substring(m.start() - 1, m.end() - 1));
+        }
+        result = result + "\nDelta G: " + dG;
+        if (dG < revG) {
+            result = result + "\nWarning: self dimer is likely in reverse primer";
+        }
+
+        //check for dimer with other primer
+        result = result + "\nrev primer:";
+        alignString = Aligner.align(fwdSeq, revSeq);
+        result = result + "\n" + alignString;
+        p = Pattern.compile("[|]+");
+        m = p.matcher(dimerCheckHelper(alignString));
+        while (m.find()) {
+            dG = dG + calcDeltaG(alignString.substring(m.start() - 1, m.end() - 1));
+            System.out.println(alignString.substring(m.start() - 1, m.end() - 1));
+        }
+        result = result + "\nDelta G: " + dG;
+        if (dG < fwdG || dG<revG) {
+            result = result + "\nWarning: Dimerization is likely to occur between forward and reverse primer";
+        }
+
+        //Check for hairpins
+        //check against template for portential match
+
+        return result;
+    }
+
+    private static String dimerCheckHelper(String s) {
+        int first = 0;
+        int second = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.substring(i, i + 1).matches("\\n")) {
+                if (first == 0) {
+                    first = i;
+                } else {
+                    second = i;
+                }
+
+            }
+        }
+        return (s.substring(first, second));
     }
 
     public void switchViews() {
@@ -321,6 +392,11 @@ public class PrimerDesignController {
                 && evt.getKeyChar() != '0') {
             evt.consume();
         }
+
+    }
+
+    public void changeSequence(String s) {
+        _sequence = s;
     }
     private String _sequence;
     private JFrame _frameView;

@@ -51,6 +51,7 @@ public class PrimerDesignerListener implements DocumentListener {
             }
         }
         _view.updateLabels();
+        _view.getController().changeSequence(_view.getText());
     }
 
     @Override
@@ -76,11 +77,13 @@ public class PrimerDesignerListener implements DocumentListener {
 
         }
         _view.updateLabels();
+                _view.getController().changeSequence(_view.getText());
     }
 
     @Override
     public void changedUpdate(DocumentEvent e) {
         _view.updateLabels();
+                _view.getController().changeSequence(_view.getText());
     }
     private DesignFrame _view;
 }
