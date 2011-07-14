@@ -19,9 +19,12 @@ import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
+import org.clothocore.api.core.Collector;
 import org.clothocore.api.data.Annotation;
+import org.clothocore.api.data.Collection;
 import org.clothocore.api.data.Feature;
 import org.clothocore.api.data.NucSeq;
+import org.clothocore.api.data.Oligo;
 import org.openide.windows.TopComponent;
 
 /**
@@ -121,6 +124,28 @@ public class PrimerDesignController {
         PrimerResultFrame prf = new PrimerResultFrame(this, fwdSequences, revSequences, fwdG, revG);
         prf.pack();
         prf.setVisible(true);
+    }
+
+    /**
+     * Saves two arraylists of sequences as Clotho oligos uses nameRoot as the base of the name
+     * @param sequences
+     * @param nameRoot
+     */
+    public void saveAll(ArrayList<String> fwdseq, ArrayList<String> revseq, String nameRoot, String collectionName) {
+        Collection saveTo = Collection.retrieveByName(collectionName);
+        if (saveTo!=null) {
+        for (int i = 0; i < fwdseq.size(); i++) {
+            Oligo ol = new Oligo(nameRoot + "F" + i, "primer", Collector.getCurrentUser(), fwdseq.get(i));
+            saveTo.addObject(ol);
+        }
+        for (int i = 0; i < revseq.size(); i++) {
+            Oligo ol = new Oligo(nameRoot + "R" + i, "primer", Collector.getCurrentUser(), revseq.get(i));
+            saveTo.addObject(ol);
+            ol.saveDefault();
+
+        }
+        saveTo.saveDefault();
+        }
     }
 
     /**
@@ -258,32 +283,32 @@ public class PrimerDesignController {
             dG = dG + calcDeltaG(alignString.substring(m.start() - 1, m.end() - 1));
         }
         result = result + "\nDelta G: " + dG;
-   
-            if (dG.intValue() <= fwdG.intValue()) {
-                result = result + "\nWarning: self dimer is likely in forward primer";
-            }
-   
+
+        if (dG.intValue() <= fwdG.intValue()) {
+            result = result + "\nWarning: self dimer is likely in forward primer";
+        }
+
         result = result + "\n" + alignString;
         result = result + "\nDelta G: " + dG;
         result = result + "\nrev primer:";
-        dG=0.0;
+        dG = 0.0;
         alignString = Aligner.align(revSeq, revSeq);
         p = Pattern.compile("[|]+");
         m = p.matcher(dimerCheckHelper(alignString));
         while (m.find()) {
             dG = dG + calcDeltaG(alignString.substring(m.start() - 1, m.end() - 1));
         }
-   
-            if (dG.intValue() <= revG.intValue()) {
-                result = result + "\nWarning: self dimer is likely in reverse primer";
-            }
-   
+
+        if (dG.intValue() <= revG.intValue()) {
+            result = result + "\nWarning: self dimer is likely in reverse primer";
+        }
+
         result = result + "\n" + alignString;
         result = result + "\nDelta G: " + dG;
 
         //check for dimer with other primer
         result = result + "\nrev primer:";
-        dG=0.0;
+        dG = 0.0;
         alignString = Aligner.align(fwdSeq, revSeq);
 
         p = Pattern.compile("[|]+");
@@ -291,11 +316,11 @@ public class PrimerDesignController {
         while (m.find()) {
             dG = dG + calcDeltaG(alignString.substring(m.start() - 1, m.end() - 1));
         }
-   
-            if ((dG.intValue() <= fwdG.intValue() || dG.intValue() < revG.intValue())) {
-                result = result + "\nWarning: Dimerization is likely to occur between forward and reverse primer";
-            }
-    
+
+        if ((dG.intValue() <= fwdG.intValue() || dG.intValue() < revG.intValue())) {
+            result = result + "\nWarning: Dimerization is likely to occur between forward and reverse primer";
+        }
+
         result = result + "\n" + alignString;
         result = result + "\nDelta G: " + dG;
 
@@ -303,66 +328,66 @@ public class PrimerDesignController {
         result = result + "\nHairpins:\nfwd primer:";
 
         for (int i = 0; i < fwdSeq.length(); i++) {
-            dG=0.0;
+            dG = 0.0;
             alignString = Aligner.align(fwdSeq.substring(0, fwdSeq.length() - i), fwdSeq.substring(i));
             p = Pattern.compile("[|]+");
             m = p.matcher(dimerCheckHelper(alignString));
             while (m.find()) {
                 dG = dG + calcDeltaG(alignString.substring(m.start() - 1, m.end() - 1));
             }
-           
-                if (dG.intValue() <= fwdG.intValue()) {
-                    result = result + "\nWarning: Forward primer is likely to form a hairpin";
-                    result = result + "\n" + alignString;
-                    result = result + "\nDelta G: " + dG;
 
-                }
- 
+            if (dG.intValue() <= fwdG.intValue()) {
+                result = result + "\nWarning: Forward primer is likely to form a hairpin";
+                result = result + "\n" + alignString;
+                result = result + "\nDelta G: " + dG;
+
+            }
+
         }
         result = result + "\nrev primer:";
 
         for (int i = 0; i < revSeq.length(); i++) {
-            dG=0.0;
+            dG = 0.0;
             alignString = Aligner.align(revSeq.substring(0, revSeq.length() - i), revSeq.substring(i));
             p = Pattern.compile("[|]+");
             m = p.matcher(dimerCheckHelper(alignString));
             while (m.find()) {
                 dG = dG + calcDeltaG(alignString.substring(m.start() - 1, m.end() - 1));
             }
-                if (dG.intValue() <= revG.intValue()) {
-                    result = result + "\nWarning: Reverse primer is likely to form a hairpin";
-                    result = result + "\n" + alignString;
-                    result = result + "\nDelta G: " + dG;
-                }
-     
+            if (dG.intValue() <= revG.intValue()) {
+                result = result + "\nWarning: Reverse primer is likely to form a hairpin";
+                result = result + "\n" + alignString;
+                result = result + "\nDelta G: " + dG;
+            }
+
 
         }
         //check against template for portential match
         result = result + "\nMISMATCH AGAINST TEMPLATE:\nfwd primer:";
-        dG=0.0;
+        dG = 0.0;
         alignString = Aligner.align(fwdSeq, _sequence);
         p = Pattern.compile("[|]+");
         m = p.matcher(dimerCheckHelper(alignString));
         while (m.find()) {
             dG = dG + calcDeltaG(alignString.substring(m.start() - 1, m.end() - 1));
         }
-            if (dG.intValue() <= fwdG.intValue()) {
-                result = result + "\nWarning: Forward primer is likely to mismatch against the template";
-            }
+        if (dG.intValue() <= fwdG.intValue()) {
+            result = result + "\nWarning: Forward primer is likely to mismatch against the template";
+        }
 
         result = result + "\n" + alignString;
         result = result + "\nDelta G: " + dG;
         result = result + "\nrev primer:";
-        dG=0.0;
+        dG = 0.0;
         alignString = Aligner.align(revSeq, _sequence);
         p = Pattern.compile("[|]+");
         m = p.matcher(dimerCheckHelper(alignString));
         while (m.find()) {
             dG = dG + calcDeltaG(alignString.substring(m.start() - 1, m.end() - 1));
         }
-            if (dG.intValue() <= revG.intValue()) {
-                result = result + "\nWarning: Reverse primer is likely to mismatch against the template";
-            }
+        if (dG.intValue() <= revG.intValue()) {
+            result = result + "\nWarning: Reverse primer is likely to mismatch against the template";
+        }
 
         result = result + "\n" + alignString;
         result = result + "\nDelta G: " + dG;

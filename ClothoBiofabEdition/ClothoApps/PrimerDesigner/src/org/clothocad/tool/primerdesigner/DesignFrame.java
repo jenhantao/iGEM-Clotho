@@ -253,9 +253,11 @@ public class DesignFrame extends javax.swing.JFrame {
         endLabel.setMinimumSize(new java.awt.Dimension(40, 30));
 
         jLabel7.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.jLabel7.text")); // NOI18N
+        jLabel7.setEnabled(false);
 
         tmTextField.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.tmTextField.text")); // NOI18N
         tmTextField.setToolTipText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.tmTextField.toolTipText")); // NOI18N
+        tmTextField.setEnabled(false);
         tmTextField.setMinimumSize(new java.awt.Dimension(35, 28));
         tmTextField.setPreferredSize(new java.awt.Dimension(35, 28));
         tmTextField.addActionListener(new java.awt.event.ActionListener() {

@@ -13,8 +13,12 @@ package org.clothocad.tool.primerdesigner;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import org.clothocore.api.core.Collector;
+import org.clothocore.api.data.ObjLink;
+import org.clothocore.api.data.ObjType;
 import org.clothocore.api.data.Oligo;
 
 /**
@@ -331,16 +335,9 @@ public class PrimerResultFrame extends javax.swing.JFrame {
         }    }//GEN-LAST:event_revResultsTableMouseClicked
 
     private void saveAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAllButtonActionPerformed
-        String nameBase = JOptionPane.showInputDialog("Enter oligo name root");
-        for (int i = 0; i < fwdSequences.size(); i++) {
-            Oligo ol = new Oligo(nameBase + "F" + i, "primer", Collector.getCurrentUser(), fwdSequences.get(i));
-            ol.saveDefault();
-        }
-        for (int i = 0; i < revSequences.size(); i++) {
-            Oligo ol = new Oligo(nameBase + "R" + i, "primer", Collector.getCurrentUser(), revSequences.get(i));
-            ol.saveDefault();
-        }
-        // TODO add your handling code here:
+        SaveFrame sf = new SaveFrame(fwdSequences,revSequences,_controller);
+        sf.pack();
+        sf.setVisible(true);
     }//GEN-LAST:event_saveAllButtonActionPerformed
 
     /**

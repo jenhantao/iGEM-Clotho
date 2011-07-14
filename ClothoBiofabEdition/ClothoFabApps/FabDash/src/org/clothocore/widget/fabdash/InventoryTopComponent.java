@@ -69,15 +69,12 @@ public final class InventoryTopComponent extends TopComponent {
 
 
         initComponents();
-        //add(new ObjTypeChooser(this), java.awt.BorderLayout.NORTH);
-//        add(new SearchBar(), java.awt.BorderLayout.SOUTH);
-
-
         setName(NbBundle.getMessage(InventoryTopComponent.class, "CTL_InventoryTopComponent"));
         setToolTipText(NbBundle.getMessage(InventoryTopComponent.class, "HINT_InventoryTopComponent"));
 //        setIcon(ImageUtilities.loadImage(ICON_PATH, true));
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
         partsTable.addMouseListener(new MouseAdapter() {
+
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (partsTable.getSelectedRow() > 0 && partsTable.getSelectedRow() < partsTable.getHeight()) {
@@ -127,7 +124,22 @@ public final class InventoryTopComponent extends TopComponent {
         System.out.println(_chosenType);
     }
 
+    private void refreshConnectionInformation() {
+        if (Collector.isConnected()) {
+            if (Collector.getCurrentUser()!=null) {
+            currentUserLabel.setText(Collector.getCurrentUser().getDisplayName());
+            statusLabel.setText("connected to default connection");
+            defaultConnectionLabel.setText(Collector.getDefaultConnection().toString());
+            }
+        } else {
+            currentUserLabel.setText("Not Connected");
+            defaultConnectionLabel.setText(Collector.getDefaultConnection().toString());
+            statusLabel.setText("Not connected to Clotho connection");
+        }
+    }
+
     private void fetchInventoryInformation() {
+
         new SwingWorker() {
 
             Collection personalCollection = null;
@@ -139,7 +151,6 @@ public final class InventoryTopComponent extends TopComponent {
                 if (!Collector.isConnected()) {
                     return null;
                 }
-
                 try {
                     personalCollection = Collector.getCurrentUser().getHerCollection();
                     //Populate the Plasmid tab is below
@@ -154,10 +165,7 @@ public final class InventoryTopComponent extends TopComponent {
                         Format aform = aplas.getFormat(); //get the Format of aplas
                         plasmidTableModel[i][1] = aform.getName(); //based on the Format, the sequence of the region of interest is retreieved and used to populate the table
                     }
-
-
                     plasmidsTable.setModel(new javax.swing.table.DefaultTableModel(plasmidTableModel, new String[]{"Plasmid Name", "Format"}));
-
                     //populate the Oligo tab
                     ArrayList<ObjLink> allOligos = Collector.getAllLinksOf(ObjType.OLIGO);
                     Object[][] oligoTableModel = new Object[allOligos.size()][2];
@@ -169,9 +177,7 @@ public final class InventoryTopComponent extends TopComponent {
                         oligoTableModel[i][0] = allOligos.get(i).name;
                         oligoTableModel[i][1] = oligo.getDescription();
                     }
-
                     oligosTable.setModel(new javax.swing.table.DefaultTableModel(oligoTableModel, new String[]{"Name", "Description"}));
-
                     //populate the Vectors tab is below
                     ArrayList<ObjLink> allVectors = Collector.getAllLinksOf(ObjType.VECTOR);
                     Object[][] vectorTableModel = new Object[allVectors.size()][2];
@@ -207,13 +213,9 @@ public final class InventoryTopComponent extends TopComponent {
                         partTableModel[i][1] = aPart.getFormat().toString();
                     }
                     partsTable.setModel(new javax.swing.table.DefaultTableModel(partTableModel, new String[]{"Part Name", "Format"}));
-
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
                 return null;
             }
 
@@ -269,6 +271,9 @@ public final class InventoryTopComponent extends TopComponent {
         connectButton = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         configureConnectionButton = new javax.swing.JButton();
+        statusLabel = new javax.swing.JLabel();
+        currentUserLabel = new javax.swing.JLabel();
+        defaultConnectionLabel = new javax.swing.JTextField();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -406,8 +411,10 @@ public final class InventoryTopComponent extends TopComponent {
         connectionPanel.setMinimumSize(new java.awt.Dimension(150, 30));
         connectionPanel.setPreferredSize(new java.awt.Dimension(150, 100));
 
+        jLabel1.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.jLabel1.text")); // NOI18N
 
+        changeVariableButton.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(changeVariableButton, org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.changeVariableButton.text")); // NOI18N
         changeVariableButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -415,10 +422,18 @@ public final class InventoryTopComponent extends TopComponent {
             }
         });
 
+        connectButton.setFont(new java.awt.Font("Ubuntu", 0, 15)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(connectButton, org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.connectButton.text")); // NOI18N
+        connectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                connectButtonActionPerformed(evt);
+            }
+        });
 
+        jLabel2.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.jLabel2.text")); // NOI18N
 
+        configureConnectionButton.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(configureConnectionButton, org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.configureConnectionButton.text")); // NOI18N
         configureConnectionButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -426,20 +441,48 @@ public final class InventoryTopComponent extends TopComponent {
             }
         });
 
+        statusLabel.setFont(new java.awt.Font("Ubuntu", 0, 15)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(statusLabel, org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.statusLabel.text")); // NOI18N
+        statusLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        currentUserLabel.setFont(new java.awt.Font("Ubuntu", 0, 15)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(currentUserLabel, org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.currentUserLabel.text")); // NOI18N
+        currentUserLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        currentUserLabel.setMaximumSize(new java.awt.Dimension(80, 25));
+        currentUserLabel.setMinimumSize(new java.awt.Dimension(100, 25));
+        currentUserLabel.setPreferredSize(new java.awt.Dimension(80, 25));
+
+        defaultConnectionLabel.setEditable(false);
+        defaultConnectionLabel.setText(org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.defaultConnectionLabel.text")); // NOI18N
+        defaultConnectionLabel.setMaximumSize(new java.awt.Dimension(100, 25));
+        defaultConnectionLabel.setMinimumSize(new java.awt.Dimension(100, 25));
+        defaultConnectionLabel.setPreferredSize(new java.awt.Dimension(100, 25));
+
         javax.swing.GroupLayout connectionPanelLayout = new javax.swing.GroupLayout(connectionPanel);
         connectionPanel.setLayout(connectionPanelLayout);
         connectionPanelLayout.setHorizontalGroup(
             connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(connectionPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(connectButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
-                .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(configureConnectionButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(changeVariableButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(connectionPanelLayout.createSequentialGroup()
+                        .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(connectionPanelLayout.createSequentialGroup()
+                        .addComponent(connectButton, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                        .addGap(27, 27, 27)))
+                .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(connectionPanelLayout.createSequentialGroup()
+                        .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(defaultConnectionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+                            .addComponent(currentUserLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(changeVariableButton, javax.swing.GroupLayout.Alignment.TRAILING, 0, 0, Short.MAX_VALUE)
+                            .addComponent(configureConnectionButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(statusLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE))
                 .addContainerGap())
         );
         connectionPanelLayout.setVerticalGroup(
@@ -447,16 +490,25 @@ public final class InventoryTopComponent extends TopComponent {
             .addGroup(connectionPanelLayout.createSequentialGroup()
                 .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(changeVariableButton))
+                    .addComponent(changeVariableButton, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(currentUserLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(configureConnectionButton)
                     .addGroup(connectionPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(connectButton)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(configureConnectionButton, 0, 0, Short.MAX_VALUE)
+                            .addComponent(jLabel2))
+                        .addGap(7, 7, 7))
+                    .addGroup(connectionPanelLayout.createSequentialGroup()
+                        .addComponent(defaultConnectionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(connectButton)
+                    .addComponent(statusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(6, 6, 6))
         );
+
+        connectionPanelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {changeVariableButton, configureConnectionButton});
 
         add(connectionPanel, java.awt.BorderLayout.NORTH);
     }// </editor-fold>//GEN-END:initComponents
@@ -469,11 +521,21 @@ public final class InventoryTopComponent extends TopComponent {
         // TODO add your handling code here:
     }//GEN-LAST:event_configureConnectionButtonActionPerformed
 
+    private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                Collector.connectToDefault();
+            }
+        }).start();    }//GEN-LAST:event_connectButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton changeVariableButton;
     private javax.swing.JButton configureConnectionButton;
     private javax.swing.JButton connectButton;
     private javax.swing.JPanel connectionPanel;
+    private javax.swing.JLabel currentUserLabel;
+    private javax.swing.JTextField defaultConnectionLabel;
     protected javax.swing.JTabbedPane inventoryTabbedPane;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -484,6 +546,7 @@ public final class InventoryTopComponent extends TopComponent {
     private javax.swing.JScrollPane plasmidsScrollPane;
     protected javax.swing.JTable plasmidsTable;
     private org.clothocore.widget.fabdash.browser.SearchBar searchBar1;
+    private javax.swing.JLabel statusLabel;
     private javax.swing.JScrollPane vectorsScrollPane;
     protected javax.swing.JTable vectorsTable;
     // End of variables declaration//GEN-END:variables
@@ -528,6 +591,7 @@ public final class InventoryTopComponent extends TopComponent {
     @Override
     //Called to populate the tree
     public void componentOpened() {
+        refreshConnectionInformation();
         fetchInventoryInformation();
     }
 
