@@ -435,20 +435,22 @@ public class DesignFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-public PrimerDesignController getController () {
-    return _controller;
-}
+
+    public PrimerDesignController getController() {
+        return _controller;
+    }
+
     public void updateLabels() {
         endLabel.setText("" + sequenceTextField.getText().length());
     }
 
     private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
-statusLabel.setText("Status: Generating primers....");
+        statusLabel.setText("Status: Generating primers....");
         String seq = sequenceTextField.getText();
         reLocations = _controller.checkForRESites();
         Double tm;
         int length;
-        if (reLocations == null) {
+        if (!this.checkRESites()) {
             try {
                 tm = Double.parseDouble(tmTextField.getText());
             } catch (NumberFormatException e) {
@@ -466,7 +468,52 @@ statusLabel.setText("Status: Generating primers....");
             String spacer1 = spacerTextField1.getText().toUpperCase();
             String spacer2 = spacerTextField2.getText().toUpperCase();
             _controller.generatePrimers(seq, tm, length, insert1, insert2, spacer1, spacer2);
+            statusLabel.setText("Primers calculated");
         } else {
+            statusLabel.setText("Restriction sites found");
+            return;
+        }
+//        if (reLocations == null) {
+//            try {
+//                tm = Double.parseDouble(tmTextField.getText());
+//            } catch (NumberFormatException e) {
+//                statusLabel.setText("Warning: invalid target melting temperature");
+//                return;
+//            }
+//            try {
+//                length = Integer.parseInt(lengthTextField.getText());
+//            } catch (NumberFormatException e) {
+//                statusLabel.setText("Warning: invalid target primer length");
+//                return;
+//            }
+//            String insert1 = (String) insertComboBox1.getSelectedItem();
+//            String insert2 = (String) insertComboBox2.getSelectedItem();
+//            String spacer1 = spacerTextField1.getText().toUpperCase();
+//            String spacer2 = spacerTextField2.getText().toUpperCase();
+//            _controller.generatePrimers(seq, tm, length, insert1, insert2, spacer1, spacer2);
+//        } else {
+//            Highlighter h = sequenceTextField.getHighlighter();
+//            DefaultHighlightPainter painter = new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.RED);
+//            java.awt.Graphics g = navigatorPanel.getGraphics().create();
+//            g.setColor(Color.RED);
+//            h.removeAllHighlights();
+//            for (Integer i : reLocations.keySet()) {
+//                try {
+//                    h.addHighlight(i, reLocations.get(i), painter);
+//                    Double placement = new Double(i / sequenceTextField.getText().length());
+//                    placement = Math.floor(placement * navigatorPanel.getWidth());
+//                    g.fillRect(placement.intValue(), 0, 3, navigatorPanel.getHeight());
+//                } catch (BadLocationException ex) {
+//                    Exceptions.printStackTrace(ex);
+//                }
+//            }
+//            g.dispose();
+
+//        }
+    }//GEN-LAST:event_generateButtonActionPerformed
+    private boolean checkRESites() {
+//        reLocations = _controller.checkForRESites();
+        if (reLocations != null) {
             Highlighter h = sequenceTextField.getHighlighter();
             DefaultHighlightPainter painter = new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.RED);
             java.awt.Graphics g = navigatorPanel.getGraphics().create();
@@ -483,18 +530,12 @@ statusLabel.setText("Status: Generating primers....");
                 }
             }
             g.dispose();
-
+            return true;
+        } else {
+            return false;
         }
-//        java.awt.Graphics g = navigatorPanel.getGraphics().create();
-//        g.setColor(Color.red);
-//        for (int i = 0; i < 100; i++) {
-//            System.out.println(i);
-//            g.fillRect(i, 0, 3, navigatorPanel.getHeight());
-//
-//            i = i + 20;
-//        }
-//        g.dispose();
-    }//GEN-LAST:event_generateButtonActionPerformed
+    }
+
     /**
      * Retrieves the text in sequence text field
      * @return
@@ -534,19 +575,20 @@ statusLabel.setText("Status: Generating primers....");
             Double placement = sequenceTextField.getCaretPosition() / (sequenceTextField.getText().length() + 0.0);
             placement = Math.floor(placement * navigatorPanel.getWidth());
             g.fillRect(placement.intValue(), 0, 3, navigatorPanel.getHeight());
-
-            if (reLocations != null) {
-                g.setColor(Color.red);
-                for (Integer i : reLocations.keySet()) {
-                    placement = new Double(i / sequenceTextField.getText().length());
-                    placement = Math.floor(placement * navigatorPanel.getWidth());
-                    g.fillRect(placement.intValue(), 0, 3, navigatorPanel.getHeight());
-
-                }
-            }
-
             g.dispose();
-        positionLabel.setText("Position: "+sequenceTextField.getCaretPosition());
+//            if (reLocations != null) {
+//                g.setColor(Color.red);
+//                for (Integer i : reLocations.keySet()) {
+//                    placement = new Double(i / sequenceTextField.getText().length());
+//                    placement = Math.floor(placement * navigatorPanel.getWidth());
+//                    g.fillRect(placement.intValue(), 0, 3, navigatorPanel.getHeight());
+//
+//                }
+//            }
+//
+//            g.dispose();
+            this.checkRESites();
+            positionLabel.setText("Position: " + sequenceTextField.getCaretPosition());
         }
 
     }//GEN-LAST:event_navigatorPanelMouseClicked
@@ -576,15 +618,16 @@ statusLabel.setText("Status: Generating primers....");
             Double placement = sequenceTextField.getCaretPosition() / (sequenceTextField.getText().length() + 0.0);
             placement = Math.floor(placement * navigatorPanel.getWidth());
             g.fillRect(placement.intValue(), 0, 3, navigatorPanel.getHeight());
-            if (reLocations != null) {
-                g.setColor(Color.red);
-                for (Integer i : reLocations.keySet()) {
-                    placement = new Double(i / sequenceTextField.getText().length());
-                    placement = Math.floor(placement * navigatorPanel.getWidth());
-                    g.fillRect(placement.intValue(), 0, 3, navigatorPanel.getHeight());
-
-                }
-            }
+            checkRESites();
+            //            if (reLocations != null) {
+//                g.setColor(Color.red);
+//                for (Integer i : reLocations.keySet()) {
+//                    placement = new Double(i / sequenceTextField.getText().length());
+//                    placement = Math.floor(placement * navigatorPanel.getWidth());
+//                    g.fillRect(placement.intValue(), 0, 3, navigatorPanel.getHeight());
+//
+//                }
+//            }
             g.dispose();
 
         }
@@ -604,27 +647,40 @@ positionLabel.setText("Position: "+sequenceTextField.getCaretPosition());    }//
             statusLabel.setText("No restriction sites found");
             return;
         } else {
-            Highlighter h = sequenceTextField.getHighlighter();
-            DefaultHighlightPainter painter = new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.RED);
-            java.awt.Graphics g = navigatorPanel.getGraphics().create();
-            g.clearRect(0, 0, navigatorPanel.getWidth(), navigatorPanel.getHeight());
-            g.setColor(Color.RED);
-            h.removeAllHighlights();
-            for (Integer i : reLocations.keySet()) {
-                try {
-                    h.addHighlight(i, reLocations.get(i), painter);
-                    Double placement = new Double(i / sequenceTextField.getText().length());
-                    placement = Math.floor(placement * navigatorPanel.getWidth());
-                    g.fillRect(placement.intValue(), 0, 3, navigatorPanel.getHeight());
-                } catch (BadLocationException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
+//            Highlighter h = sequenceTextField.getHighlighter();
+//            DefaultHighlightPainter painter = new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.RED);
+//            java.awt.Graphics g = navigatorPanel.getGraphics().create();
+//            g.clearRect(0, 0, navigatorPanel.getWidth(), navigatorPanel.getHeight());
+//            g.setColor(Color.RED);
+//            h.removeAllHighlights();
+//            for (Integer i : reLocations.keySet()) {
+//                try {
+//                    h.addHighlight(i, reLocations.get(i), painter);
+//                    Double placement = new Double(i / sequenceTextField.getText().length());
+//                    placement = Math.floor(placement * navigatorPanel.getWidth());
+//                    g.fillRect(placement.intValue(), 0, 3, navigatorPanel.getHeight());
+//                } catch (BadLocationException ex) {
+//                    Exceptions.printStackTrace(ex);
+//                }
+//            }
+            checkRESites();
             statusLabel.setText("Restriction sites found");
-            g.dispose();
+//            g.dispose();
         }    }//GEN-LAST:event_reCheckButtonActionPerformed
 
     private void sequenceTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sequenceTextFieldKeyPressed
+        positionLabel.setText("Position: " + sequenceTextField.getCaretPosition());
+        if (sequenceTextField.getText().length() > 0) {
+            java.awt.Graphics g = navigatorPanel.getGraphics().create();
+            g.clearRect(0, 0, navigatorPanel.getWidth(), navigatorPanel.getWidth());
+            g.setColor(Color.GREEN);
+            Double placement = sequenceTextField.getCaretPosition() / (sequenceTextField.getText().length() + 0.0);
+            placement = Math.floor(placement * navigatorPanel.getWidth());
+            g.fillRect(placement.intValue(), 0, 3, navigatorPanel.getHeight());
+            checkRESites();
+            g.dispose();
+
+        }
         _controller.validateKeyPressed(evt);
     }//GEN-LAST:event_sequenceTextFieldKeyPressed
 
@@ -648,6 +704,7 @@ positionLabel.setText("Position: "+sequenceTextField.getCaretPosition());    }//
     }//GEN-LAST:event_spacerTextField2KeyTyped
 
     private void sequenceTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sequenceTextFieldKeyTyped
+        positionLabel.setText("Position: " + sequenceTextField.getCaretPosition());
         _controller.validateKeyTyped(evt);
     }//GEN-LAST:event_sequenceTextFieldKeyTyped
 
