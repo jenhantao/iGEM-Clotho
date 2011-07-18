@@ -49,7 +49,7 @@ public class connect implements ClothoTool {
             return;
         }
         DesignFrame someFrame = new DesignFrame("");
-        someFrame.setVisible(true);
+//        someFrame.setVisible(true);
 //        SwingUtilities.invokeLater(new Runnable() {
 //
 //            @Override

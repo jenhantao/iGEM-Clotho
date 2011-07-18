@@ -188,7 +188,9 @@ public class SequenceView {
             _sequenceview.pack();
             _sequenceview.setVisible(true);
             _isTC = false;
+//FIXME fix top component persistence
             _tcView.close();
+
         } else {
             final JComponent guiContentPane = (JComponent) _sequenceview.getContentPane();
 //            JRootPane guiRootPane = _frameView.getRootPane();

@@ -615,13 +615,13 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(1313, Short.MAX_VALUE)
+                .addContainerGap(1336, Short.MAX_VALUE)
                 .addComponent(jLabel20)
                 .addGap(64, 64, 64))
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(LockCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
+                    .addComponent(LockCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(SequenceLengthJLabel)
@@ -688,14 +688,14 @@ public class SequenceViewGUI extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel2Layout.createSequentialGroup()
                             .addComponent(jLabel30)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 320, Short.MAX_VALUE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 441, Short.MAX_VALUE)
                             .addComponent(degeneracyCheckBox)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(MethCheckBox)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(CircularCheckBox))
                         .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addComponent(featureNameJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 644, Short.MAX_VALUE)
+                            .addComponent(featureNameJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 682, Short.MAX_VALUE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(columnCountJLabel)))
                     .addContainerGap()))
@@ -774,7 +774,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
                                 .addComponent(degeneracyCheckBox))
                             .addGap(4, 4, 4)
                             .addComponent(columnCountJLabel)))
-                    .addContainerGap(22, Short.MAX_VALUE)))
+                    .addContainerGap(28, Short.MAX_VALUE)))
         );
 
         SequenceTextPane.setFont(new java.awt.Font("Courier New", 0, 11));
@@ -855,21 +855,21 @@ public class SequenceViewGUI extends javax.swing.JFrame {
                         .addGap(19, 19, 19)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 728, Short.MAX_VALUE)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 729, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel32, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(32, 32, 32)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel33, javax.swing.GroupLayout.DEFAULT_SIZE, 615, Short.MAX_VALUE)
+                                .addComponent(jLabel33, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
                                 .addGap(83, 83, 83))
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 698, Short.MAX_VALUE)))
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 699, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(mainToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 1445, Short.MAX_VALUE))))
+                            .addComponent(mainToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 1447, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -916,7 +916,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         FileMenu.add(LoadMenuItem);
 
         SaveMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
-        SaveMenuItem.setText("Save Sequence File"); // NOI18N
+        SaveMenuItem.setText("Save Sequence File ");
         SaveMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 SaveMenuItemActionPerformed(evt);
@@ -934,10 +934,10 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         FileMenu.add(jSeparator1);
 
         ExitMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
-        ExitMenuItem.setText("Exit Sequence View"); // NOI18N
+        ExitMenuItem.setText("Close Window");
         ExitMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ExitMenuItemActionPerformed(evt);
+                ExitMenuItemActionPerformed1(evt);
             }
         });
         FileMenu.add(ExitMenuItem);
@@ -1682,6 +1682,55 @@ private void importApEMenuItemActionPerformed(java.awt.event.ActionEvent evt) {/
 private void switchViewMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switchViewMenuItemActionPerformed
 _sv.switchView();
 }//GEN-LAST:event_switchViewMenuItemActionPerformed
+
+private void ExitMenuItemActionPerformed1(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitMenuItemActionPerformed1
+if (!(_sv.getSaved())) {
+//        ClothoDialogBox db = new ClothoDialogBox("Warning!", "Sequence View contains unsaved data!  Close without saving?");
+        String[] options = {"Yes Close", "No", "Save", "Hide"};
+//        int chosen = db.show_optionDialog(javax.swing.JOptionPane.YES_NO_CANCEL_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, options, options[2]);
+        int chosen = javax.swing.JOptionPane.showOptionDialog(
+                null,
+                "Sequence View contains unsaved data!  Close without saving?",
+                "Warning!",
+                javax.swing.JOptionPane.YES_NO_CANCEL_OPTION,
+                javax.swing.JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[2]);//FIXME replace with ClothoDialogBox
+
+        if (chosen == javax.swing.JOptionPane.YES_OPTION) {
+            // No longer clears data on close, since windows can be
+            // re-opened after they are closed.
+            // _connection.updateClearedSequence();
+            SequenceTextPane.setText("");
+            setTitle("Clotho: Sequence View (Address: " + _sv.getIndex() + ") New Sequence");
+            CommentTextArea.setText("");
+            OutputTextArea.setText("");
+            _sv.updateWindowMenus();
+
+            //FIXME _sv.loadPart(new clothodata.ClothoPartsData());
+            if (_sv.getIsTC()) {
+                _sv.getTCView().close();
+            }
+            this.dispose();
+        } else if (chosen == javax.swing.JOptionPane.NO_OPTION) {
+            this.requestFocus();
+        } else if (chosen == 2) {
+            this.requestFocus();
+            _sv.saveSequence();
+        } else if (chosen == 3) {
+            if (_sv.getIsTC()) {
+                _sv.getTCView().close();
+            }
+            this.dispose();
+        }
+    } else {
+        if (_sv.getIsTC()) {
+                _sv.getTCView().close();
+            }
+        this.dispose();
+    }
+}//GEN-LAST:event_ExitMenuItemActionPerformed1
 
     /**
      * @param args the command line arguments

@@ -306,12 +306,14 @@ public class PrimerResultFrame extends javax.swing.JFrame {
             deltaGDifferenceLabel.setText("Delta G Diff: " + Math.abs(((Double) fwdTableModel[fwdIndex][2]) - ((Double) revTableModel[revIndex][2])));
             fwdSequenceTextField.setText(((String) fwdTableModel[fwdIndex][0]));
             revSequenceTextField.setText(((String) revTableModel[revIndex][0]));
-            dimerTextArea.setBackground(Color.pink);
             dimerTextArea.setText("forward Sequence: " + fwdTableModel[fwdIndex][0] + "\n" + "reverse Sequence: " + revTableModel[revIndex][0]
                     + "\nForward Delta G: " + fwdTableModel[fwdIndex][2] + "\nReverse delta g: " + revTableModel[revIndex][2]);
 
             String results = _controller.checkForDimers((String) fwdTableModel[fwdIndex][0], (String) revTableModel[revIndex][0], (Double) fwdTableModel[fwdIndex][2], (Double) revTableModel[revIndex][2]);
             dimerTextArea.setText(results);
+            if (results.contains("Warning:")) {
+                dimerTextArea.setBackground(Color.pink);
+            }
         }
 
     }//GEN-LAST:event_fwdResultsTableMouseClicked

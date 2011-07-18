@@ -39,9 +39,27 @@ public class PrimerDesignController {
      * @param s
      */
     public PrimerDesignController(DesignFrame d) {
-        isTC = false;
+        isTC = true;
         _frameView = d;
         _ns = new NucSeq("");
+            final JComponent guiContentPane = (JComponent) _frameView.getContentPane();
+//            JRootPane guiRootPane = _frameView.getRootPane();
+            final JMenuBar menu = _frameView.getJMenuBar();
+            SwingUtilities.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    _tcView = new TopComponent();
+                    _tcView.setLayout(new BorderLayout());
+                    JScrollPane sp = new JScrollPane(guiContentPane);
+                    _tcView.add(menu, BorderLayout.NORTH);
+                    _tcView.add(sp, BorderLayout.CENTER);
+                    _tcView.setName("Primer Designer");
+                    _tcView.open();
+                    _tcView.requestActive();
+
+                }
+            });
     }
 
     public String getSequence() {
@@ -443,7 +461,7 @@ public class PrimerDesignController {
 
                 }
             });
-            _frameView.dispose();
+            _frameView.setVisible(false);
             isTC = true;
         }
 
