@@ -91,6 +91,7 @@ public class DesignFrame extends javax.swing.JFrame {
         reCheckButton = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        loadSequenceMenuItem = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         switchViewMenuItem = new javax.swing.JMenuItem();
@@ -299,6 +300,14 @@ public class DesignFrame extends javax.swing.JFrame {
 
         jMenu1.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.jMenu1.text")); // NOI18N
 
+        loadSequenceMenuItem.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.loadSequenceMenuItem.text")); // NOI18N
+        loadSequenceMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadSequenceMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(loadSequenceMenuItem);
+
         jMenuItem1.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.jMenuItem1.text")); // NOI18N
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -364,7 +373,7 @@ public class DesignFrame extends javax.swing.JFrame {
                                 .addComponent(cancelButton)))
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
                         .addGap(497, 497, 497))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(14, 14, 14)
@@ -719,6 +728,10 @@ positionLabel.setText("Position: "+sequenceTextField.getCaretPosition());    }//
         _controller.validateNumTyped(evt);
     }//GEN-LAST:event_lengthTextFieldKeyTyped
 
+    private void loadSequenceMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadSequenceMenuItemActionPerformed
+_controller.loadSequence();
+    }//GEN-LAST:event_loadSequenceMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -754,6 +767,7 @@ positionLabel.setText("Position: "+sequenceTextField.getCaretPosition());    }//
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JTextField lengthTextField;
+    private javax.swing.JMenuItem loadSequenceMenuItem;
     private javax.swing.JPanel navigatorPanel;
     private javax.swing.JLabel positionLabel;
     private javax.swing.JButton reCheckButton;

@@ -8,7 +8,9 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.regex.Matcher;
@@ -20,12 +22,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import org.clothocore.api.core.Collector;
 import org.clothocore.api.data.Annotation;
 import org.clothocore.api.data.Collection;
 import org.clothocore.api.data.Feature;
 import org.clothocore.api.data.NucSeq;
 import org.clothocore.api.data.Oligo;
+import org.clothocore.util.chooser.ClothoOpenChooser;
 import org.openide.windows.TopComponent;
 
 /**
@@ -44,33 +48,35 @@ public class PrimerDesignController {
         _frameView = d;
         _textField = d.getSequenceTextField();
         _ns = new NucSeq("");
-            final JComponent guiContentPane = (JComponent) _frameView.getContentPane();
+        final JComponent guiContentPane = (JComponent) _frameView.getContentPane();
 //            JRootPane guiRootPane = _frameView.getRootPane();
-            final JMenuBar menu = _frameView.getJMenuBar();
-            SwingUtilities.invokeLater(new Runnable() {
+        final JMenuBar menu = _frameView.getJMenuBar();
+        SwingUtilities.invokeLater(new Runnable() {
 
-                @Override
-                public void run() {
-                    _tcView = new TopComponent();
-                    _tcView.setLayout(new BorderLayout());
-                    JScrollPane sp = new JScrollPane(guiContentPane);
-                    _tcView.add(menu, BorderLayout.NORTH);
-                    _tcView.add(sp, BorderLayout.CENTER);
-                    _tcView.setName("Primer Designer");
-                    _tcView.open();
-                    _tcView.requestActive();
+            @Override
+            public void run() {
+                _tcView = new TopComponent();
+                _tcView.setLayout(new BorderLayout());
+                JScrollPane sp = new JScrollPane(guiContentPane);
+                _tcView.add(menu, BorderLayout.NORTH);
+                _tcView.add(sp, BorderLayout.CENTER);
+                _tcView.setName("Primer Designer");
+                _tcView.open();
+                _tcView.requestActive();
 
-                }
-            });
+            }
+        });
     }
 
     public String getSequence() {
         return _sequence;
     }
+
     public void setSequence(String s) {
         _sequence = s;
         _textField.setText(s);
-        
+        ((DesignFrame) _frameView).updateLabels();
+
     }
 
     /**
@@ -158,18 +164,18 @@ public class PrimerDesignController {
      */
     public void saveAll(ArrayList<String> fwdseq, ArrayList<String> revseq, String nameRoot, String collectionName) {
         Collection saveTo = Collection.retrieveByName(collectionName);
-        if (saveTo!=null) {
-        for (int i = 0; i < fwdseq.size(); i++) {
-            Oligo ol = new Oligo(nameRoot + "F" + i, "primer", Collector.getCurrentUser(), fwdseq.get(i));
-            saveTo.addObject(ol);
-        }
-        for (int i = 0; i < revseq.size(); i++) {
-            Oligo ol = new Oligo(nameRoot + "R" + i, "primer", Collector.getCurrentUser(), revseq.get(i));
-            saveTo.addObject(ol);
-            ol.saveDefault();
+        if (saveTo != null) {
+            for (int i = 0; i < fwdseq.size(); i++) {
+                Oligo ol = new Oligo(nameRoot + "F" + i, "primer", Collector.getCurrentUser(), fwdseq.get(i));
+                saveTo.addObject(ol);
+            }
+            for (int i = 0; i < revseq.size(); i++) {
+                Oligo ol = new Oligo(nameRoot + "R" + i, "primer", Collector.getCurrentUser(), revseq.get(i));
+                saveTo.addObject(ol);
+                ol.saveDefault();
 
-        }
-        saveTo.saveDefault();
+            }
+            saveTo.saveDefault();
         }
     }
 
@@ -518,6 +524,88 @@ public class PrimerDesignController {
 
     }
 
+    public void loadSequence() {
+        FileNameExtensionFilter fastaFilter = new FileNameExtensionFilter("FASTA File", "fa", "mpfa", "fna", "fsa", "fas", "fasta");
+        FileNameExtensionFilter genbankFilter = new FileNameExtensionFilter("GenBank File", "gen", "gb", "gbank", "genbank");
+        if (!_fileOpenerInstantiated) {
+            _fileOpener = new ClothoOpenChooser("Load Sequence");
+            _fileOpener.getFileChooser().addChoosableFileFilter(fastaFilter);
+            _fileOpener.getFileChooser().addChoosableFileFilter(genbankFilter);
+            _fileOpener.getFileChooser().setFileFilter(_fileOpener.getFileChooser().getAcceptAllFileFilter());
+            _fileOpener.setTitle("Open a Sequence...");
+            _fileOpenerInstantiated = true;
+        }
+        _fileOpener.open_Window();
+
+        if (_fileOpener.fileSelected) {
+            loadSequence(_fileOpener.getFile());
+        }
+    }
+
+    public void loadSequence(File toLoad) {
+        String toSeqView = "";
+        if (toLoad.exists()) {
+            try {
+                java.io.BufferedReader inFile = new java.io.BufferedReader(new java.io.FileReader(toLoad));
+                String line = inFile.readLine();
+
+                // Reads in a FASTA format file
+                if (line.startsWith(">")) {
+                    line = line.substring(1, line.length());
+                    line = inFile.readLine();
+                    while (line != null) {
+                        toSeqView = toSeqView + line.trim();
+                        line = inFile.readLine();
+                    }
+                    setSequence(toSeqView);
+
+                } // Read in a Genbank format file
+                else if (line.startsWith("LOCUS")) {
+                    while (line != null) {
+                        if (line.startsWith("ORIGIN")) {
+                            line = inFile.readLine().trim();
+                            while (!(line.startsWith("//"))) {
+                                ArrayList<String> seq = new ArrayList(Arrays.asList(line.split(" ")));
+                                for (int i = 1; i < seq.size(); i++) {
+                                    toSeqView = toSeqView + seq.get(i);
+                                }
+                                line = inFile.readLine().trim();
+                            }
+                        }
+
+                        line = inFile.readLine();
+                    }
+                    setSequence(toSeqView);
+
+                } else {
+                    String[] yesNoOpt = {"Yes", "No"};
+                    if (javax.swing.JOptionPane.showOptionDialog(new JFrame(), "This does not appear to be a Genbank or FASTA formated file.\n Do you want to proceed?", "Clotho: Sequnce View", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, null, yesNoOpt, yesNoOpt[1]) == javax.swing.JOptionPane.YES_OPTION) {
+                        while (line != null) {
+                            toSeqView = toSeqView + line.trim();
+                            line = inFile.readLine();
+                        }
+
+                        setSequence(toSeqView);
+
+                        System.out.println("WARNING: User decided to open a file that is not in FASTA or Genbank format");
+                    } else {
+                        System.out.println("ERROR: User decided to cancel operation since the file is not in FASTA or Genbank format");
+                    }
+                }
+
+                inFile.close();
+            } catch (java.io.IOException e) {
+                System.out.println("\n" + e.getMessage() + "\n");
+            }
+
+            // Sets the openChooser to open up at the location of the last
+            // opened file
+        } else {
+            System.out.println("File does not exist!");
+        }
+
+    }
+
     public void updateSequence(String s) {
         _sequence = s;
     }
@@ -527,4 +615,6 @@ public class PrimerDesignController {
     private boolean isTC;
     private TopComponent _tcView;
     private NucSeq _ns;
+    private boolean _fileOpenerInstantiated;
+    private ClothoOpenChooser _fileOpener;
 }
