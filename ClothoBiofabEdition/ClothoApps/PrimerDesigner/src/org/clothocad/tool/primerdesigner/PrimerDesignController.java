@@ -18,6 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import org.clothocore.api.core.Collector;
 import org.clothocore.api.data.Annotation;
@@ -41,6 +42,7 @@ public class PrimerDesignController {
     public PrimerDesignController(DesignFrame d) {
         isTC = true;
         _frameView = d;
+        _textField = d.getSequenceTextField();
         _ns = new NucSeq("");
             final JComponent guiContentPane = (JComponent) _frameView.getContentPane();
 //            JRootPane guiRootPane = _frameView.getRootPane();
@@ -64,6 +66,11 @@ public class PrimerDesignController {
 
     public String getSequence() {
         return _sequence;
+    }
+    public void setSequence(String s) {
+        _sequence = s;
+        _textField.setText(s);
+        
     }
 
     /**
@@ -511,9 +518,10 @@ public class PrimerDesignController {
 
     }
 
-    public void changeSequence(String s) {
+    public void updateSequence(String s) {
         _sequence = s;
     }
+    private JTextField _textField;
     private String _sequence;
     private JFrame _frameView;
     private boolean isTC;

@@ -26,6 +26,7 @@ import java.awt.Window;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashSet;
+import javax.swing.JOptionPane;
 import org.clothocore.api.core.Collector;
 import org.clothocore.api.data.Feature;
 import org.clothocore.api.data.NucSeq;
@@ -69,7 +70,11 @@ public class SequenceViewManager implements ClothoTool {
     }
 
     public void launch() {
-
+        if (!Collector.isConnected()) {
+            JOptionPane.showMessageDialog(null, "Database connection required to launch this tool",
+                    "Not connected", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         _sequenceViewArray = new ArrayList<SequenceView>();
         _sequenceViewArray.add(new SequenceView("SequenceView", "SequenceView", this, 0));
         _currentSequenceViewIndex = 0;

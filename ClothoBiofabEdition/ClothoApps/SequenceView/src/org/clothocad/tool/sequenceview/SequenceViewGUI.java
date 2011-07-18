@@ -30,9 +30,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import org.clothocore.util.dialog.ClothoDialogBox;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JRootPane;
 import javax.swing.text.*;
 import org.clothocore.api.core.Collator;
+import org.clothocore.api.core.Collector;
 import org.clothocore.api.core.wrapper.ToolWrapper;
 import org.clothocore.api.data.NucSeq;
 import org.clothocore.util.basic.ImageSource;
@@ -307,6 +309,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         revCompMenuItem = new javax.swing.JMenuItem();
         TranslateMenuItem = new javax.swing.JMenuItem();
         revTranslateMenuItem = new javax.swing.JMenuItem();
+        primerMenuItem = new javax.swing.JMenuItem();
         jSeparator14 = new javax.swing.JSeparator();
         ORFMenu = new javax.swing.JMenu();
         NextORFMenuItem = new javax.swing.JMenuItem();
@@ -1084,6 +1087,14 @@ public class SequenceViewGUI extends javax.swing.JFrame {
             }
         });
         ToolMenu.add(revTranslateMenuItem);
+
+        primerMenuItem.setText("Create Primers");
+        primerMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                primerMenuItemActionPerformed(evt);
+            }
+        });
+        ToolMenu.add(primerMenuItem);
         ToolMenu.add(jSeparator14);
 
         SequenceViewMenuBar.add(ToolMenu);
@@ -1732,6 +1743,14 @@ if (!(_sv.getSaved())) {
     }
 }//GEN-LAST:event_ExitMenuItemActionPerformed1
 
+private void primerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_primerMenuItemActionPerformed
+String sequence = SequenceTextPane.getSelectedText();
+if (sequence==null) {
+    sequence=SequenceTextPane.getText();
+}
+    _sv.createPrimers(sequence);
+}//GEN-LAST:event_primerMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1854,6 +1873,7 @@ if (!(_sv.getSaved())) {
     private javax.swing.JButton packageButton;
     private javax.swing.JMenuItem pasteMenuItem;
     private javax.swing.JMenuItem preferenceMenuItem;
+    private javax.swing.JMenuItem primerMenuItem;
     private javax.swing.JMenuItem redoMenuItem;
     private javax.swing.JMenuItem removeAllHighlightsMenuItem;
     private javax.swing.JMenuItem removeFeatureEnzymeHighlightMenuItem;

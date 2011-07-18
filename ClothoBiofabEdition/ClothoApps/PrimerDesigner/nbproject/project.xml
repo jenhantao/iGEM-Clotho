@@ -32,7 +32,9 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <public-packages/>
+            <public-packages>
+                <package>org.clothocad.tool.primerdesigner</package>
+            </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/biojava.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/biojava.jar</binary-origin>

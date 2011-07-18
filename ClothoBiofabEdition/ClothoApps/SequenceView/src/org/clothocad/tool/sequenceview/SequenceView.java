@@ -89,7 +89,7 @@ import org.clothocore.api.data.Person;
 import org.clothocore.util.misc.BareBonesBrowserLaunch;
 import org.openide.util.Exceptions;
 import org.openide.windows.TopComponent;
-
+import org.clothocad.tool.primerdesigner.DesignFrame;
 /**
  * The sequence view of the design. An editable view for raw DNA data.
  * @author Douglas Densmore
@@ -214,6 +214,14 @@ public class SequenceView {
             _isTC = true;
         }
     }
+
+    public void createPrimers(String sequence) {
+        if (!Collector.isConnected()) {
+            JOptionPane.showMessageDialog(null, "Database connection required to launch this tool",
+                    "Not connected", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        DesignFrame someFrame = new DesignFrame(sequence);    }
 
     class SequenceUndoableEditListener
             implements UndoableEditListener {
