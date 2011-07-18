@@ -23,11 +23,8 @@ ENHANCEMENTS, OR MODIFICATIONS..
 package org.clothocad.tool.sequenceview;
 
 import java.awt.Window;
-import java.io.FileNotFoundException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
-//import org.clothocad.core.ClothoCore;
 import java.util.HashSet;
 import org.clothocore.api.core.Collector;
 import org.clothocore.api.data.Feature;
@@ -39,23 +36,13 @@ import org.clothocore.api.data.Part;
 import org.clothocore.api.data.Plasmid;
 import org.clothocore.api.data.Vector;
 import org.clothocore.api.plugin.ClothoTool;
-//commented
-//import org.clothocad.core.ClothoTool;
-import org.clothocore.api.plugin.ClothoViewer;
 import org.clothocore.util.basic.UnknownKeywordException;
-//        clothocad.util.UnknownKeywordException; //commented
 
-//import org.clothocad.util.help.ClothoHelp;
-//import org.clothocad.util.highlight.ClothoHighlightData;
-//import org.java.plugin.PluginManager;
-//import org.java.plugin.registry.Extension;
-//import org.java.plugin.registry.ExtensionPoint;
-//import org.java.plugin.registry.PluginDescriptor;
-//import org.openide.util.Exceptions;
 /**
  *
  * @author Douglas Densmore
  * @author Roza Ghamari
+ * @author Jenhan Tao
  */
 public class SequenceViewManager implements ClothoTool {
 
@@ -72,6 +59,7 @@ public class SequenceViewManager implements ClothoTool {
         svm.init();
         svm.launch();
     }
+
     public void init() {
         _sequenceViewArray = new ArrayList<SequenceView>();
         _sequenceViewArray.add(new SequenceView("SequenceView", "SequenceView", this, 0));
@@ -86,7 +74,8 @@ public class SequenceViewManager implements ClothoTool {
         _sequenceViewArray.add(new SequenceView("SequenceView", "SequenceView", this, 0));
         _currentSequenceViewIndex = 0;
         _sequenceViewArray.get(_currentSequenceViewIndex).setTitle("Clotho: Sequence View (Address: " + _currentSequenceViewIndex + ") New Sequence");
-        _sequenceViewArray.get(_currentSequenceViewIndex).getSequenceView().setVisible(true);
+//        _sequenceViewArray.get(_currentSequenceViewIndex).getSequenceView().setVisible(true);
+        _sequenceViewArray.get(_currentSequenceViewIndex).openTab();
         _sequenceViewArray.get(_currentSequenceViewIndex).getSequenceView().requestFocus();
     }
 
@@ -151,34 +140,34 @@ public class SequenceViewManager implements ClothoTool {
         System.out.println("name: " + o.getName());
         System.out.println("type: " + o.getType());
         Boolean toLaunch = false;
-        String sequence=null;
+        String sequence = null;
         if (o.getType().equals(ObjType.OLIGO)) {
             toLaunch = true;
-            sequence=((Oligo) Collector.get(ObjType.OLIGO, o.getUUID())).getSeq().toString();
+            sequence = ((Oligo) Collector.get(ObjType.OLIGO, o.getUUID())).getSeq().toString();
         }
         if (o.getType().equals(ObjType.VECTOR)) {
             toLaunch = true;
-            sequence=((Vector) Collector.get(ObjType.VECTOR, o.getUUID())).getSeq().toString();
+            sequence = ((Vector) Collector.get(ObjType.VECTOR, o.getUUID())).getSeq().toString();
 
         }
         if (o.getType().equals(ObjType.PART)) {
             toLaunch = true;
-            sequence=((Part) Collector.get(ObjType.PART, o.getUUID())).getSeq().toString();
+            sequence = ((Part) Collector.get(ObjType.PART, o.getUUID())).getSeq().toString();
 
         }
         if (o.getType().equals(ObjType.PLASMID)) {
             toLaunch = true;
-            sequence=((Plasmid) Collector.get(ObjType.PLASMID, o.getUUID())).getSeq().toString();
+            sequence = ((Plasmid) Collector.get(ObjType.PLASMID, o.getUUID())).getSeq().toString();
 
         }
         if (o.getType().equals(ObjType.FEATURE)) {
             toLaunch = true;
-            sequence=((Feature) Collector.get(ObjType.FEATURE, o.getUUID())).getSeq().toString();
+            sequence = ((Feature) Collector.get(ObjType.FEATURE, o.getUUID())).getSeq().toString();
 
         }
         if (o.getType().equals(ObjType.NUCSEQ)) {
             toLaunch = true;
-            sequence=((NucSeq) Collector.get(ObjType.NUCSEQ, o.getUUID())).getSeq().toString();
+            sequence = ((NucSeq) Collector.get(ObjType.NUCSEQ, o.getUUID())).getSeq().toString();
 
         }
         if (toLaunch) {
@@ -192,7 +181,7 @@ public class SequenceViewManager implements ClothoTool {
             _sequenceViewArray.get(_currentSequenceViewIndex).setSequence(sequence);
             _sequenceViewArray.get(_currentSequenceViewIndex).getSequenceView().setVisible(true);
             _sequenceViewArray.get(_currentSequenceViewIndex).getSequenceView().requestFocus();
-            _sequenceViewArray.get(_currentSequenceViewIndex).getSequenceView().getOutputTextArea().setText("Loaded Clotho object: "+o.getName());
+            _sequenceViewArray.get(_currentSequenceViewIndex).getSequenceView().getOutputTextArea().setText("Loaded Clotho object: " + o.getName());
             _currentSequenceViewIndex++;
 
         }

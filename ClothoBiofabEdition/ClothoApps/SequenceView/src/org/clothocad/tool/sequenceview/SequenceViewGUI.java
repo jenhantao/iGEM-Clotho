@@ -1413,7 +1413,8 @@ private void ExitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 }//GEN-LAST:event_ExitMenuItemActionPerformed
 
 private void OpenNewMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpenNewMenuItemActionPerformed
-    _sv.createNewWindow();
+//    _sv.createNewWindow();
+    _sv.createNewTab();
 }//GEN-LAST:event_OpenNewMenuItemActionPerformed
 
 private void ToolsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ToolsMenuItemActionPerformed

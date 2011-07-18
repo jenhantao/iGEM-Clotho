@@ -104,7 +104,7 @@ public class SequenceView {
     private static int numOfSeqViews = 0;
 
     public SequenceView(String n, String d, SequenceViewManager m, int index) {
-        isTC = false; //sequence view launches into frame by default
+        _isTC = false; //sequence view launches into frame by default
         _manager = m;
         _myIndex = index;
         _annotationsOn = false;
@@ -181,13 +181,13 @@ public class SequenceView {
     }
 
     public void switchView() {
-        if (isTC) {
+        if (_isTC) {
             Component[] components = _tcView.getComponents();
             _sequenceview.setContentPane((Container) components[1]);
             _sequenceview.setJMenuBar((JMenuBar) components[0]);
             _sequenceview.pack();
             _sequenceview.setVisible(true);
-            isTC = false;
+            _isTC = false;
             _tcView.close();
         } else {
             final JComponent guiContentPane = (JComponent) _sequenceview.getContentPane();
@@ -209,7 +209,7 @@ public class SequenceView {
                 }
             });
             _sequenceview.setVisible(false);
-            isTC = true;
+            _isTC = true;
         }
     }
 
@@ -565,6 +565,20 @@ public class SequenceView {
         _manager.setMainSequenceView(seqView);
         seqView.run();
         seqView.openWindow();
+        _saved = true; //empty windows do not need to be saved
+        return seqView.getIndex();
+    }
+        /**
+     * Creates a new Sequence View tab, returning the core address of the
+     * newly created SequenceViewConnection
+     */
+    public Integer createNewTab() {
+        SequenceView seqView = new SequenceView("SequenceView", "SequenceView", _manager, _manager.getSequenceViewArray().size());
+        //seqView.activate();
+        _manager.add(seqView);
+        _manager.setMainSequenceView(seqView);
+        seqView.run();
+        seqView.openTab();
         _saved = true; //empty windows do not need to be saved
         return seqView.getIndex();
     }
@@ -1787,6 +1801,32 @@ public class SequenceView {
     public void openWindow() {
         _sequenceview.setVisible(true);
         _sequenceview.requestFocus();
+    }
+    /**
+     * opens the Sequence View tab associated with this connection
+     */
+    public void openTab() {
+            final JComponent guiContentPane = (JComponent) _sequenceview.getContentPane();
+//            JRootPane guiRootPane = _frameView.getRootPane();
+            final JMenuBar menu = _sequenceview.getJMenuBar();
+            SwingUtilities.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    _tcView = new TopComponent();
+                    _tcView.setLayout(new BorderLayout());
+                    JScrollPane sp = new JScrollPane(guiContentPane);
+                    _tcView.add(menu, BorderLayout.NORTH);
+                    _tcView.add(sp, BorderLayout.CENTER);
+                    _tcView.setName("Sequence View");
+                    _tcView.open();
+                    _tcView.requestActive();
+
+                }
+            });
+            _sequenceview.setVisible(false);
+            _isTC = true;
+            
     }
 
     //FIXME
@@ -4009,7 +4049,7 @@ public class SequenceView {
     }
 
     public boolean getIsTC() {
-        return isTC;
+        return _isTC;
     }
 
     public TopComponent getTCView() {
@@ -4017,7 +4057,7 @@ public class SequenceView {
     }
     ///////////////////////////////////////////////////////////////////
     ////                         private variables                 ////
-    private boolean isTC;
+    private boolean _isTC;
     private TopComponent _tcView;
     private NucSeq _sequence;
     private HashSet<Annotation> _annotations;
