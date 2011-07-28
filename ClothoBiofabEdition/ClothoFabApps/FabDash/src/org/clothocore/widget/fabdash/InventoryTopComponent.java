@@ -68,7 +68,7 @@ public final class InventoryTopComponent extends TopComponent {
         localRadioButton.setSelected(true);
         configurableRadioButton.setSelected(false);
         statusLabel.setText("Not connected to a Clotho connection");
-        currentUserLabel.setText("Not connected");     
+        currentUserLabel.setText("Not connected");
         setName(NbBundle.getMessage(InventoryTopComponent.class, "CTL_InventoryTopComponent"));
         setToolTipText(NbBundle.getMessage(InventoryTopComponent.class, "HINT_InventoryTopComponent"));
 //        setIcon(ImageUtilities.loadImage(ICON_PATH, true));
@@ -245,6 +245,7 @@ public final class InventoryTopComponent extends TopComponent {
         localRadioButton = new javax.swing.JRadioButton();
         configurableRadioButton = new javax.swing.JRadioButton();
         changeButton = new javax.swing.JButton();
+        inventoryPanel = new javax.swing.JPanel();
         inventoryTabbedPane = new javax.swing.JTabbedPane();
         oligosScrollPane = new javax.swing.JScrollPane();
         oligosTable = new javax.swing.JTable();
@@ -254,13 +255,23 @@ public final class InventoryTopComponent extends TopComponent {
         vectorsTable = new javax.swing.JTable();
         plasmidsScrollPane = new javax.swing.JScrollPane();
         plasmidsTable = new javax.swing.JTable();
-        logoPanel = new javax.swing.JPanel();
+        refreshButton = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
 
         setLayout(new java.awt.BorderLayout());
 
+        backgroundPanel.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                backgroundPanelKeyTyped(evt);
+            }
+        });
+
+        searchBar1.setMaximumSize(new java.awt.Dimension(900, 900));
+        searchBar1.setMinimumSize(new java.awt.Dimension(150, 100));
+        searchBar1.setPreferredSize(new java.awt.Dimension(150, 100));
+
         connectionPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        connectionPanel.setMaximumSize(new java.awt.Dimension(150, 100));
+        connectionPanel.setMaximumSize(new java.awt.Dimension(900, 900));
         connectionPanel.setMinimumSize(new java.awt.Dimension(150, 100));
         connectionPanel.setPreferredSize(new java.awt.Dimension(150, 100));
 
@@ -284,7 +295,7 @@ public final class InventoryTopComponent extends TopComponent {
             }
         });
 
-        statusLabel.setFont(new java.awt.Font("Ubuntu", 0, 15)); // NOI18N
+        statusLabel.setFont(new java.awt.Font("Ubuntu", 0, 15));
         org.openide.awt.Mnemonics.setLocalizedText(statusLabel, org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.statusLabel.text")); // NOI18N
         statusLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -349,17 +360,17 @@ public final class InventoryTopComponent extends TopComponent {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, connectionPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(statusLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
+                    .addComponent(statusLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, connectionPanelLayout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(currentUserLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE))
+                        .addComponent(currentUserLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(connectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(connectButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(changeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 67, Short.MAX_VALUE))
-                .addGap(36, 36, 36))
+                    .addComponent(changeButton, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         connectionPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {changeButton, connectButton});
@@ -385,6 +396,8 @@ public final class InventoryTopComponent extends TopComponent {
 
         connectionPanelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {currentUserLabel, jLabel1});
 
+        inventoryTabbedPane.setMaximumSize(new java.awt.Dimension(900, 900));
+        inventoryTabbedPane.setMinimumSize(new java.awt.Dimension(150, 100));
         inventoryTabbedPane.setPreferredSize(new java.awt.Dimension(300, 300));
 
         oligosTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -516,46 +529,66 @@ public final class InventoryTopComponent extends TopComponent {
 
         inventoryTabbedPane.addTab(org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.plasmidsScrollPane.TabConstraints.tabTitle"), plasmidsScrollPane); // NOI18N
 
-        logoPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        refreshButton.setFont(new java.awt.Font("Ubuntu", 0, 10)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(refreshButton, org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.refreshButton.text")); // NOI18N
+        refreshButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout inventoryPanelLayout = new javax.swing.GroupLayout(inventoryPanel);
+        inventoryPanel.setLayout(inventoryPanelLayout);
+        inventoryPanelLayout.setHorizontalGroup(
+            inventoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(inventoryPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(inventoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, inventoryPanelLayout.createSequentialGroup()
+                        .addComponent(refreshButton)
+                        .addContainerGap())
+                    .addComponent(inventoryTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)))
+        );
+        inventoryPanelLayout.setVerticalGroup(
+            inventoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(inventoryPanelLayout.createSequentialGroup()
+                .addComponent(refreshButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(inventoryTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/clothocore/widget/fabdash/browser/logo.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.jLabel2.text")); // NOI18N
-
-        javax.swing.GroupLayout logoPanelLayout = new javax.swing.GroupLayout(logoPanel);
-        logoPanel.setLayout(logoPanelLayout);
-        logoPanelLayout.setHorizontalGroup(
-            logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(logoPanelLayout.createSequentialGroup()
-                .addGap(50, 50, 50)
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(56, 56, 56))
-        );
-        logoPanelLayout.setVerticalGroup(
-            logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(logoPanelLayout.createSequentialGroup()
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
-                .addGap(12, 12, 12))
-        );
+        jLabel2.setMinimumSize(new java.awt.Dimension(150, 100));
+        jLabel2.setPreferredSize(new java.awt.Dimension(150, 100));
 
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(connectionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(inventoryTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
-            .addComponent(searchBar1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
-            .addComponent(logoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(inventoryPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, backgroundPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(searchBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE))
+                    .addComponent(connectionPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, backgroundPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         backgroundPanelLayout.setVerticalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addComponent(connectionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(inventoryTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
+                .addComponent(inventoryPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(searchBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(searchBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(logoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         add(backgroundPanel, java.awt.BorderLayout.CENTER);
@@ -612,6 +645,14 @@ public final class InventoryTopComponent extends TopComponent {
             uf.setVisible(true);
         }
     }//GEN-LAST:event_changeButtonActionPerformed
+
+    private void backgroundPanelKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_backgroundPanelKeyTyped
+        System.out.println("char: " + evt.getKeyChar());
+    }//GEN-LAST:event_backgroundPanelKeyTyped
+
+    private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
+        fetchInventoryInformation();
+    }//GEN-LAST:event_refreshButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton changeButton;
@@ -619,18 +660,19 @@ public final class InventoryTopComponent extends TopComponent {
     private javax.swing.JButton connectButton;
     private javax.swing.JPanel connectionPanel;
     private javax.swing.JLabel currentUserLabel;
+    private javax.swing.JPanel inventoryPanel;
     protected javax.swing.JTabbedPane inventoryTabbedPane;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JRadioButton localRadioButton;
-    private javax.swing.JPanel logoPanel;
     protected javax.swing.JScrollPane oligosScrollPane;
     protected javax.swing.JTable oligosTable;
     private javax.swing.JScrollPane partsScrollPane;
     protected javax.swing.JTable partsTable;
     private javax.swing.JScrollPane plasmidsScrollPane;
     protected javax.swing.JTable plasmidsTable;
+    private javax.swing.JButton refreshButton;
     private org.clothocore.widget.fabdash.browser.SearchBar searchBar1;
     private javax.swing.JLabel statusLabel;
     private javax.swing.JScrollPane vectorsScrollPane;

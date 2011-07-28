@@ -142,8 +142,11 @@ public class SequenceViewManager implements ClothoTool {
 
     @Override
     public void launch(ObjBase o) {
-        System.out.println("name: " + o.getName());
-        System.out.println("type: " + o.getType());
+        if (!Collector.isConnected()) {
+            JOptionPane.showMessageDialog(null, "Database connection required to launch this tool",
+                    "Not connected", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         Boolean toLaunch = false;
         String sequence = null;
         if (o.getType().equals(ObjType.OLIGO)) {

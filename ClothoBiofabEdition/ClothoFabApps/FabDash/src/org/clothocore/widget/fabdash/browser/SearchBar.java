@@ -165,7 +165,7 @@ public class SearchBar extends JPanel {
                 dynScroller.setViewportView(dynLister);         // put the list in the scroller
                 setResults(outcoll,myObj,dynLister);          // set the results for lister
                 mainPane.addTab(myObj.toString(), dynScroller);    // add a pane for the user
-//                _obp = new ObjBasePopup(dynLister,(ObjBase) result.get(0));
+                _obp = new ObjBasePopup(dynLister,(ObjBase) result.get(0));
 
             }
 

@@ -90,6 +90,7 @@ import org.clothocore.util.misc.BareBonesBrowserLaunch;
 import org.openide.util.Exceptions;
 import org.openide.windows.TopComponent;
 import org.clothocad.tool.primerdesigner.DesignFrame;
+
 /**
  * The sequence view of the design. An editable view for raw DNA data.
  * @author Douglas Densmore
@@ -221,7 +222,8 @@ public class SequenceView {
                     "Not connected", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        DesignFrame someFrame = new DesignFrame(sequence);    }
+        DesignFrame someFrame = new DesignFrame(sequence);
+    }
 
     class SequenceUndoableEditListener
             implements UndoableEditListener {
@@ -578,7 +580,8 @@ public class SequenceView {
         _saved = true; //empty windows do not need to be saved
         return seqView.getIndex();
     }
-        /**
+
+    /**
      * Creates a new Sequence View tab, returning the core address of the
      * newly created SequenceViewConnection
      */
@@ -1812,31 +1815,32 @@ public class SequenceView {
         _sequenceview.setVisible(true);
         _sequenceview.requestFocus();
     }
+
     /**
      * opens the Sequence View tab associated with this connection
      */
     public void openTab() {
-            final JComponent guiContentPane = (JComponent) _sequenceview.getContentPane();
+        final JComponent guiContentPane = (JComponent) _sequenceview.getContentPane();
 //            JRootPane guiRootPane = _frameView.getRootPane();
-            final JMenuBar menu = _sequenceview.getJMenuBar();
-            SwingUtilities.invokeLater(new Runnable() {
+        final JMenuBar menu = _sequenceview.getJMenuBar();
+        SwingUtilities.invokeLater(new Runnable() {
 
-                @Override
-                public void run() {
-                    _tcView = new TopComponent();
-                    _tcView.setLayout(new BorderLayout());
-                    JScrollPane sp = new JScrollPane(guiContentPane);
-                    _tcView.add(menu, BorderLayout.NORTH);
-                    _tcView.add(sp, BorderLayout.CENTER);
-                    _tcView.setName("Sequence View");
-                    _tcView.open();
-                    _tcView.requestActive();
+            @Override
+            public void run() {
+                _tcView = new TopComponent();
+                _tcView.setLayout(new BorderLayout());
+                JScrollPane sp = new JScrollPane(guiContentPane);
+                _tcView.add(menu, BorderLayout.NORTH);
+                _tcView.add(sp, BorderLayout.CENTER);
+                _tcView.setName("Sequence View");
+                _tcView.open();
+                _tcView.requestActive();
 
-                }
-            });
-            _sequenceview.setVisible(false);
-            _isTC = true;
-            
+            }
+        });
+        _sequenceview.setVisible(false);
+        _isTC = true;
+
     }
 
     //FIXME
@@ -3436,6 +3440,7 @@ public class SequenceView {
         } else if (actionChoice == 3) {
             return;
         }
+        _sequence.changeSeq(newSequence);
         _sequenceview.setVisible(true);
     }
 
@@ -3979,6 +3984,7 @@ public class SequenceView {
     }
 
     public void highlightFeatures() {
+//        _sequence.changeSeq(_sequenceview.get_TextArea().getText());
         new SwingWorker() {
 
             @Override
@@ -3986,6 +3992,7 @@ public class SequenceView {
                 Person user = Collector.getCurrentUser();
                 _sequence.removeAnnotations();
                 _sequence.autoAnnotate(user);
+//                _annotations = _sequence.getAnnotations();
                 return null;
             }
         }.execute();
