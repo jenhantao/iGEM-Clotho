@@ -144,8 +144,6 @@ public final class InventoryTopComponent extends TopComponent {
 
             @Override
             protected Object doInBackground() throws Exception {
-                System.out.println("################################ FabDash connecting");
-
                 if (!Collector.isConnected()) {
                     return null;
                 }
