@@ -107,10 +107,9 @@ public class WorkspaceFrame extends javax.swing.JFrame {
         } else {
             File iconFile = new File(Spectacles.getIconPath());
             try {
-                //FIXME icon loading broken
-//                setIconImage(ImageIO.read(iconFile));
-//                _notepad.setIconImage(ImageIO.read(iconFile));
-            } catch (Exception ex) {
+                setIconImage(ImageIO.read(iconFile));
+                _notepad.setIconImage(ImageIO.read(iconFile));
+            } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
 

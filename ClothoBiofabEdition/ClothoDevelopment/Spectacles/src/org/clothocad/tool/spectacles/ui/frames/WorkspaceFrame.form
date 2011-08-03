@@ -479,7 +479,7 @@
                       <Component id="jButtonImportNotepad" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jButtonSendNotepad" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="51" max="32767" attributes="0"/>
+                      <EmptySpace pref="38" max="32767" attributes="0"/>
                       <Component id="jButtonRefreshParts" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
@@ -519,7 +519,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="partsComboBox" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="thumbnailJSP" pref="379" max="32767" attributes="0"/>
+                      <Component id="thumbnailJSP" pref="374" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
