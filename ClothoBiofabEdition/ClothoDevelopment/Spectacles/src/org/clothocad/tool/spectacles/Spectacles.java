@@ -107,7 +107,7 @@ public class Spectacles implements ClothoTool {
         _workspaceFrame = new WorkspaceFrame();
        //  _dataCore = DataCore.getDataCore();
 
-        _workspaceFrame.setVisible(true);
+//        _workspaceFrame.setVisible(true);
         System.out.println("LAUNCHED");
     }
 

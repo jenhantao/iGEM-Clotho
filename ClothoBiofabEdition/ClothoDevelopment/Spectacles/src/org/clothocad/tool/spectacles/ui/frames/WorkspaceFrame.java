@@ -1,24 +1,24 @@
 /*
- Copyright (c) 2009 The Regents of the University of California.
- All rights reserved.
- Permission is hereby granted, without written agreement and without
- license or royalty fees, to use, copy, modify, and distribute this
- software and its documentation for any purpose, provided that the above
- copyright notice and the following two paragraphs appear in all copies
- of this software.
+Copyright (c) 2009 The Regents of the University of California.
+All rights reserved.
+Permission is hereby granted, without written agreement and without
+license or royalty fees, to use, copy, modify, and distribute this
+software and its documentation for any purpose, provided that the above
+copyright notice and the following two paragraphs appear in all copies
+of this software.
 
- IN NO EVENT SHALL THE UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY
- FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES
- ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
- THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
- SUCH DAMAGE.
+IN NO EVENT SHALL THE UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY
+FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES
+ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.
 
- THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY WARRANTIES,
- INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
- PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
- CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
- ENHANCEMENTS, OR MODIFICATIONS..
+THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
+PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
+CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
+ENHANCEMENTS, OR MODIFICATIONS..
  */
 
 /*
@@ -26,13 +26,15 @@
  *
  * Created on Jun 23, 2009, 11:10:09 PM
  */
-
 package org.clothocad.tool.spectacles.ui.frames;
 
 import eugene.Device;
 import eugene.Part;
 import eugene.Primitive;
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseEvent;
@@ -49,11 +51,15 @@ import java.util.prefs.Preferences;
 import java.util.regex.Matcher;
 import javax.imageio.ImageIO;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 //import org.clothocad.core.ClothoCore;
 //import org.clothocad.databaseio.Datum;
@@ -74,6 +80,9 @@ import org.clothocad.tool.spectacles.eugeneimportexport.Manager;
 import org.clothocad.tool.spectacles.ui.scenes.SpectaclesFactory;
 import org.clothocad.tool.spectacles.ui.scenes.ThumbnailScene;
 import org.clothocad.tool.spectacles.ui.scenes.WorkspaceScene;
+import org.openide.windows.Mode;
+import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
 
 /**
  * WorkspaceFrame is the primary component of the Spectacles GUI. It contains
@@ -120,7 +129,7 @@ public class WorkspaceFrame extends javax.swing.JFrame {
 
         _newDeviceCount = 0;
         _clippedWrapper = null;
-        
+
         _wsSceneList = new ArrayList<WorkspaceScene>();
         _deviceMenuItemMap = new HashMap<DevicePartWrapper, JMenuItem>();
         _activeThumbnailScene = new ThumbnailScene(this);
@@ -131,6 +140,49 @@ public class WorkspaceFrame extends javax.swing.JFrame {
 
         newTab();
         setModified(false);
+
+
+
+
+        final JComponent guiContentPane = (JComponent) this.getContentPane();
+        final JMenuBar menu = this.getJMenuBar();
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                _tcView = new TopComponent();
+                _tcView.setLayout(new BorderLayout());
+                JScrollPane sp = new JScrollPane(guiContentPane);
+                _tcView.add(menu, BorderLayout.NORTH);
+                _tcView.add(sp, BorderLayout.CENTER);
+                _tcView.setName("Spectacles");
+                _tcView.open();
+                _tcView.requestActive();
+
+                _tcNotepad = new TopComponent() {
+
+                    @Override
+                    public void open() {
+                        Mode m = WindowManager.getDefault().findMode("output");
+                        if (m != null) {
+                            m.dockInto(this);
+                        }
+                        super.open();
+                    }
+                };
+                _tcNotepad.setLayout(new BorderLayout());
+                JScrollPane sp2 = new JScrollPane(_notepad.getContentPane());
+                _tcNotepad.add(_notepad.getJMenuBar(), BorderLayout.NORTH);
+                _tcNotepad.add(sp2, BorderLayout.CENTER);
+                _tcNotepad.setName("Notepad");
+                _tcNotepad.open();
+                _tcNotepad.requestActive();
+
+
+            }
+        });
+        _isTC = true;
+
     }
 
     /**
@@ -172,10 +224,10 @@ public class WorkspaceFrame extends javax.swing.JFrame {
      */
     public void closeTab(String deviceName) {
         //if (mainJTP.getTabCount() > 1) {
-            int index = mainJTP.indexOfTab(deviceName);
-            if (index != -1) {
-                closeTab(index);
-            }
+        int index = mainJTP.indexOfTab(deviceName);
+        if (index != -1) {
+            closeTab(index);
+        }
         //}
     }
 
@@ -367,7 +419,7 @@ public class WorkspaceFrame extends javax.swing.JFrame {
         DevicePartWrapper wrapper = new DevicePartWrapper(device, _activeWorkspaceScene);
         _manager.addWrappedDevice(wrapper);
         mainJTP.addTab(wrapper.getName(), _activeWorkspaceScene.getJScrollPane());
-        mainJTP.setSelectedIndex(mainJTP.getTabCount()-1);
+        mainJTP.setSelectedIndex(mainJTP.getTabCount() - 1);
         mainJTP.validate();
         createDeviceMenuItem(wrapper);
         setModified(true);
@@ -547,8 +599,7 @@ public class WorkspaceFrame extends javax.swing.JFrame {
      */
     protected boolean renamePart(DevicePartWrapper wrappedPart, String newName) {
         String oldName = wrappedPart.getName();
-        if (!newName.equals(oldName) && validateName(newName))
-        { // Check for valid name
+        if (!newName.equals(oldName) && validateName(newName)) { // Check for valid name
             wrappedPart.setName(newName); // change the name of the part
             _manager.getEugenePartDecs().remove(oldName); // change name in PartDeclarations HashMap
             _manager.getEugenePartDecs().put(newName, wrappedPart.getPart());
@@ -565,17 +616,13 @@ public class WorkspaceFrame extends javax.swing.JFrame {
      * @param name the part or device name.
      */
     protected void updateAssociatedWidgets(String name) {
-        for (String aDeviceName : _manager.getAllWrappedDevices().keySet())
-        {  // loop through all the Devices
+        for (String aDeviceName : _manager.getAllWrappedDevices().keySet()) {  // loop through all the Devices
             DevicePartWrapper aDeviceWrapper = _manager.getAllWrappedDevices().get(aDeviceName);
             WorkspaceScene deviceWSS = aDeviceWrapper.getWorkspaceScene();
-            if (aDeviceWrapper.isDevice() && deviceWSS == _activeWorkspaceScene)
-            { // getDeviceComponentsList() updates the names in the parts list
+            if (aDeviceWrapper.isDevice() && deviceWSS == _activeWorkspaceScene) { // getDeviceComponentsList() updates the names in the parts list
                 int listSize = aDeviceWrapper.getDeviceComponentsList().size();
-                for (int i=0; i < listSize; i++)
-                { // go through the scene's parts and devices
-                    if (aDeviceWrapper.getDeviceComponentsList().get(i).equals(name))
-                    { // update the associated icon widgets
+                for (int i = 0; i < listSize; i++) { // go through the scene's parts and devices
+                    if (aDeviceWrapper.getDeviceComponentsList().get(i).equals(name)) { // update the associated icon widgets
                         deviceWSS.updateWidget(
                                 (IconNodeWidget) deviceWSS.getWidgetList().get(i));
                     }
@@ -667,6 +714,7 @@ public class WorkspaceFrame extends javax.swing.JFrame {
             deviceMenuItem.setText(wrappedDevice.getName());
             deviceMenuItem.setName(wrappedDevice.getName());
             deviceMenuItem.addActionListener(new java.awt.event.ActionListener() {
+
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     int index = mainJTP.indexOfTab(wrappedDevice.getName());
                     if (index != -1) {
@@ -912,8 +960,8 @@ public class WorkspaceFrame extends javax.swing.JFrame {
      */
     private int promptSave() {
         int option = JOptionPane.showConfirmDialog(
-            this, "Save this device?", "Save",
-            JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+                this, "Save this device?", "Save",
+                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
         return option;
     }
 
@@ -927,28 +975,28 @@ public class WorkspaceFrame extends javax.swing.JFrame {
         Collection<Part> allParts = _manager.getEugenePartDecs().values();
         for (Part part : allParts) {
             if (part.propertyValues.containsKey("ID") && !part.propertyValues.get("ID").txt.equals("")) {
-               // XXX FIXME
-               // Iterator<Datum> iter = Spectacles.getDataCore().findUsingHQL(
-               //         "from " + partObjKywd + " as part where part.id = " + part.propertyValues.get("ID").txt);
-               // if (iter.hasNext()) {
-               //     //try {
-               //         Datum partDatum = iter.next();
-               //         Primitive sequencePrimitive = new Primitive("Sequence", "txt");
-               //         sequencePrimitive.txt = partDatum.getFieldAsString("sequence");
-               //         part.propertyValues.put("Sequence", sequencePrimitive);
-               //         updateAssociatedWidgets(part.name);
-               //     //} catch (DataFormatException ex) {
-               //         // TODO: find how to catch the exception that needs this error message - can I even catch it?
-               //         /*JOptionPane.showMessageDialog(this,
-               //         "'" + part.propertyValues.get("ID").txt + "' is not a valid database ID",
-               //         "Error", JOptionPane.ERROR_MESSAGE);*/
-               //         //Exceptions.printStackTrace(ex);
-               //     //} catch (NoSuchFieldException ex) {
-               //         //Exceptions.printStackTrace(ex);
-               //     //}
-               // } else {
-               //     showErrorDialog("The database object with ID " +  part.propertyValues.get("ID").txt + " does not exist.");
-               // }
+                // XXX FIXME
+                // Iterator<Datum> iter = Spectacles.getDataCore().findUsingHQL(
+                //         "from " + partObjKywd + " as part where part.id = " + part.propertyValues.get("ID").txt);
+                // if (iter.hasNext()) {
+                //     //try {
+                //         Datum partDatum = iter.next();
+                //         Primitive sequencePrimitive = new Primitive("Sequence", "txt");
+                //         sequencePrimitive.txt = partDatum.getFieldAsString("sequence");
+                //         part.propertyValues.put("Sequence", sequencePrimitive);
+                //         updateAssociatedWidgets(part.name);
+                //     //} catch (DataFormatException ex) {
+                //         // TODO: find how to catch the exception that needs this error message - can I even catch it?
+                //         /*JOptionPane.showMessageDialog(this,
+                //         "'" + part.propertyValues.get("ID").txt + "' is not a valid database ID",
+                //         "Error", JOptionPane.ERROR_MESSAGE);*/
+                //         //Exceptions.printStackTrace(ex);
+                //     //} catch (NoSuchFieldException ex) {
+                //         //Exceptions.printStackTrace(ex);
+                //     //}
+                // } else {
+                //     showErrorDialog("The database object with ID " +  part.propertyValues.get("ID").txt + " does not exist.");
+                // }
             }
         }
         displayProperties();
@@ -996,7 +1044,7 @@ public class WorkspaceFrame extends javax.swing.JFrame {
         }
         if (JFileChooser.APPROVE_OPTION == _pngFileChooser.showSaveDialog(this)) {
             int imgWidth = WorkspaceScene.iconWidth;
-            int outWidth = widgets.size()*imgWidth;
+            int outWidth = widgets.size() * imgWidth;
             int imgHeight = WorkspaceScene.iconHeight;
             int heightOffset = 0;
             int w = 0;
@@ -1004,7 +1052,7 @@ public class WorkspaceFrame extends javax.swing.JFrame {
                 // adjust width/height, borders
                 w += 1;
                 imgWidth += 1;
-                outWidth = (widgets.size()*imgWidth)+1;
+                outWidth = (widgets.size() * imgWidth) + 1;
                 imgHeight += 2;
                 heightOffset += 1;
             }
@@ -1093,6 +1141,8 @@ public class WorkspaceFrame extends javax.swing.JFrame {
         devicesMenuSeparator1 = new javax.swing.JSeparator();
         helpMenu = new javax.swing.JMenu();
         helpMenuAbout = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        switchViewsMenuItem = new javax.swing.JMenuItem();
 
         mainJTPContextMenu.setName("mainJTPContextMenu"); // NOI18N
 
@@ -1135,7 +1185,7 @@ public class WorkspaceFrame extends javax.swing.JFrame {
             }
         });
 
-        jButtonImport.setText(org.openide.util.NbBundle.getMessage(WorkspaceFrame.class, "WorkspaceFrame.jButtonImport.text")); // NOI18N
+        jButtonImport.setText(org.openide.util.NbBundle.getMessage(WorkspaceFrame.class, "WorkspaceFrame.jButtonImport.text_1")); // NOI18N
         jButtonImport.setToolTipText(org.openide.util.NbBundle.getMessage(WorkspaceFrame.class, "WorkspaceFrame.jButtonImport.toolTipText")); // NOI18N
         jButtonImport.setName("jButtonImport"); // NOI18N
         jButtonImport.addActionListener(new java.awt.event.ActionListener() {
@@ -1153,7 +1203,7 @@ public class WorkspaceFrame extends javax.swing.JFrame {
             }
         });
 
-        jButtonSendNotepad.setText(org.openide.util.NbBundle.getMessage(WorkspaceFrame.class, "WorkspaceFrame.jButtonSendNotepad.text")); // NOI18N
+        jButtonSendNotepad.setText(org.openide.util.NbBundle.getMessage(WorkspaceFrame.class, "WorkspaceFrame.jButtonSendNotepad.text_1")); // NOI18N
         jButtonSendNotepad.setToolTipText(org.openide.util.NbBundle.getMessage(WorkspaceFrame.class, "WorkspaceFrame.jButtonSendNotepad.toolTipText")); // NOI18N
         jButtonSendNotepad.setName("jButtonSendNotepad"); // NOI18N
         jButtonSendNotepad.addActionListener(new java.awt.event.ActionListener() {
@@ -1162,7 +1212,7 @@ public class WorkspaceFrame extends javax.swing.JFrame {
             }
         });
 
-        jButtonImportNotepad.setText(org.openide.util.NbBundle.getMessage(WorkspaceFrame.class, "WorkspaceFrame.jButtonImportNotepad.text")); // NOI18N
+        jButtonImportNotepad.setText(org.openide.util.NbBundle.getMessage(WorkspaceFrame.class, "WorkspaceFrame.jButtonImportNotepad.text_1")); // NOI18N
         jButtonImportNotepad.setToolTipText(org.openide.util.NbBundle.getMessage(WorkspaceFrame.class, "WorkspaceFrame.jButtonImportNotepad.toolTipText")); // NOI18N
         jButtonImportNotepad.setName("jButtonImportNotepad"); // NOI18N
         jButtonImportNotepad.addActionListener(new java.awt.event.ActionListener() {
@@ -1217,7 +1267,7 @@ public class WorkspaceFrame extends javax.swing.JFrame {
         mainMenuBar.setName("mainMenuBar"); // NOI18N
 
         fileMenu.setMnemonic('f');
-        fileMenu.setText(org.openide.util.NbBundle.getMessage(WorkspaceFrame.class, "WorkspaceFrame.fileMenu.text")); // NOI18N
+        fileMenu.setText(org.openide.util.NbBundle.getMessage(WorkspaceFrame.class, "WorkspaceFrame.fileMenu.text_1")); // NOI18N
         fileMenu.setName("fileMenu"); // NOI18N
 
         fileMenuImport.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
@@ -1349,7 +1399,7 @@ public class WorkspaceFrame extends javax.swing.JFrame {
         mainMenuBar.add(fileMenu);
 
         editMenu.setMnemonic('e');
-        editMenu.setText(org.openide.util.NbBundle.getMessage(WorkspaceFrame.class, "WorkspaceFrame.editMenu.text")); // NOI18N
+        editMenu.setText(org.openide.util.NbBundle.getMessage(WorkspaceFrame.class, "WorkspaceFrame.editMenu.text_1")); // NOI18N
         editMenu.setName("editMenu"); // NOI18N
         editMenu.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -1432,7 +1482,7 @@ public class WorkspaceFrame extends javax.swing.JFrame {
         mainMenuBar.add(editMenu);
 
         settingsMenu.setMnemonic('s');
-        settingsMenu.setText(org.openide.util.NbBundle.getMessage(WorkspaceFrame.class, "WorkspaceFrame.settingsMenu.text")); // NOI18N
+        settingsMenu.setText(org.openide.util.NbBundle.getMessage(WorkspaceFrame.class, "WorkspaceFrame.settingsMenu.text_1")); // NOI18N
         settingsMenu.setName("settingsMenu"); // NOI18N
 
         settingsMenuPreferences.setMnemonic('p');
@@ -1448,7 +1498,7 @@ public class WorkspaceFrame extends javax.swing.JFrame {
         mainMenuBar.add(settingsMenu);
 
         devicesMenu.setMnemonic('d');
-        devicesMenu.setText(org.openide.util.NbBundle.getMessage(WorkspaceFrame.class, "WorkspaceFrame.devicesMenu.text")); // NOI18N
+        devicesMenu.setText(org.openide.util.NbBundle.getMessage(WorkspaceFrame.class, "WorkspaceFrame.devicesMenu.text_1")); // NOI18N
         devicesMenu.setName("devicesMenu"); // NOI18N
 
         devicesMenuManageTabs.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_M, java.awt.event.InputEvent.CTRL_MASK));
@@ -1468,7 +1518,7 @@ public class WorkspaceFrame extends javax.swing.JFrame {
         mainMenuBar.add(devicesMenu);
 
         helpMenu.setMnemonic('h');
-        helpMenu.setText(org.openide.util.NbBundle.getMessage(WorkspaceFrame.class, "WorkspaceFrame.helpMenu.text")); // NOI18N
+        helpMenu.setText(org.openide.util.NbBundle.getMessage(WorkspaceFrame.class, "WorkspaceFrame.helpMenu.text_1")); // NOI18N
         helpMenu.setName("helpMenu"); // NOI18N
 
         helpMenuAbout.setMnemonic('a');
@@ -1482,6 +1532,20 @@ public class WorkspaceFrame extends javax.swing.JFrame {
         helpMenu.add(helpMenuAbout);
 
         mainMenuBar.add(helpMenu);
+
+        jMenu1.setText(org.openide.util.NbBundle.getMessage(WorkspaceFrame.class, "WorkspaceFrame.jMenu1.text")); // NOI18N
+        jMenu1.setName("jMenu1"); // NOI18N
+
+        switchViewsMenuItem.setText(org.openide.util.NbBundle.getMessage(WorkspaceFrame.class, "WorkspaceFrame.switchViewsMenuItem.text")); // NOI18N
+        switchViewsMenuItem.setName("switchViewsMenuItem"); // NOI18N
+        switchViewsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                switchViewsMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(switchViewsMenuItem);
+
+        mainMenuBar.add(jMenu1);
 
         setJMenuBar(mainMenuBar);
 
@@ -1500,7 +1564,7 @@ public class WorkspaceFrame extends javax.swing.JFrame {
                         .addComponent(jButtonImportNotepad)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonSendNotepad)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 609, Short.MAX_VALUE)
                         .addComponent(jButtonRefreshParts))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1508,8 +1572,8 @@ public class WorkspaceFrame extends javax.swing.JFrame {
                             .addComponent(partsComboBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(mainJTP, javax.swing.GroupLayout.DEFAULT_SIZE, 1010, Short.MAX_VALUE)
-                            .addComponent(bottomJSP, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1010, Short.MAX_VALUE))))
+                            .addComponent(mainJTP, javax.swing.GroupLayout.DEFAULT_SIZE, 1317, Short.MAX_VALUE)
+                            .addComponent(bottomJSP, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1317, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1525,13 +1589,13 @@ public class WorkspaceFrame extends javax.swing.JFrame {
                 .addGap(4, 4, 4)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(mainJTP, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
+                        .addComponent(mainJTP, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(bottomJSP, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(partsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(thumbnailJSP, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)))
+                        .addComponent(thumbnailJSP, javax.swing.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -1571,7 +1635,7 @@ public class WorkspaceFrame extends javax.swing.JFrame {
     private void editMenuPropertiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editMenuPropertiesActionPerformed
         if (_activeWorkspaceScene.hasFocusedWidget()) {
             Widget w = _activeWorkspaceScene.getFocusedWidget();
-            ((DevicePartWrapper)_activeWorkspaceScene.findObject(w)).openPropertiesDialog(_propertiesDialog, _activeWorkspaceScene);
+            ((DevicePartWrapper) _activeWorkspaceScene.findObject(w)).openPropertiesDialog(_propertiesDialog, _activeWorkspaceScene);
         }
 }//GEN-LAST:event_editMenuPropertiesActionPerformed
 
@@ -1736,53 +1800,107 @@ public class WorkspaceFrame extends javax.swing.JFrame {
         _deviceDialog.chooseDevices(devices, deviceIndices);
     }//GEN-LAST:event_devicesMenuManageTabsActionPerformed
 
-    
+    private void switchViewsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switchViewsMenuItemActionPerformed
+        if (_isTC) {
+            Component[] components = _tcView.getComponents();
+            this.setContentPane((Container) components[1]);
+            this.setJMenuBar((JMenuBar) components[0]);
+            this.pack();
+            _isTC = false;
+            _tcView.close();
+
+            Component[] components2 = _tcNotepad.getComponents();
+            _notepad.setContentPane((Container) components2[1]);
+            _notepad.setJMenuBar((JMenuBar) components2[0]);
+            _notepad.pack();
+            _tcNotepad.close();
+            this.setVisible(true);
+
+            _notepad.setVisible(true);
+
+        } else {
+            final JComponent guiContentPane = (JComponent) this.getContentPane();
+            final JMenuBar menu = this.getJMenuBar();
+            SwingUtilities.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    _tcView = new TopComponent();
+                    _tcView.setLayout(new BorderLayout());
+                    JScrollPane sp = new JScrollPane(guiContentPane);
+                    _tcView.add(menu, BorderLayout.NORTH);
+                    _tcView.add(sp, BorderLayout.CENTER);
+                    _tcView.setName("Spectacles");
+                    _tcView.open();
+                    _tcView.requestActive();
+
+                    _tcNotepad = new TopComponent() {
+
+                        @Override
+                        public void open() {
+                            Mode m = WindowManager.getDefault().findMode("output");
+                            if (m != null) {
+                                m.dockInto(this);
+                            }
+                            super.open();
+                        }
+                    };
+                    _tcNotepad.setLayout(new BorderLayout());
+                    JScrollPane sp2 = new JScrollPane(_notepad.getContentPane());
+                    _tcNotepad.add(_notepad.getJMenuBar(), BorderLayout.NORTH);
+                    _tcNotepad.add(sp2, BorderLayout.CENTER);
+                    _tcNotepad.setName("Notepad");
+                    _tcNotepad.open();
+                    _tcNotepad.requestActive();
+
+
+                }
+            });
+            _isTC = true;
+        }
+    }//GEN-LAST:event_switchViewsMenuItemActionPerformed
+
     /**
-    * @param args the command line arguments
-    */
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
         JFrame.setDefaultLookAndFeelDecorated(true);
         JDialog.setDefaultLookAndFeelDecorated(true);
         System.setProperty("sun.awt.noerasebackground", "true");
         try {
             javax.swing.UIManager.setLookAndFeel(new SubstanceBusinessBlackSteelLookAndFeel());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e);
         }
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new WorkspaceFrame().setVisible(true);
             }
         });
     }
-
     public NotepadWindow _notepad;
     private PropertiesDialog _propertiesDialog;
     private PreferencesDialog _preferencesDialog;
     private AboutDialog _aboutDialog;
     private DeviceDialog _deviceDialog;
-
     private Preferences _preferences;
-    
     private Manager _manager;
     private String _currentFilePath;
-
     private int _newDeviceCount;
     private boolean _isModified;
     private DevicePartWrapper _clippedWrapper;
-    
     private WorkspaceScene _activeWorkspaceScene;
     private ArrayList<WorkspaceScene> _wsSceneList;
     private HashMap<DevicePartWrapper, JMenuItem> _deviceMenuItemMap;
     private ThumbnailScene _activeThumbnailScene;
-
-
     private static JFileChooser _pngFileChooser;
+
     {
         _pngFileChooser = new JFileChooser();
         _pngFileChooser.setAcceptAllFileFilterUsed(false);
         _pngFileChooser.setFileFilter(new FileFilter() {
+
             @Override
             public boolean accept(File f) { // Handles which files are allowed by filter.
                 // Since this is used during enumeration of existing file system,
@@ -1817,8 +1935,9 @@ public class WorkspaceFrame extends javax.swing.JFrame {
             }
         });
     }
-
-
+    private TopComponent _tcNotepad;
+    private TopComponent _tcView;
+    private boolean _isTC;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane bottomJSP;
     private javax.swing.JTextPane bottomTextPane;
@@ -1857,6 +1976,7 @@ public class WorkspaceFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButtonImportNotepad;
     private javax.swing.JButton jButtonRefreshParts;
     private javax.swing.JButton jButtonSendNotepad;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JTabbedPane mainJTP;
     private javax.swing.JPopupMenu mainJTPContextMenu;
     private javax.swing.JMenuItem mainJTPContextMenuCloseDevice;
@@ -1866,7 +1986,7 @@ public class WorkspaceFrame extends javax.swing.JFrame {
     private javax.swing.JComboBox partsComboBox;
     private javax.swing.JMenu settingsMenu;
     private javax.swing.JMenuItem settingsMenuPreferences;
+    private javax.swing.JMenuItem switchViewsMenuItem;
     private javax.swing.JScrollPane thumbnailJSP;
     // End of variables declaration//GEN-END:variables
-
 }
