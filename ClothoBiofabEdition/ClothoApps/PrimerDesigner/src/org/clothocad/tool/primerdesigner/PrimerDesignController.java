@@ -60,7 +60,7 @@ public class PrimerDesignController {
                 JScrollPane sp = new JScrollPane(guiContentPane);
                 _tcView.add(menu, BorderLayout.NORTH);
                 _tcView.add(sp, BorderLayout.CENTER);
-                _tcView.setName("Primer Designer");
+                _tcView.setName("Optimus Primer");
                 _tcView.open();
                 _tcView.requestActive();
 
@@ -108,17 +108,17 @@ public class PrimerDesignController {
         }
         if (seq.length() < 60) {
             String[] yesNoOpt = {"Yes", "No"};
-            if (javax.swing.JOptionPane.showOptionDialog(new JFrame(), "Template is less than 60 basepairs in length.\nProceed anyways?", "Primer Designer: Warning", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, null, yesNoOpt, yesNoOpt[1]) == 1) {
+            if (javax.swing.JOptionPane.showOptionDialog(new JFrame(), "Template is less than 60 basepairs in length.\nProceed anyways?", "Optimus Primer: Warning", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, null, yesNoOpt, yesNoOpt[1]) == 1) {
                 return;
             }
             if (seq.length() < 20) {
-                JOptionPane.showMessageDialog(new JFrame(), "Sequence is too short to generate primers", "Primer Designer: Warning", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(new JFrame(), "Sequence is too short to generate primers", "Optimus Primer: Warning", JOptionPane.WARNING_MESSAGE);
                 return;
             }
         }
         if (length < 15) {
             String[] yesNoOpt = {"Yes", "No"};
-            if (javax.swing.JOptionPane.showOptionDialog(new JFrame(), "Preferred primer length may be too short to allow for specific annealing.\nProceed anyways?", "Primer Designer: Warning", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, null, yesNoOpt, yesNoOpt[1]) == 1) {
+            if (javax.swing.JOptionPane.showOptionDialog(new JFrame(), "Preferred primer length may be too short to allow for specific annealing.\nProceed anyways?", "Optimus Primer: Warning", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, null, yesNoOpt, yesNoOpt[1]) == 1) {
                 return;
             }
             if (length < 4) {
@@ -127,7 +127,7 @@ public class PrimerDesignController {
         }
         if (spacer1.length() > 5 || spacer2.length() > 5) {
             String[] yesNoOpt = {"Yes", "No"};
-            if (javax.swing.JOptionPane.showOptionDialog(new JFrame(), "Spacers seem to be large.\nProceed anyways?", "Primer Designer: Warning", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, null, yesNoOpt, yesNoOpt[1]) == 1) {
+            if (javax.swing.JOptionPane.showOptionDialog(new JFrame(), "Spacers seem to be large.\nProceed anyways?", "Optimus Primer: Warning", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, null, yesNoOpt, yesNoOpt[1]) == 1) {
                 return;
             }
         }

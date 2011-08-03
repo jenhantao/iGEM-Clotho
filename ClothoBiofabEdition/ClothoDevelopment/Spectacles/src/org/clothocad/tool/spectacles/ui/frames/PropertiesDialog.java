@@ -42,6 +42,8 @@ import org.clothocad.tool.spectacles.eugeneimportexport.DevicePartWrapper;
 import org.clothocad.tool.spectacles.ui.scenes.WorkspaceScene;
 //import org.clothocad.tool.spectacles.ui.scenes.SpectaclesFactory;
 import org.clothocore.api.data.ObjBase;
+import org.clothocore.api.data.ObjLink;
+import org.clothocore.api.data.ObjType;
 import org.clothocore.api.data.Part;
 import org.clothocore.api.core.Collector;
 import org.clothocore.api.data.Format;
@@ -63,6 +65,10 @@ public class PropertiesDialog extends javax.swing.JDialog {
     public PropertiesDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        ArrayList<ObjLink> links = Collector.getAllLinksOf(ObjType.FORMAT);
+        final Object[] array = links.toArray();
+        formatList.setModel(new javax.swing.DefaultComboBoxModel(array));
+
         _wsFrame = (WorkspaceFrame) parent;
     }
 
@@ -136,10 +142,10 @@ public class PropertiesDialog extends javax.swing.JDialog {
                 partsDescriptionField.setText((String)properties.get("Part_Description").getValue());
             }
 
-            partsFormatField.setEditable(true);
+            /*partsFormatField.setEditable(true);
             if (properties.containsKey("Part_Format")){
                 partsFormatField.setText((String)properties.get("Part_Format").getValue());
-            }
+            }*/
 
             partsSequenceArea.setEditable(true);
             if (properties.containsKey("Part_Sequence")){
@@ -210,7 +216,6 @@ public class PropertiesDialog extends javax.swing.JDialog {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         partsDescriptionField = new javax.swing.JTextField();
-        partsFormatField = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         partsSequenceArea = new javax.swing.JTextArea();
         jLabel8 = new javax.swing.JLabel();
@@ -238,6 +243,7 @@ public class PropertiesDialog extends javax.swing.JDialog {
         partsSequenceArea1 = new javax.swing.JTextArea();
         searchButton2 = new javax.swing.JButton();
         assignButton2 = new javax.swing.JButton();
+        formatList = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(org.openide.util.NbBundle.getMessage(PropertiesDialog.class, "PropertiesDialog.title")); // NOI18N
@@ -313,14 +319,6 @@ public class PropertiesDialog extends javax.swing.JDialog {
         partsDescriptionField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 partsDescriptionFieldActionPerformed(evt);
-            }
-        });
-
-        partsFormatField.setText(org.openide.util.NbBundle.getMessage(PropertiesDialog.class, "PropertiesDialog.partsFormatField.text")); // NOI18N
-        partsFormatField.setName("partsFormatField"); // NOI18N
-        partsFormatField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                partsFormatFieldActionPerformed(evt);
             }
         });
 
@@ -453,6 +451,9 @@ public class PropertiesDialog extends javax.swing.JDialog {
             }
         });
 
+        formatList.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        formatList.setName("formatList"); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -489,9 +490,11 @@ public class PropertiesDialog extends javax.swing.JDialog {
                                             .addComponent(jLabel5))))
                                 .addGap(37, 37, 37)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(formatList, 0, 328, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                                     .addComponent(comppartNameField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
                                     .addComponent(partsDescriptionField, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
-                                    .addComponent(partsFormatField, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
                                     .addComponent(partsNameField, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
                                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
                                     .addGroup(layout.createSequentialGroup()
@@ -499,9 +502,7 @@ public class PropertiesDialog extends javax.swing.JDialog {
                                             .addGroup(layout.createSequentialGroup()
                                                 .addComponent(comppartLefty, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
                                                 .addGap(2, 2, 2))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                                            .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                             .addComponent(comppartRighty)
@@ -602,10 +603,11 @@ public class PropertiesDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(partsFormatField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(formatList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -637,7 +639,7 @@ public class PropertiesDialog extends javax.swing.JDialog {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(searchButton2)
                             .addComponent(assignButton2))))
-                .addGap(73, 73, 73))
+                .addGap(74, 74, 74))
         );
 
         pack();
@@ -654,8 +656,8 @@ public class PropertiesDialog extends javax.swing.JDialog {
         sequenceTextArea.setText("");
         partsNameField.setEditable(false);
         partsNameField.setText("");
-        partsFormatField.setEditable(false);
-        partsFormatField.setText("");
+        //partsFormatField.setEditable(false);
+        //partsFormatField.setText("");
         partsDescriptionField.setEditable(false);
         partsDescriptionField.setText("");
         partsSequenceArea.setEditable(false);
@@ -692,7 +694,8 @@ public class PropertiesDialog extends javax.swing.JDialog {
         String name = partsNameField.getText();
         String description = partsDescriptionField.getText();
         String sequence = partsSequenceArea.getText();
-        Format form = Format.retrieveByName(partsFormatField.getText());
+        ObjLink link = (ObjLink) formatList.getSelectedItem();
+        Format form = Collector.getFormat(link.uuid);
 
         HashMap<String, Primitive> properties = _dpw.getPartPropertyValues();
 
@@ -949,10 +952,6 @@ public class PropertiesDialog extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_comppartLeftyActionPerformed
 
-    private void partsFormatFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_partsFormatFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_partsFormatFieldActionPerformed
-
     private void nameTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_nameTextField1ActionPerformed
@@ -1064,6 +1063,8 @@ public class PropertiesDialog extends javax.swing.JDialog {
             @Override
             public void run() {
                 PropertiesDialog dialog = new PropertiesDialog(new javax.swing.JFrame(), true);
+                ArrayList<ObjLink> links = Collector.getAllLinksOf(ObjType.FORMAT);
+                final Object[] array = links.toArray(); 
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -1098,6 +1099,7 @@ public class PropertiesDialog extends javax.swing.JDialog {
     private javax.swing.JTextField comppartLefty;
     private javax.swing.JTextField comppartNameField;
     private javax.swing.JTextField comppartRighty;
+    private javax.swing.JComboBox formatList;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1119,7 +1121,6 @@ public class PropertiesDialog extends javax.swing.JDialog {
     private javax.swing.JTextField nameTextField;
     private javax.swing.JTextField nameTextField1;
     private javax.swing.JTextField partsDescriptionField;
-    private javax.swing.JTextField partsFormatField;
     private javax.swing.JTextField partsNameField;
     private javax.swing.JTextField partsNameField1;
     private javax.swing.JTextArea partsSequenceArea;

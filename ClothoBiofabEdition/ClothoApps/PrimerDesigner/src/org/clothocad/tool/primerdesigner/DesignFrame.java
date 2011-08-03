@@ -373,7 +373,7 @@ public class DesignFrame extends javax.swing.JFrame {
                                 .addComponent(cancelButton)))
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
+                        .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(497, 497, 497))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(14, 14, 14)
