@@ -424,6 +424,7 @@ public class WorkspaceScene extends GraphScene  {
      * @return the child widget.
      */
     private IconNodeWidget createChild(String label, Image image) {
+       
         IconNodeWidget widget = SpectaclesFactory.createIconNodeWidget(this, label, image);
         widget.getActions().addAction(ActionFactory.createPopupMenuAction(
                 SpectaclesFactory.createGridWidgetContextMenuProvider(_propertiesDialog)));

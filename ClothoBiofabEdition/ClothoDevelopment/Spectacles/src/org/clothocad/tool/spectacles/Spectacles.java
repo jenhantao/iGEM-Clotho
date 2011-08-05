@@ -44,21 +44,20 @@ public class Spectacles implements ClothoTool {
         System.setProperty("sun.awt.noerasebackground", "true");
         /*
         try {
-            javax.swing.UIManager.setLookAndFeel(new SubstanceBusinessBlackSteelLookAndFeel());
+        javax.swing.UIManager.setLookAndFeel(new SubstanceBusinessBlackSteelLookAndFeel());
         } catch (Exception e) {
-            System.out.println(e);
+        System.out.println(e);
         }
-        */
+         */
         new WorkspaceFrame().setVisible(true);
     }
 
     /*
     public static DataCore getDataCore() {
-        return _dataCore;
+    return _dataCore;
     }
 
-    */
-
+     */
     public static String getHeaderFilesLocation() {
         return _headerFilesLocation;
     }
@@ -78,7 +77,7 @@ public class Spectacles implements ClothoTool {
     public static void setHeaderFilesLocation(String location) {
         _headerFilesLocation = location;
     }
-    
+
     public static void setImageLocation(String location) {
         _imageLocation = location;
     }
@@ -92,56 +91,55 @@ public class Spectacles implements ClothoTool {
         _headerFilesLocation = "data/tools/spectacles/include/";
         _workspaceFrame = new WorkspaceFrame();
         _dataCore = DataCore.getDataCore();
-*/
-         }
+         */
+    }
 
     @Override
     public void launch() {
-/*        _workspaceFrame.setVisible(true); */
+        /*        _workspaceFrame.setVisible(true); */
 
         _runningSolo = false;
-       //_iconPath = "data/icons/tools/spectacles_icon.png";
+        //_iconPath = "data/icons/tools/spectacles_icon.png";
         _iconPath = "src/org/clothocad/tool/spectacles/spectacles_icon.png";
         _imageLocation = "src/org/clothocad/tool/spectacles/partsimages/";
         //_headerFilesLocation = "data/tools/spectacles/include/";
         _workspaceFrame = new WorkspaceFrame();
-       //  _dataCore = DataCore.getDataCore();
+        //  _dataCore = DataCore.getDataCore();
 
 //        _workspaceFrame.setVisible(true);
         System.out.println("LAUNCHED");
     }
 
-/*
+    /*
     public Object getData(String object, String field) throws UnknownKeywordException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public void sendData(Object data, ClothoTool sender) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public void sendData(Object data, ClothoTool sender, int opcode) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    throw new UnsupportedOperationException("Not supported yet.");
     }
-*/
-
+     */
     private WorkspaceFrame _workspaceFrame;
     // private static DataCore _dataCore = null;
     // use a private static method to resolve the image path
     // all path stuff should go here for easy access
-    private static String _iconPath = "tool/spectacles/spectacles_icon.png";
-    private static String _imageLocation  = "src/org/clothocad/tool/spectacles/partsimages/";
+    private static String _iconPath = "src/org/clothocad/tool/spectacles/spectacles_icon.png";
+    private static String _imageLocation = "src/org/clothocad/tool/spectacles/partsimages/";
     private static String _headerFilesLocation = "include/";
     private static boolean _runningSolo = true;
 
     @Override
     public void launch(ObjBase o) {
         _runningSolo = false;
-        _iconPath = "data/icons/tools/spectacles_icon.png";
+        _iconPath = "src/org/clothocad/tool/spectacles/spectacles_icon.png";
         _imageLocation = "src/org/clothocad/tool/spectacles/partsimages/";
         _headerFilesLocation = "data/tools/spectacles/include/";
         _workspaceFrame = new WorkspaceFrame();
-       //  _dataCore = DataCore.getDataCore();
+        //  _dataCore = DataCore.getDataCore();
 
         _workspaceFrame.setVisible(true);
     }

@@ -34,6 +34,8 @@ import org.clothocore.api.core.Collator;
 
 import org.clothocore.api.core.Collector;
 import org.clothocore.api.core.wrapper.ConnectionWrapper;
+import org.clothocore.api.core.wrapper.PluginWrapper;
+import org.clothocore.api.core.wrapper.ToolWrapper;
 import org.clothocore.api.data.Collection;
 //import org.clothocore.api.data.Feature;
 import org.clothocore.api.data.Format;
@@ -64,6 +66,12 @@ public final class InventoryTopComponent extends TopComponent {
 
 
         initComponents();
+        for (ToolWrapper tw : Collator.getAllTools()) {
+            if (tw.getUUID().equals("org.clothocad.tool.toolappbrowser")) {
+                tw.launchTool();
+                break;
+            }
+        }
         changeButton.setEnabled(false);
         localRadioButton.setSelected(true);
         configurableRadioButton.setSelected(false);

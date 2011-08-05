@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+<type>ClothoTool</type>
+<version>1.0</version>
+<classname>org-clothocad-tool-trumpet-connect</classname>
+<description>Trumpet</description>
+<displayname>Trumpet</displayname>
+<uuid>org.clothocad.tool.trumpet</uuid>
+<!--<screenshotpath>org/clothocad/tool/personeditor/screenshot.png</screenshotpath>-->
+<author>Craig LaBoda</author>
+<dependency>org.clothocad.wikieditorpanel</dependency>
+<iconpath>org/clothocad/tool/trumpet/trumpetLogo.png</iconpath>
+    <help>
+<!--        <helpurl>http://wiki.bu.edu/ece-clotho/index.php/Person_Editor</helpurl>-->
+        <helpdescription>For more information please see the help url</helpdescription>
+        <!--<helpcommand>Command1</helpcommand>-->
+        <!--<helpcommand>Command2</helpcommand>-->
+    </help>
+</plugin>
