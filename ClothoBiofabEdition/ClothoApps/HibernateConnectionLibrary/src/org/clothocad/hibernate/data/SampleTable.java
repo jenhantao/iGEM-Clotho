@@ -69,7 +69,7 @@ public class SampleTable implements java.io.Serializable, hibernateDatum {
             this.containerTable = new ContainerTable(s.getContainer().getUUID());
         }
 
-        Sample.sampleType type = s.getSampleType();
+        Sample.SampleType type = s.getSampleType();
 
         HashSet<String> existingLinks = new  HashSet<String>();
 
@@ -123,7 +123,7 @@ public class SampleTable implements java.io.Serializable, hibernateDatum {
 
     @Override
     public ObjBase getObject() {
-        Sample.sampleType type = Sample.sampleType.valueOf(sampleType);
+        Sample.SampleType type = Sample.SampleType.valueOf(sampleType);
         Sample.SampleDatum d = (SampleDatum) getObjBaseDatum();
 
         switch(type)  {
@@ -149,7 +149,7 @@ public class SampleTable implements java.io.Serializable, hibernateDatum {
 
     @Override
     public ObjBaseDatum getObjBaseDatum() {
-        Sample.sampleType type = Sample.sampleType.valueOf(sampleType);
+        Sample.SampleType type = Sample.SampleType.valueOf(sampleType);
         Sample.SampleDatum d = null;
         switch(type)  {
             case PLASMID_SAMPLE:

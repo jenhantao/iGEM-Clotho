@@ -37,5 +37,8 @@ public class CelloRPromoterTable {
     }
     
 
+     public ArrayList<CelloRPromoter> getTable(){
+         return _table;
+    }
     private ArrayList<CelloRPromoter> _table;
 }

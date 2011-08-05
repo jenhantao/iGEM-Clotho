@@ -188,7 +188,7 @@ public class Container extends ObjBase {
 
     public boolean EVT_SampleToContainer( Sample thesample ) {
         boolean outer;
-        if ( _conDatum._sampleUUID.equals( "" ) ||_conDatum._sampleUUID==null ) {
+        if ( _conDatum._sampleUUID==null || _conDatum._sampleUUID.equals( "" ) ) {
             _conDatum._sampleUUID = thesample.getUUID();
             outer = true;
             _conDatum.isEmpty = false;
@@ -301,7 +301,7 @@ public class Container extends ObjBase {
      * @return a Sample in this container
      */
     public Sample getSample() {
-        if ( _conDatum.isEmpty ) {
+        if ( _conDatum._sampleUUID==null || _conDatum._sampleUUID.equals("") ) {
             return null;
         }
         return Collector.getSample( _conDatum._sampleUUID );

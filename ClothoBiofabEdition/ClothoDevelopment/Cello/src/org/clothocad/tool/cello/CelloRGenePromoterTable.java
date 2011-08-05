@@ -15,19 +15,23 @@ public class CelloRGenePromoterTable {
 
     public CelloRGenePromoterTable()
     {
-        _table = new HashMap<Integer, Integer>(); //key = Rpromoter id and Value = Gene id
+        _table = new HashMap<CelloRPromoter, CelloGene>(); //key = Rpromoter id and Value = Gene id
     }
 
     public void add( CelloRPromoter crpK, CelloGene cgV)
     {
-        _table.put( crpK.getId(), cgV.getId());
+        _table.put( crpK, cgV);
     }
 
-    public Integer getGeneId(CelloRPromoter crpK)
+    public CelloGene getGene(CelloRPromoter crpK)
     {
-        return  _table.get(crpK.getId());
+        return  _table.get(crpK);
+    }
+    public  HashMap<CelloRPromoter, CelloGene> getTable ()
+    {
+        return this._table;
     }
 
-    private HashMap<Integer, Integer> _table;
+    private HashMap<CelloRPromoter, CelloGene> _table;
 
 }

@@ -23,6 +23,7 @@
 package org.clothocad.tool.cello;
 
 import antlr.CharBuffer;
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileFilter;
@@ -33,11 +34,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
+import javax.swing.JTabbedPane;
 import javax.swing.ListModel;
 import org.antlr.runtime.*;
 import org.openide.util.Exceptions;
@@ -52,6 +55,8 @@ public class CelloGUI extends javax.swing.JFrame {
     /** Creates new form CelloGUI */
     public CelloGUI() {
         initComponents();
+        ArrayList<String> TFNameList =Main.CreateTFList();
+        lTFList.setListData(TFNameList.toArray());
     }
 
     CelloGUI(String input) {
@@ -70,8 +75,8 @@ public class CelloGUI extends javax.swing.JFrame {
     private void initComponents() {
 
         FCBrowser = new javax.swing.JFileChooser();
-        BGDoubleInverter = new javax.swing.ButtonGroup();
         BGCostFunctions = new javax.swing.ButtonGroup();
+        BGDoubleInverter = new javax.swing.ButtonGroup();
         TFAddress = new javax.swing.JTextField();
         BBrowse = new javax.swing.JButton();
         BRun = new javax.swing.JButton();
@@ -79,10 +84,9 @@ public class CelloGUI extends javax.swing.JFrame {
         BClear = new javax.swing.JButton();
         BMap = new javax.swing.JButton();
         PIOTFConstraint = new javax.swing.JPanel();
-        CBTF1 = new javax.swing.JCheckBox();
-        CBTF2 = new javax.swing.JCheckBox();
-        CBIO3 = new javax.swing.JCheckBox();
-        CBTF0 = new javax.swing.JCheckBox();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        lTFList = new javax.swing.JList();
+        BTFSelect = new javax.swing.JButton();
         PCelloGUI = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         LPartFamily = new javax.swing.JList();
@@ -128,6 +132,7 @@ public class CelloGUI extends javax.swing.JFrame {
         RBMaxRepress = new javax.swing.JRadioButton();
         RBMinRepress = new javax.swing.JRadioButton();
         BFindBestSolution = new javax.swing.JButton();
+        CBImplementations = new javax.swing.JComboBox();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMFile = new javax.swing.JMenu();
         jMINew = new javax.swing.JMenuItem();
@@ -201,42 +206,33 @@ public class CelloGUI extends javax.swing.JFrame {
 
         PIOTFConstraint.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(CelloGUI.class, "CelloGUI.PIOTFConstraint.border.title"))); // NOI18N
 
-        CBTF1.setSelected(true);
-        CBTF1.setText(org.openide.util.NbBundle.getMessage(CelloGUI.class, "CelloGUI.CBTF1.text")); // NOI18N
+        jScrollPane6.setViewportView(lTFList);
 
-        CBTF2.setSelected(true);
-        CBTF2.setText(org.openide.util.NbBundle.getMessage(CelloGUI.class, "CelloGUI.CBTF2.text")); // NOI18N
-
-        CBIO3.setSelected(true);
-        CBIO3.setText(org.openide.util.NbBundle.getMessage(CelloGUI.class, "CelloGUI.CBIO3.text")); // NOI18N
-
-        CBTF0.setSelected(true);
-        CBTF0.setText(org.openide.util.NbBundle.getMessage(CelloGUI.class, "CelloGUI.CBTF0.text")); // NOI18N
+        BTFSelect.setText(org.openide.util.NbBundle.getMessage(CelloGUI.class, "CelloGUI.BTFSelect.text")); // NOI18N
+        BTFSelect.setBorder(new javax.swing.border.MatteBorder(null));
+        BTFSelect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTFSelectActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout PIOTFConstraintLayout = new javax.swing.GroupLayout(PIOTFConstraint);
         PIOTFConstraint.setLayout(PIOTFConstraintLayout);
         PIOTFConstraintLayout.setHorizontalGroup(
             PIOTFConstraintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PIOTFConstraintLayout.createSequentialGroup()
-                .addGroup(PIOTFConstraintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(CBTF1)
-                    .addComponent(CBTF2)
-                    .addComponent(CBIO3)
-                    .addComponent(CBTF0))
-                .addContainerGap(256, Short.MAX_VALUE))
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
+                .addComponent(BTFSelect, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(67, Short.MAX_VALUE))
         );
         PIOTFConstraintLayout.setVerticalGroup(
             PIOTFConstraintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PIOTFConstraintLayout.createSequentialGroup()
-                .addGap(8, 8, 8)
-                .addComponent(CBTF0)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(CBTF1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(CBTF2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(CBIO3)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addGroup(PIOTFConstraintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
+                    .addComponent(BTFSelect, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         PCelloGUI.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(CelloGUI.class, "CelloGUI.PCelloGUI.border.title"))); // NOI18N
@@ -268,15 +264,15 @@ public class CelloGUI extends javax.swing.JFrame {
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31)
                 .addComponent(BPartSelect, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(92, Short.MAX_VALUE))
         );
         PCelloGUILayout.setVerticalGroup(
             PCelloGUILayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PCelloGUILayout.createSequentialGroup()
                 .addGroup(PCelloGUILayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(BPartSelect, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE))
+                    .addComponent(BPartSelect, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -320,6 +316,12 @@ public class CelloGUI extends javax.swing.JFrame {
             }
         });
 
+        TPControl.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                TPControlStateChanged(evt);
+            }
+        });
+
         CBTransfromNOR.setSelected(true);
         CBTransfromNOR.setText(org.openide.util.NbBundle.getMessage(CelloGUI.class, "CelloGUI.CBTransfromNOR.text")); // NOI18N
 
@@ -339,7 +341,7 @@ public class CelloGUI extends javax.swing.JFrame {
                 .addComponent(CBTransfromNOR)
                 .addGap(80, 80, 80)
                 .addComponent(BCompileandGenerateGraph)
-                .addContainerGap(406, Short.MAX_VALUE))
+                .addContainerGap(731, Short.MAX_VALUE))
         );
         PCompileLayout.setVerticalGroup(
             PCompileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -348,7 +350,7 @@ public class CelloGUI extends javax.swing.JFrame {
                 .addGroup(PCompileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(CBTransfromNOR)
                     .addComponent(BCompileandGenerateGraph))
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
 
         TPControl.addTab(org.openide.util.NbBundle.getMessage(CelloGUI.class, "CelloGUI.PCompile.TabConstraints.tabTitle"), PCompile); // NOI18N
@@ -392,7 +394,7 @@ public class CelloGUI extends javax.swing.JFrame {
                 .addGroup(PGateLevelOptimizeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(CBRemoveDoubleInvertersGL)
                     .addComponent(CBFindRepeatPatterns))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 333, Short.MAX_VALUE)
                 .addGroup(PGateLevelOptimizeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(RBRemoveAllInverters)
                     .addComponent(RBRemoveDoubleInvertersbutNORS))
@@ -416,7 +418,7 @@ public class CelloGUI extends javax.swing.JFrame {
                         .addComponent(CBFindRepeatPatterns)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(CBRemoveDoubleInvertersGL)))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         TPControl.addTab(org.openide.util.NbBundle.getMessage(CelloGUI.class, "CelloGUI.PGateLevelOptimize.TabConstraints.tabTitle"), PGateLevelOptimize); // NOI18N
@@ -448,7 +450,7 @@ public class CelloGUI extends javax.swing.JFrame {
                 .addGroup(PMappingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(BMapping)
                     .addComponent(CBHaybridDual))
-                .addContainerGap(360, Short.MAX_VALUE))
+                .addContainerGap(685, Short.MAX_VALUE))
         );
         PMappingLayout.setVerticalGroup(
             PMappingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -461,7 +463,7 @@ public class CelloGUI extends javax.swing.JFrame {
                 .addGroup(PMappingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(CBfamilyNORn)
                     .addComponent(BMapping))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         TPControl.addTab(org.openide.util.NbBundle.getMessage(CelloGUI.class, "CelloGUI.PMapping.TabConstraints.tabTitle"), PMapping); // NOI18N
@@ -495,7 +497,7 @@ public class CelloGUI extends javax.swing.JFrame {
                         .addGap(21, 21, 21)
                         .addComponent(BMotifLevelOptimization))
                     .addComponent(CBFindRepeatedPatterns))
-                .addContainerGap(460, Short.MAX_VALUE))
+                .addContainerGap(785, Short.MAX_VALUE))
         );
         PMotifLevelOptimizationLayout.setVerticalGroup(
             PMotifLevelOptimizationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -508,7 +510,7 @@ public class CelloGUI extends javax.swing.JFrame {
                 .addGroup(PMotifLevelOptimizationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(CBRemoveDoubleInverstersML)
                     .addComponent(BMotifLevelOptimization))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         TPControl.addTab(org.openide.util.NbBundle.getMessage(CelloGUI.class, "CelloGUI.PMotifLevelOptimization.TabConstraints.tabTitle"), PMotifLevelOptimization); // NOI18N
@@ -540,6 +542,12 @@ public class CelloGUI extends javax.swing.JFrame {
 
         BFindBestSolution.setText(org.openide.util.NbBundle.getMessage(CelloGUI.class, "CelloGUI.BFindBestSolution.text")); // NOI18N
 
+        CBImplementations.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                CBImplementationsMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout PAssignSequenceLayout = new javax.swing.GroupLayout(PAssignSequence);
         PAssignSequence.setLayout(PAssignSequenceLayout);
         PAssignSequenceLayout.setHorizontalGroup(
@@ -558,27 +566,33 @@ public class CelloGUI extends javax.swing.JFrame {
                     .addComponent(RBMinRepress)
                     .addComponent(RBMaxRepress))
                 .addGap(18, 18, 18)
-                .addGroup(PAssignSequenceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(BFindBestSolution)
-                    .addComponent(BShowSequence))
-                .addContainerGap(360, Short.MAX_VALUE))
+                .addComponent(BFindBestSolution)
+                .addGap(19, 19, 19)
+                .addComponent(CBImplementations, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(BShowSequence)
+                .addContainerGap(430, Short.MAX_VALUE))
         );
         PAssignSequenceLayout.setVerticalGroup(
             PAssignSequenceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PAssignSequenceLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(PAssignSequenceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(RBMaxFeatures)
-                    .addComponent(RBMaxInduce)
-                    .addComponent(RBMaxRepress)
-                    .addComponent(BFindBestSolution))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(PAssignSequenceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(RBMinFeatures)
-                    .addComponent(RBMinIndice)
-                    .addComponent(RBMinRepress)
-                    .addComponent(BShowSequence))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(PAssignSequenceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PAssignSequenceLayout.createSequentialGroup()
+                        .addGroup(PAssignSequenceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(RBMaxFeatures)
+                            .addComponent(RBMaxInduce)
+                            .addComponent(RBMaxRepress))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(PAssignSequenceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(RBMinFeatures)
+                            .addComponent(RBMinIndice)
+                            .addComponent(RBMinRepress)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PAssignSequenceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(BFindBestSolution, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
+                        .addComponent(BShowSequence, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(CBImplementations, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         TPControl.addTab(org.openide.util.NbBundle.getMessage(CelloGUI.class, "CelloGUI.PAssignSequence.TabConstraints.tabTitle"), PAssignSequence); // NOI18N
@@ -651,27 +665,28 @@ public class CelloGUI extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(PCelloGUI, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(PIOTFConstraint, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(BClear)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(BParse))
-                            .addComponent(PIOTFConstraint, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE))
+                            .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE))
                         .addGap(6, 6, 6)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 775, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 693, Short.MAX_VALUE)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 693, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(BShoqSequence)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(BOptimize)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(BMap)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 161, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
                                 .addComponent(BGateLevelOptimization)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(BGateMapping)
@@ -680,11 +695,8 @@ public class CelloGUI extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(TFAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(BBrowse))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 775, Short.MAX_VALUE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(335, 335, 335)
-                        .addComponent(TPControl, javax.swing.GroupLayout.DEFAULT_SIZE, 775, Short.MAX_VALUE)))
+                                .addComponent(BBrowse))))
+                    .addComponent(TPControl, javax.swing.GroupLayout.DEFAULT_SIZE, 1100, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -699,11 +711,9 @@ public class CelloGUI extends javax.swing.JFrame {
                                     .addComponent(BBrowse)
                                     .addComponent(TFAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(34, 34, 34))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(BClear)
-                                    .addComponent(BParse))
-                                .addGap(18, 18, 18))))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(BClear)
+                                .addComponent(BParse))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -714,21 +724,20 @@ public class CelloGUI extends javax.swing.JFrame {
                             .addComponent(BGateMapping)
                             .addComponent(BGateLevelOptimization))
                         .addGap(8, 8, 8)))
-                .addGap(48, 48, 48)
-                .addComponent(TPControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(101, 101, 101)
+                .addComponent(TPControl, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(PCelloGUI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(PIOTFConstraint, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(PCelloGUI, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(PIOTFConstraint, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(14, 14, 14))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         TPControl.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(CelloGUI.class, "CelloGUI.TPCompile.AccessibleContext.accessibleName")); // NOI18N
@@ -739,6 +748,11 @@ public class CelloGUI extends javax.swing.JFrame {
     private void FCBrowserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FCBrowserActionPerformed
         // TODO add your handling code here:
         String filepath = FCBrowser.getSelectedFile().getPath();
+        if(!filepath.endsWith(".v"))
+        {
+            TALog.append("Invalid file selection!\n");
+        }else
+        {
         TFAddress.setText(filepath);
         String fileinside = "";
         try {
@@ -759,6 +773,7 @@ public class CelloGUI extends javax.swing.JFrame {
 
         TAInput.setText(fileinside);
         TALog.append("File :"+filepath+" is loaded!\n");
+        }
 
 }//GEN-LAST:event_FCBrowserActionPerformed
 
@@ -809,7 +824,7 @@ public class CelloGUI extends javax.swing.JFrame {
     private void BMapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BMapActionPerformed
         // TODO add your handling code here:
 
-        TAResult.append(Main.motifLevelMapping(true,true));
+        TAResult.append(Main.motifLevelMapping("NORBased", true,true));
         TALog.append("Parts mapping done!\n");
 
     }//GEN-LAST:event_BMapActionPerformed
@@ -850,7 +865,7 @@ public class CelloGUI extends javax.swing.JFrame {
 
         String[] msg = new String[1];
         msg[0] = "";
-        TAResult.append(Main.motifLevelOptimization( msg));
+        TAResult.append( Main.motifLevelOptimization( "", msg));
         TALog.append(msg[0]+"Optimization done!\n");
     }//GEN-LAST:event_BOptimizeActionPerformed
 
@@ -859,10 +874,8 @@ public class CelloGUI extends javax.swing.JFrame {
 
         String [] error = new String[1];
         error[0] = "";
-        TAResult.append(Main.assignSequence(error)+"\n");
-
+        TAResult.append(Main.assignSequence( (String)CBImplementations.getSelectedItem(), error)+"\n");
         TALog.append("Sequence assignment done!\n"+error[0]);
-
 
     }//GEN-LAST:event_BShoqSequenceActionPerformed
 
@@ -892,11 +905,14 @@ public class CelloGUI extends javax.swing.JFrame {
 
     private void BGateMappingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BGateMappingActionPerformed
         // TODO add your handling code here:
-
+/*
         String [] error = new String[1];
         error[0] = "";
         TAResult.append(Main.gateLevelMapping(error));
         TALog.append("Technology Mapping to NOR is done!\n"+error[0]);
+ *
+ */
+        CelloGraphViewer.main(null);
     }//GEN-LAST:event_BGateMappingActionPerformed
 
     private void BGateLevelOptimizationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BGateLevelOptimizationActionPerformed
@@ -946,7 +962,7 @@ public class CelloGUI extends javax.swing.JFrame {
     private void BMappingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BMappingActionPerformed
         // TODO add your handling code here:
 
-        TAResult.append(Main.motifLevelMapping(CBfamilyNOR2.isSelected(), CBfamilyNORn.isSelected()));
+        TAResult.append(Main.motifLevelMapping( "NORBased", CBfamilyNOR2.isSelected(), CBfamilyNORn.isSelected()));
         TALog.append("Parts mapping done!\n");
         
 
@@ -969,7 +985,7 @@ public class CelloGUI extends javax.swing.JFrame {
 
          String[] msg = new String[1];
         msg[0] = "";
-        TAResult.append(Main.motifLevelOptimization( msg));
+        TAResult.append(Main.motifLevelOptimization( "", msg));
         TALog.append(msg[0]+"Optimization done!\n");
     }//GEN-LAST:event_BMotifLevelOptimizationActionPerformed
 
@@ -978,10 +994,52 @@ public class CelloGUI extends javax.swing.JFrame {
 
          String [] error = new String[1];
         error[0] = "";
-        TAResult.append(Main.assignSequence(error)+"\n");
 
-        TALog.append("Sequence assignment done!\n"+error[0]);
+        DInOutSelection dialog = new DInOutSelection(this, true);
+        if(dialog.returnFlag){
+            TAResult.append(Main.assignSequence((String)CBImplementations.getSelectedItem(), error)+"\n");
+
+            TALog.append("Sequence assignment done!\n"+error[0]);
+        }
     }//GEN-LAST:event_BShowSequenceActionPerformed
+
+    private void BTFSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTFSelectActionPerformed
+        // TODO add your handling code here:
+
+        int[] selectedTFi = lTFList.getSelectedIndices();
+
+        Main.setTFList(selectedTFi);
+        
+        lTFList.updateUI();
+
+    }//GEN-LAST:event_BTFSelectActionPerformed
+
+    private void TPControlStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_TPControlStateChanged
+        // TODO add your handling code here:
+        /*JTabbedPane pane = (JTabbedPane)evt.getSource();
+        int si = pane.getSelectedIndex();
+        int sa = TPControl.indexOfTab("Assign Sequence");
+        if(si == sa)
+        {
+           CBImplementations.removeAllItems();
+           Iterator<String> iter = Main.getImplementation().iterator();
+           while(iter.hasNext()){
+               CBImplementations.addItem(iter.next());
+           }
+        }
+         * 
+         */
+        
+    }//GEN-LAST:event_TPControlStateChanged
+
+    private void CBImplementationsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CBImplementationsMouseClicked
+        // TODO add your handling code here:
+        CBImplementations.removeAllItems();
+           Iterator<String> iter = Main.getImplementation().iterator();
+           while(iter.hasNext()){
+               CBImplementations.addItem(iter.next());
+        }
+    }//GEN-LAST:event_CBImplementationsMouseClicked
 
     /**
     * @param args the command line arguments
@@ -1018,16 +1076,14 @@ public class CelloGUI extends javax.swing.JFrame {
     private javax.swing.JButton BRun;
     private javax.swing.JButton BShoqSequence;
     private javax.swing.JButton BShowSequence;
+    private javax.swing.JButton BTFSelect;
     private javax.swing.JCheckBox CBFindRepeatPatterns;
     private javax.swing.JCheckBox CBFindRepeatedPatterns;
     private javax.swing.JCheckBox CBHaybridDual;
-    private javax.swing.JCheckBox CBIO3;
+    private javax.swing.JComboBox CBImplementations;
     private javax.swing.JCheckBox CBRemoveBuffers;
     private javax.swing.JCheckBox CBRemoveDoubleInverstersML;
     private javax.swing.JCheckBox CBRemoveDoubleInvertersGL;
-    private javax.swing.JCheckBox CBTF0;
-    private javax.swing.JCheckBox CBTF1;
-    private javax.swing.JCheckBox CBTF2;
     private javax.swing.JCheckBox CBTransfromNOR;
     private javax.swing.JCheckBox CBfamilyNOR2;
     private javax.swing.JCheckBox CBfamilyNORn;
@@ -1072,8 +1128,10 @@ public class CelloGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JList lTFList;
     // End of variables declaration//GEN-END:variables
 
 }

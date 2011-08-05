@@ -5,6 +5,8 @@
 
 package org.clothocad.tool.cello;
 
+import org.clothocore.api.data.Feature;
+
 /**
  *
  * @author Douglas Densmore
@@ -51,6 +53,16 @@ public class CelloRPromoter extends CelloPrimitive{
         _id = i;
     }
 
+    public void setFeature(Feature f)
+    {
+        _feature = f;
+    }
+
+    public Feature getFeature ()
+    {
+        return this._feature;
+    }
+    
     @Override
     public String print()
     {

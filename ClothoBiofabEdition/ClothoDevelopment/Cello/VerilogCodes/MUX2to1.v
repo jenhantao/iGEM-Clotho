@@ -10,6 +10,6 @@ input A;
     input S;
     output O;
 
-assign O = ~( ~( ~(A | S) | ~(B | ~S)));
+assign O = ~( ~( ~(~A |~ S) | ~(B | ~S)));
 
 endmodule

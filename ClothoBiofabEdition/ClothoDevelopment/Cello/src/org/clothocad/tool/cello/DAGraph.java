@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import org.clothocore.api.data.Part;
 import sun.security.provider.certpath.Vertex;
 
 /**
@@ -330,15 +331,65 @@ public class DAGraph {
             String Key = String.valueOf( v.Cover)+"_"+String.valueOf( v.subCover);
             if (!sequenceArray.containsKey(Key))
                 sequenceArray.put(Key, new ArrayList<String>());
-            if (v.Feature._sequence != null)
-            {
+            //if (v.Feature._sequence != null)
+            //{
                 //Result += "("+v.Feature._sequence+")";
-               sequenceArray.get(Key).add(v.Feature._sequence);
-            }else
-            {
-                 sequenceArray.get(Key).add("(N/A)");
+               sequenceArray.get(Key).add(v.Feature.printDNA());
+            //}else
+            //{
+            //     sequenceArray.get(Key).add("(N/A)");
                 //Result += "(N/A)";
-            }
+            //}
+        }
+
+    }
+
+    HashMap<String, ArrayList<Part>> makeCompositePart() {
+
+        ArrayList<DAGVertex> roots = this.findRoots();
+
+        HashMap<String, ArrayList<Part>> sequenceArray = new HashMap<String, ArrayList<Part>>();
+
+
+
+
+        for (int i=0; i< roots.size(); i++)
+        {
+            DFSSearchP(roots.get(i), sequenceArray);
+        }
+
+        return sequenceArray;
+
+    }
+
+    private void DFSSearchP(DAGVertex v, HashMap<String, ArrayList<Part>> sequenceArray) {
+
+        DAGEdge e = v.Outgoing;
+
+        while (e!= null)
+        {
+            DFSSearchP(e.To, sequenceArray);
+            e = e.Next;
+
+        }
+
+        if (v.Feature !=null)
+        {
+
+            String Key = String.valueOf( v.Cover)+"_"+String.valueOf( v.subCover);
+            if (!sequenceArray.containsKey(Key))
+                sequenceArray.put(Key, new ArrayList<Part>());
+            //if (v.Feature._sequence != null)
+            //{
+                //Result += "("+v.Feature._sequence+")";
+
+
+               sequenceArray.get(Key).add(v.Feature.getPart());
+            //}else
+            //{
+            //     sequenceArray.get(Key).add("(N/A)");
+                //Result += "(N/A)";
+            //}
         }
 
     }

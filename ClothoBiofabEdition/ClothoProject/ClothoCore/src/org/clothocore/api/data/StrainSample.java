@@ -64,7 +64,7 @@ public class StrainSample extends Sample {
      * @param author who is creating the Sample
      */
     private StrainSample( Strain mystrain, double myvolume, Person author ) {
-        super( null );
+        super( mystrain.getName(), myvolume, author, SampleType.STRAIN_SAMPLE );
         _strSampleDatum = new StrainSampleDatum();
         _samDatum = _strSampleDatum;
         _datum = _strSampleDatum;
@@ -88,7 +88,7 @@ public class StrainSample extends Sample {
      * @param author
      * @return
      */
-    public static StrainSample generateOligoSample( Strain mystrain, Container mycontainer, double myvolume, Person author ) {
+    public static StrainSample generateStrainSample( Strain mystrain, Container mycontainer, double myvolume, Person author ) {
         StrainSample ps = new StrainSample( mystrain, myvolume, author );
         if ( ps.PUT_SampleToContainer( mycontainer ) ) {
             return ps;
@@ -208,7 +208,7 @@ public class StrainSample extends Sample {
     @Override
     protected Sample duplicateTo( Container acon, Double vol ) {
         //private plasmidSample(plasmid myplasmid, Strain mycell, double myvolume, Person author) {
-        StrainSample ps = generateOligoSample( getStrain(), acon, vol, getAuthor() );
+        StrainSample ps = generateStrainSample( getStrain(), acon, vol, getAuthor() );
         return ps;
     }
 
@@ -217,8 +217,8 @@ public class StrainSample extends Sample {
     }
 
     @Override
-    public sampleType getSampleType() {
-        return sampleType.CELL_SAMPLE;
+    public SampleType getSampleType() {
+        return SampleType.STRAIN_SAMPLE;
     }
 
     /*-----------------

@@ -67,7 +67,8 @@ public class PlasmidSample extends Sample {
      * @param author who is creating the Sample
      */
     private PlasmidSample( Plasmid myplasmid, Strain mycell, double myvolume, Person author ) {
-        super( myplasmid.getName(), myvolume, author );
+        super( myplasmid.getName(), myvolume, author, SampleType.PLASMID_SAMPLE );
+        _pSampleDatum = (PlasmidSampleDatum) _samDatum;
         _pSampleDatum._plasmidUUID = myplasmid.getUUID();
 
         if ( mycell != null ) {
@@ -257,8 +258,8 @@ public class PlasmidSample extends Sample {
     }
 
     @Override
-    public sampleType getSampleType() {
-        return sampleType.PLASMID_SAMPLE;
+    public SampleType getSampleType() {
+        return SampleType.PLASMID_SAMPLE;
     }
 
     /*-----------------

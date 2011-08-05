@@ -37,5 +37,8 @@ public class CelloRBSTable {
         return _table.get(i);
     }
 
+     public ArrayList<CelloRBS> getTable(){
+         return _table;
+    }
     private ArrayList<CelloRBS> _table;
 }

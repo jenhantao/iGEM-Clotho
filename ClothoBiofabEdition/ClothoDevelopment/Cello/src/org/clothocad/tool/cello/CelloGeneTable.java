@@ -31,10 +31,19 @@ public class CelloGeneTable {
         return _table.size();
     }
 
+    public CelloGene get(CelloGene g)
+    {
+        return _table.get(_table.indexOf(g));
+    }
+
     public CelloGene get(int i)
     {
         return _table.get(i);
     }
 
+
+    public ArrayList<CelloGene> getTable(){
+         return _table;
+    }
     private ArrayList<CelloGene> _table;
 }

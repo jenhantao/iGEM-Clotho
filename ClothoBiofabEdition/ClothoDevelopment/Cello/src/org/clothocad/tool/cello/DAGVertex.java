@@ -90,6 +90,20 @@ public DAGVertex (DAGVertex v)
         }
     }
 
+    @Override
+    public String toString()
+    {
+        String s = "";
+        s += this.Name;
+        /*if (this.Feature != null )
+            if (this.Feature._feature != null)
+                s+= this.Feature._feature.getName();
+         *
+         */
+        return s;
+
+    }
+
 
 
 }

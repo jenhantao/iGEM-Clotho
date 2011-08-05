@@ -66,4 +66,10 @@ public class DAGEdge {
         return e;
     }
 
+    public String toString ()
+    {
+        return String.valueOf (this.Index);
+                
+    }
+
 }

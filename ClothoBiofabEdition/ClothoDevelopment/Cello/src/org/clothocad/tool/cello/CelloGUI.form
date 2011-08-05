@@ -12,9 +12,9 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="FCBrowserActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.ButtonGroup" name="BGDoubleInverter">
-    </Component>
     <Component class="javax.swing.ButtonGroup" name="BGCostFunctions">
+    </Component>
+    <Component class="javax.swing.ButtonGroup" name="BGDoubleInverter">
     </Component>
     <Menu class="javax.swing.JMenuBar" name="jMenuBar1">
       <SubComponents>
@@ -164,29 +164,30 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="PCelloGUI" max="32767" attributes="1"/>
+                          <Component id="PIOTFConstraint" alignment="0" max="32767" attributes="1"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="BClear" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="BParse" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="PIOTFConstraint" alignment="0" max="32767" attributes="1"/>
-                          <Component id="jScrollPane5" alignment="0" pref="319" max="32767" attributes="1"/>
+                          <Component id="jScrollPane5" alignment="1" pref="401" max="32767" attributes="1"/>
                       </Group>
                       <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane4" alignment="0" pref="775" max="32767" attributes="2"/>
+                          <Component id="jScrollPane1" pref="1179" max="32767" attributes="2"/>
+                          <Component id="jScrollPane4" pref="1179" max="32767" attributes="2"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="BShoqSequence" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="BOptimize" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="BMap" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="161" max="32767" attributes="0"/>
+                              <EmptySpace pref="79" max="32767" attributes="0"/>
                               <Component id="BGateLevelOptimization" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="BGateMapping" min="-2" max="-2" attributes="0"/>
@@ -198,13 +199,9 @@
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="BBrowse" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="jScrollPane1" alignment="0" pref="775" max="32767" attributes="2"/>
                       </Group>
                   </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="-2" pref="335" max="-2" attributes="0"/>
-                      <Component id="TPControl" pref="775" max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="TPControl" alignment="0" pref="1586" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -224,12 +221,9 @@
                               </Group>
                               <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="BClear" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="BParse" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" alignment="1" groupAlignment="3" attributes="0">
+                              <Component id="BClear" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="BParse" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -246,25 +240,23 @@
                       <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
-              <Component id="TPControl" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="101" max="-2" attributes="0"/>
+              <Component id="TPControl" min="-2" pref="99" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Component id="PCelloGUI" min="-2" max="-2" attributes="1"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="PIOTFConstraint" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="jScrollPane4" pref="447" max="32767" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Group type="102" alignment="1" attributes="1">
-                      <Component id="PCelloGUI" max="32767" attributes="1"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="PIOTFConstraint" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="jScrollPane4" pref="398" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="jScrollPane5" pref="122" max="32767" attributes="1"/>
+                  <Component id="jScrollPane1" pref="122" max="32767" attributes="2"/>
               </Group>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="jScrollPane1" pref="232" max="32767" attributes="2"/>
-                  <Component id="jScrollPane5" pref="232" max="32767" attributes="1"/>
-              </Group>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -340,65 +332,57 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="CBTF1" min="-2" max="-2" attributes="0"/>
-                      <Component id="CBTF2" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="CBIO3" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="CBTF0" alignment="0" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace pref="256" max="32767" attributes="0"/>
+              <Group type="102" alignment="0" attributes="0">
+                  <Component id="jScrollPane6" min="-2" pref="227" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                  <Component id="BTFSelect" min="-2" pref="69" max="-2" attributes="0"/>
+                  <EmptySpace pref="67" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
-                  <Component id="CBTF0" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="jScrollPane6" alignment="0" pref="188" max="32767" attributes="1"/>
+                      <Component id="BTFSelect" alignment="1" pref="188" max="32767" attributes="3"/>
+                  </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="CBTF1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="CBTF2" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
-                  <Component id="CBIO3" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="22" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JCheckBox" name="CBTF1">
+        <Container class="javax.swing.JScrollPane" name="jScrollPane6">
+          <AuxValues>
+            <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+          </AuxValues>
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+          <SubComponents>
+            <Component class="javax.swing.JList" name="lTFList">
+              <Properties>
+                <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
+                  <StringArray count="0"/>
+                </Property>
+              </Properties>
+            </Component>
+          </SubComponents>
+        </Container>
+        <Component class="javax.swing.JButton" name="BTFSelect">
           <Properties>
-            <Property name="selected" type="boolean" value="true"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/clothocad/tool/cello/Bundle.properties" key="CelloGUI.CBTF1.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+              <ResourceString bundle="org/clothocad/tool/cello/Bundle.properties" key="CelloGUI.BTFSelect.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+            </Property>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.MatteColorBorderInfo">
+                <MatteColorBorder/>
+              </Border>
             </Property>
           </Properties>
-        </Component>
-        <Component class="javax.swing.JCheckBox" name="CBTF2">
-          <Properties>
-            <Property name="selected" type="boolean" value="true"/>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/clothocad/tool/cello/Bundle.properties" key="CelloGUI.CBTF2.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-            </Property>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JCheckBox" name="CBIO3">
-          <Properties>
-            <Property name="selected" type="boolean" value="true"/>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/clothocad/tool/cello/Bundle.properties" key="CelloGUI.CBIO3.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-            </Property>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JCheckBox" name="CBTF0">
-          <Properties>
-            <Property name="selected" type="boolean" value="true"/>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/clothocad/tool/cello/Bundle.properties" key="CelloGUI.CBTF0.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-            </Property>
-          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BTFSelectActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -422,7 +406,7 @@
                   <Component id="jScrollPane3" min="-2" pref="80" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
                   <Component id="BPartSelect" min="-2" pref="69" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="92" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -430,9 +414,9 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="BPartSelect" pref="189" max="32767" attributes="2"/>
-                      <Component id="jScrollPane3" alignment="0" pref="189" max="32767" attributes="2"/>
-                      <Component id="jScrollPane2" alignment="0" pref="189" max="32767" attributes="2"/>
+                      <Component id="BPartSelect" pref="177" max="32767" attributes="2"/>
+                      <Component id="jScrollPane3" alignment="0" pref="177" max="32767" attributes="2"/>
+                      <Component id="jScrollPane2" alignment="0" pref="177" max="32767" attributes="2"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
@@ -582,6 +566,9 @@
           <ResourceString bundle="org/clothocad/tool/cello/Bundle.properties" key="CelloGUI.TPCompile.AccessibleContext.accessibleName" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </AccessibilityProperties>
+      <Events>
+        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="TPControlStateChanged"/>
+      </Events>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
       <SubComponents>
@@ -604,7 +591,7 @@
                       <Component id="CBTransfromNOR" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="80" max="-2" attributes="0"/>
                       <Component id="BCompileandGenerateGraph" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="406" max="32767" attributes="0"/>
+                      <EmptySpace pref="1217" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -616,7 +603,7 @@
                           <Component id="CBTransfromNOR" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="BCompileandGenerateGraph" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="40" max="32767" attributes="0"/>
+                      <EmptySpace pref="37" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -662,7 +649,7 @@
                           <Component id="CBRemoveDoubleInvertersGL" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="CBFindRepeatPatterns" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="8" max="32767" attributes="0"/>
+                      <EmptySpace pref="819" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="RBRemoveAllInverters" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="RBRemoveDoubleInvertersbutNORS" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -693,7 +680,7 @@
                               <Component id="CBRemoveDoubleInvertersGL" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="18" max="32767" attributes="0"/>
+                      <EmptySpace pref="15" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -779,7 +766,7 @@
                           <Component id="BMapping" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="CBHaybridDual" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="360" max="32767" attributes="0"/>
+                      <EmptySpace pref="1171" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -796,7 +783,7 @@
                           <Component id="CBfamilyNORn" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="BMapping" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="14" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -864,7 +851,7 @@
                           </Group>
                           <Component id="CBFindRepeatedPatterns" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="460" max="32767" attributes="0"/>
+                      <EmptySpace pref="1271" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -881,7 +868,7 @@
                           <Component id="CBRemoveDoubleInverstersML" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="BMotifLevelOptimization" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="14" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -952,32 +939,40 @@
                           <Component id="RBMaxRepress" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="BFindBestSolution" min="-2" max="-2" attributes="0"/>
-                          <Component id="BShowSequence" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace pref="360" max="32767" attributes="0"/>
+                      <Component id="BFindBestSolution" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+                      <Component id="CBImplementations" min="-2" pref="109" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="BShowSequence" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="916" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="RBMaxFeatures" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="RBMaxInduce" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="RBMaxRepress" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="BFindBestSolution" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="RBMaxFeatures" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="RBMaxInduce" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="RBMaxRepress" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="RBMinFeatures" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="RBMinIndice" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="RBMinRepress" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Group type="103" alignment="1" groupAlignment="3" attributes="0">
+                              <Component id="BFindBestSolution" alignment="3" pref="49" max="32767" attributes="0"/>
+                              <Component id="BShowSequence" alignment="3" min="-2" pref="53" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="CBImplementations" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="RBMinFeatures" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="RBMinIndice" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="RBMinRepress" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="BShowSequence" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1059,6 +1054,16 @@
                   <ResourceString bundle="org/clothocad/tool/cello/Bundle.properties" key="CelloGUI.BFindBestSolution.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="CBImplementations">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="0"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="CBImplementationsMouseClicked"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

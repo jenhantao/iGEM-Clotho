@@ -37,5 +37,9 @@ public class CelloIPromoterTable {
         return _table.get(i);
     }
 
+    public ArrayList<CelloIPromoter> getTable(){
+         return _table;
+    }
+
     private ArrayList<CelloIPromoter> _table;
 }

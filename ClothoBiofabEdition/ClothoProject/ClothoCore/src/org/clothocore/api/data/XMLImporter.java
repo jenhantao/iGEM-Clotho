@@ -186,11 +186,11 @@ public class XMLImporter {
                 return PlateType.importFromHashMap(uuid, objHash);
             case SAMPLE:
                 String sampletype = (String) objHash.get("name");
-                Sample.sampleType st = Sample.sampleType.valueOf(sampletype);
+                Sample.SampleType st = Sample.SampleType.valueOf(sampletype);
                 switch(st) {
                     case PLASMID_SAMPLE:
                         return PlasmidSample.importFromHashMap(uuid, objHash);
-                    case CELL_SAMPLE:
+                    case STRAIN_SAMPLE:
                         return null;
                     case OLIGO_SAMPLE:
                         return null;

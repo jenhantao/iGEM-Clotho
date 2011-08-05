@@ -5,6 +5,7 @@
 
 
 package org.clothocad.tool.cello;
+import com.sun.org.apache.bcel.internal.generic.AALOAD;
 import java.io.IOException;
 import java.lang.annotation.Target;
 import java.util.List;
@@ -13,11 +14,17 @@ import org.antlr.runtime.*;
 import org.antlr.runtime.debug.ParseTreeBuilder;
 import org.antlr.runtime.tree.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 import javax.naming.spi.DirStateFactory.Result;
 import javax.print.DocFlavor.STRING;
+import org.clothocore.api.data.Feature;
+import org.clothocore.api.data.Part;
+import sun.awt.geom.Curve;
 import sun.security.provider.certpath.Vertex;
 
 
@@ -102,7 +109,9 @@ public class Main {
      */
     public static String AST_Generate (String Path , String[] error) throws IOException, RecognitionException
     {
-          CharStream input = new ANTLRFileStream(Path);
+
+
+        CharStream input = new ANTLRFileStream(Path);
 
         VerilogALexer lexerA = new VerilogALexer(input);
         CommonTokenStream tokensA = new CommonTokenStream(lexerA);
@@ -153,7 +162,7 @@ public class Main {
 
         connectNodes(g);
 
-        HashMap<String, ArrayList<String>> inputOutputList = new HashMap<String, ArrayList<String>>();
+        inputOutputList = new HashMap<String, HashMap<String, Feature>>();
         makeInputOutputList ((CommonTree) t, inputOutputList);
         error [0] = checkInputOutput(g, inputOutputList );
        result+= g.PrintGraph();
@@ -167,20 +176,23 @@ public class Main {
        return result;
     }
 
-    private static void makeInputOutputList(CommonTree t, HashMap<String, ArrayList<String>> inputOutputList) {
+    private static void makeInputOutputList(CommonTree t, HashMap<String, HashMap<String, Feature>> inputOutputList) {
 
-       ArrayList<String> inputs = new ArrayList<String>();
-       ArrayList<String> outputs = new ArrayList<String>();
+       HashMap<String, Feature> inputs = new HashMap<String, Feature>();
+       HashMap<String, Feature> outputs = new HashMap<String, Feature>();
 
          for (int i=0; i< t.getChildCount(); i++)
              {
                  if (t.getChild(i).getText().equals("input"))
                  {
-                     inputs.add(t.getChild(i).getChild(0).getText());
+                     
+                     inputs.put(t.getChild(i).getChild(0).getText(), null);
+                     //new String[]{t.getChild(i).getChild(0).getText(), ""});
                  }
                  else if(t.getChild(i).getText().equals("output"))
                  {
-                     outputs.add(t.getChild(i).getChild(0).getText());
+                     outputs.put(t.getChild(i).getChild(0).getText(), null);
+                    //new String[]{t.getChild(i).getChild(0).getText(), ""});
                  }
         }
        inputOutputList.put("input", inputs);
@@ -188,7 +200,7 @@ public class Main {
 
     }
 
-     private static String checkInputOutput(DAGraph g, HashMap<String, ArrayList<String>> inputOutputList) {
+     private static String checkInputOutput(DAGraph g,  HashMap<String, HashMap<String, Feature>> inputOutputList) {
 
          ArrayList<DAGVertex> leafs = g.findLeaf();
          ArrayList<DAGVertex> roots = g.findRoots();
@@ -196,13 +208,33 @@ public class Main {
 
          for (int i =0; i<leafs.size(); i++)
          {
-             if (! inputOutputList.get("input").contains(leafs.get(i).Name))
+             Iterator<String> ins = inputOutputList.get("input").keySet().iterator();
+             boolean flag = false;
+             while (ins.hasNext())
+             {
+                 if ( ins.next().equals(leafs.get(i).Name))   //ins.next()[0].equals(leafs.get(i).Name))
+                 {
+                     flag = true;
+                     break;
+                 }
+             }
+             if (! flag)
                  error+="invalid input port " + leafs.get(i).Name + " in node# " + String.valueOf(leafs.get(i).Index) +"\n";
          }
 
          for (int i =0; i<roots.size(); i++)
          {
-             if (! inputOutputList.get("output").contains(roots.get(i).Name))
+             Iterator<String> ins = inputOutputList.get("output").keySet().iterator();
+             boolean flag = false;
+             while (ins.hasNext())
+             {
+                 if (ins.next().equals(roots.get(i).Name))
+                 {
+                     flag = true;
+                     break;
+                 }
+             }
+             if (! flag)
                  error+="invalid output port " + roots.get(i).Name + " in node# " + String.valueOf(roots.get(i).Index) +"\n";
          }
 
@@ -1035,7 +1067,7 @@ setIndex((ParseTree)pt.payload, "");
        newds.setInputGraph(transG.Copy());
        newds.setIsOptimized(false);
        newds.setIsTransferred(true);
-       implementations.put("NORBased", newds);
+       implementations.put("Transformed", newds);
        return Result;
 
     }
@@ -1087,20 +1119,29 @@ setIndex((ParseTree)pt.payload, "");
 
          if (implementations.containsKey(NORBased))
          {
-             CelloCircuit newds = implementations.get(NORBased);
+             CelloCircuit newds =  new CelloCircuit();
+             //implementations.get(NORBased);
+             newds.setInputGraph(implementations.get(NORBased).getInputGraph().Copy());
             optG = newds.getInputGraph();//g.Copy();
 
             if (doubleInverters){
                 result+= removeDoubleInverter(optG, error, NORs);
                 g = optG;
+
                 newds.setIsOptimized(true);
                 newds.setIsTransferred(true);
+                
+                implementations.put("GOpt-" + NORBased, newds);
+
              }
+
         }
-         else {
+
              if (implementations.containsKey(AST))
              {
-                 CelloCircuit newds = implementations.get(AST);
+                 CelloCircuit newds =  new CelloCircuit();
+             //implementations.get(NORBased);
+             newds.setInputGraph(implementations.get(AST).getInputGraph().Copy());
                 optG = newds.getInputGraph();//g.Copy();
 
                 if (doubleInverters){
@@ -1108,13 +1149,15 @@ setIndex((ParseTree)pt.payload, "");
                     g = optG;
                     newds.setInputGraph(optG);
                     newds.setIsOptimized(true);
-                    newds.setIsTransferred(true);
+                    newds.setIsTransferred(false);
+                    implementations.put("GOpt-" + AST, newds);
                  }
-             }else{
+        }
+         if (implementations.isEmpty()){
                  error[0] += "No compiled input!\n";
              }
 
-         }
+       
              return result;
      }
 
@@ -1221,13 +1264,17 @@ setIndex((ParseTree)pt.payload, "");
             DAGEdge ce = heads.get(i).Outgoing;
             while (ce!= null)
             {
+                boolean flag = false;
                 if (ce.To!= null)
                 {
                     if (ce.To.Type.equals("del"))
                     {
                         ce.To = toes.get(i);
+                        flag = true;
                     }
                 }
+                if (flag)
+                    break;
                 ce = ce.Next;
             }
         }
@@ -1263,7 +1310,7 @@ setIndex((ParseTree)pt.payload, "");
      * This function is for adding sequences and making motifs.
      */
     public static void addPartList ()
-    {
+    {/*
         gt.add(new CelloGene("CI", 0));
         gt.add(new CelloGene("Cro", 0));
         gt.add(new CelloGene("TetR", 0));
@@ -1295,6 +1342,8 @@ setIndex((ParseTree)pt.payload, "");
 
         tt.add(new CelloTerminator("Terminator", 0));
 
+      *
+      */
 
         PartList.clear();
 
@@ -1321,25 +1370,40 @@ setIndex((ParseTree)pt.payload, "");
 
 
 
-    public static String motifLevelMapping(boolean nor, boolean nor3)//boolean ifTransferred, boolean ifOptimized)
+    public static String motifLevelMapping(String impType,  boolean nor, boolean nor3 )//boolean ifTransferred, boolean ifOptimized)
     {
         String result = "";
-        if (implementations.containsKey(NORBased))
+        ArrayList<CelloGates> PartListNOR2 = new  ArrayList<CelloGates>();
+                CelloNOR cNor = new CelloNOR();
+                CelloNot cNot = new CelloNot();
+                PartListNOR2.add(cNor);
+                PartListNOR2.add(cNot);
+       ArrayList<CelloGates> PartListNORn = new  ArrayList<CelloGates>();
+                CelloNOR3 cNor3 = new CelloNOR3();
+                PartListNORn.add(cNor3);
+                PartListNORn.add(cNor);
+                PartListNORn.add(cNot);
+        if (implementations.containsKey(impType))
         {
-            CelloCircuit newds = implementations.get(NORBased);
+            CelloCircuit newds = implementations.get(impType);
             CelloCircuit newds2 =  new CelloCircuit();
             newds2.setInputGraph(newds.getInputGraph().Copy());
             newds2.setIsOptimized(newds.isOptimized());
             newds2.setIsTransferred(newds.isTransferred());
 
             if (nor)
-                result += AssignParts(newds);
+            {
+
+                result += AssignParts(newds, PartListNOR2);
+            }
             if (nor3)
             {
-                result+= AssignPartsNorn(newds2);
-                implementations.put(NORnBased, newds2);
+
+                result+= AssignPartsNorn(newds2, PartListNORn);
+                implementations.put(NORnBased+"-"+ impType, newds2);
             }
         }
+                /*
         else if (implementations.containsKey(AST))
         {
             CelloCircuit newds = implementations.get(AST);
@@ -1349,13 +1413,15 @@ setIndex((ParseTree)pt.payload, "");
             newds2.setIsTransferred(newds.isTransferred());
 
             if (nor)
-                result += AssignParts(newds);
+                result += AssignParts(newds, PartListNOR2);
             if (nor3)
             {
-                result+= AssignPartsNorn(newds2);
+                result+= AssignPartsNorn(newds2, PartListNORn);
                 implementations.put(NORnBased, newds2);
             }
         }
+                 * 
+                 */
         else{
             result+= "No Compiled input!\n";
         }
@@ -1363,7 +1429,7 @@ setIndex((ParseTree)pt.payload, "");
         return result;
     }
 
-      public static String AssignPartsNorn(CelloCircuit imp)
+      public static String AssignPartsNorn(CelloCircuit imp ,  ArrayList<CelloGates> PartList2)
     {
 
         mappedg = new DAGraph();
@@ -1371,7 +1437,8 @@ setIndex((ParseTree)pt.payload, "");
         //addPartList();
         int cindex =1;
 
-        ArrayList<CelloGates> PartList2 = new  ArrayList<CelloGates>();
+        /*
+         ArrayList<CelloGates> PartList2 = new  ArrayList<CelloGates>();
         CelloNOR3 nor3 = new CelloNOR3();
         PartList2.add(nor3);
         CelloNOR nor = new CelloNOR();
@@ -1379,6 +1446,8 @@ setIndex((ParseTree)pt.payload, "");
         CelloNot not = new CelloNot();
         PartList2.add(not);
 
+         *
+         */
         for (int i =0; i< mappedg.Vertices.size(); i++)
         {
 
@@ -1561,7 +1630,7 @@ setIndex((ParseTree)pt.payload, "");
      * which is covered by the part (e.g. the NOR part can cover the pattern | --> ~ in
      * the graph) and replaces the covered nodes with the part graph which is a graph itself.
      */
-    public static String AssignParts(CelloCircuit imp)
+    public static String AssignParts(CelloCircuit imp,  ArrayList<CelloGates> PartList)
     {
 
         mappedg = new DAGraph();
@@ -1757,21 +1826,35 @@ setIndex((ParseTree)pt.payload, "");
     }
 
 
-    public static String motifLevelOptimization( String[] message)//boolean ifTransferred, boolean ifOptimized)
+    public static String motifLevelOptimization( String key,  String[] message)//boolean ifTransferred, boolean ifOptimized)
     {
         String result = "";
-         if (implementations.containsKey(NORnBased))
+         if (implementations.containsKey(key))
         {
-            result+= optimizeMappedGraphe(message, implementations.get(NORnBased));
-         }
+            CelloCircuit newImp = new CelloCircuit();
+            if (implementations.get(key).getMappedGraph().Vertices.isEmpty())
+                message[0] = "Selected implementation was not mapped previously!\nSelect a mappled implementation.\n";
+            else{
+            result+= optimizeMappedGraphe(message, implementations.get(key), newImp);
+            implementations.put( "MOpt-"+key, newImp);
+            }
+         }else
+             message[0] = "Incorrect implementation key was selected!\n";
+        /*
         if (implementations.containsKey(NORBased))
         {
-          result+= optimizeMappedGraphe(message, implementations.get(NORBased));
+             CelloCircuit newImp = new CelloCircuit();
+          result+= optimizeMappedGraphe(message, implementations.get(NORBased), newImp);
+          implementations.put( "MOpt-"+NORBased , newImp);
         }
         else if (implementations.containsKey(AST))
         {
-          result+= optimizeMappedGraphe(message, implementations.get(AST));
+             CelloCircuit newImp = new CelloCircuit();
+            result+= optimizeMappedGraphe(message, implementations.get(AST), newImp);
+            implementations.put(AST + "-MotifOpt", newImp);
         }
+         *
+         */
 
         return result;
     }
@@ -1782,7 +1865,7 @@ setIndex((ParseTree)pt.payload, "");
      * path exists; however, these function can be applied over more than one path.
      */
 
-    public static String optimizeMappedGraphe ( String[] message, CelloCircuit imp)
+    public static String optimizeMappedGraphe ( String[] message, CelloCircuit imp,  CelloCircuit newImp )
     {
         String result = "";
         DAGraph buffer = makeBufferGraph();
@@ -1920,6 +2003,7 @@ setIndex((ParseTree)pt.payload, "");
                             if (heads.get(k).Outgoing.From == null & heads.get(k).Outgoing.To == null){
                                 heads.get(k).Outgoing.From = heads.get(k);
                                 heads.get(k).Outgoing.To = toes.get(k);
+                                cure.From = null;
                             }else{
                                 DAGEdge cedge = heads.get(k).Outgoing;
                                 boolean assigned = false;
@@ -1928,6 +2012,7 @@ setIndex((ParseTree)pt.payload, "");
                                         cedge.Next.From = heads.get(k);
                                         cedge.Next.To = toes.get(k);
                                         assigned  = true;
+                                        cure.From = null;
                                         break;
                                     }
                                     cedge = cedge.Next;
@@ -1992,7 +2077,13 @@ setIndex((ParseTree)pt.payload, "");
        result += "\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n";
        result += optMappedg.PrintGraph();
 
-       imp.setMappedGraph(optMappedg.Copy());
+       //imp.setMappedGraph(optMappedg.Copy());
+
+       //newImp = new CelloCircuit();
+       newImp.setInputGraph(imp.getInputGraph().Copy());
+       newImp.setMappedGraph(optMappedg.Copy());
+       newImp.setIsOptimized(true);
+       newImp.setIsTransferred(imp.isTransferred());
         return result;
     }
 
@@ -2044,15 +2135,38 @@ setIndex((ParseTree)pt.payload, "");
      * Input promoter, Repressible promoters, (repressor )Genes, Terminators, and RBS sites.
      * The order can be changed.
      */
-    public static String assignSequence (String[] error)
+    public static String assignSequence (String impKey, String[] error)
     {
         String result = "";
 
-        DAGraph assignedgraph = implementations.get(NORnBased).getMappedGraph(); //optMappedg.Copy();
 
+        DAGraph assignedgraph = implementations.get(impKey).getMappedGraph().Copy(); //optMappedg.Copy();
+
+        for(DAGVertex v : assignedgraph.Vertices){
+            if (v.Type.equals("assigned")){
+                v.Type = "";
+                v.Feature._feature = null;
+            }
+        }
+
+        if (assignedgraph == null)
+        {
+            error[0]+= "The selected implementation was not mapped!\n";
+            return  "";
+
+        }
+
+        if (assignedgraph.Vertices.isEmpty())
+        {
+            error[0]+= "The selected implementation was not mapped!\n";
+            return  "";
+        }
         //String [] e1 ="", e2="", e3="", e4="", e5 = "";
 
+       tfRelationTable = dbConnection.createTables(TFList, inputOutputList , gt, ipt, rpt, rbst, tt, ogt, rgpt);
 
+       assignIO(assignedgraph, error);
+       
         assignIPromoter(assignedgraph, error);
         
         assignRPromoter (assignedgraph, error);
@@ -2066,6 +2180,14 @@ setIndex((ParseTree)pt.payload, "");
         //error[0]= e1+e2+e3+e4+e5;
         
         result += assignedgraph.printSequence();
+
+        CelloCircuit newImp = new CelloCircuit();
+        newImp.setInputGraph(implementations.get(impKey).getInputGraph().Copy());
+        newImp.setMappedGraph(assignedgraph);
+        newImp.setIsOptimized(implementations.get(impKey).isOptimized());
+        newImp.setIsTransferred(true);
+
+        implementations.put("Assigned-"+impKey, newImp);
 
         return result;
     }
@@ -2090,7 +2212,7 @@ setIndex((ParseTree)pt.payload, "");
                     if (rbstIndex<rbst.Size())
                     {
                         curv.Feature = rbst.get(rbstIndex);
-                        rbstIndex++;
+                        //rbstIndex++;
                     }
                     else
                     {
@@ -2138,6 +2260,8 @@ setIndex((ParseTree)pt.payload, "");
         {
             DAGVertex curv = ag.Vertices.get(i);
             if (curv.Feature != null)
+                if (curv.Type!= null)
+                if (!curv.Type.equals("assigned"))
                 if (curv.Feature._type == CelloPrimitiveType.Gene)
                 {
                     DAGVertex fpred = new DAGVertex();
@@ -2166,7 +2290,8 @@ setIndex((ParseTree)pt.payload, "");
                         {
                             try
                             {
-                            curv.Feature= gt.get(rgpt.getGeneId((CelloRPromoter) spred.Feature));
+                            curv.Feature= gt.get(rgpt.getGene( (CelloRPromoter) spred.Feature));
+                            curv.Type = "assigned";
                             }
                             catch (Exception e)
                             {
@@ -2181,6 +2306,7 @@ setIndex((ParseTree)pt.payload, "");
                         if (ogtindex< ogt.Size())
                         {
                         curv.Feature = ogt.get(ogtindex);
+                        curv.Type = "assigned";
                         ogtindex++;
                         }
                         else
@@ -2202,15 +2328,42 @@ setIndex((ParseTree)pt.payload, "");
      private static void assignRPromoter(DAGraph ag, String[] error) {
         
         int rptindex = 0;
+        int orgptindex = 0;
         for (int i=0; i< ag.Vertices.size(); i++)
         {
             DAGVertex curv = ag.Vertices.get(i);
             if (curv.Feature != null)
+                if (curv.Type!= null)
+                if (!curv.Type.equals("assigned"))
                 if (curv.Feature._type == CelloPrimitiveType.RPromoter)
                 {
+
+                    boolean flag = false;
+                    if (curv.Outgoing!= null)
+                        if(curv.Outgoing.To.Feature!= null)
+                        if (curv.Outgoing.To.Feature._type == CelloPrimitiveType.Terminator)
+                            if (curv.Outgoing.To.Outgoing != null)
+                                if (curv.Outgoing.To.Outgoing.To.Feature != null)
+                                if (curv.Outgoing.To.Outgoing.To.Feature._type == CelloPrimitiveType.Gene)
+                                {
+                                    flag = true;
+                                    if (orgptindex< rgpt.getTable().keySet().size()){
+                                    curv.Feature  = (CelloRPromoter) rgpt.getTable().keySet().toArray()[orgptindex++];
+                                    rpt.getTable().remove((CelloRPromoter)curv.Feature);
+                                    }
+                                    else
+                                    {
+                                        error[0] += "Not enough paired RPromoters!\n";
+                                        break;
+
+                                    }
+                                    
+                                }
+                    if (!flag){
                     if (rptindex < ipt.Size())
                     {
                         curv.Feature = rpt.get(rptindex);
+                        curv.Type = "assigned";
                         rptindex++;
                     }
                     else
@@ -2218,6 +2371,7 @@ setIndex((ParseTree)pt.payload, "");
                         error[0] += "Not enough RPromoters!\n";
                         break;
                         
+                    }
                     }
                 }
             
@@ -2237,11 +2391,28 @@ setIndex((ParseTree)pt.payload, "");
         {
             DAGVertex curv = ag.Vertices.get(i);
             if (curv.Feature != null)
+                if (curv.Type!= null)
+                if (!curv.Type.equals("assigned"))
                 if (curv.Feature._type == CelloPrimitiveType.IPromoter)
                 {
+                    DAGVertex fpred = new DAGVertex();
+                    for (int ei = 0; ei<ag.Edges.size(); ei++)
+                    {
+                        if (ag.Edges.get(ei).To.Index == curv.Index)
+                        {
+                            fpred = ag.Edges.get(ei).From;
+                            break;
+                        }
+                    }
+
+                    if (inputOutputList.get("input").containsKey(fpred.Name))
+                    {
+                       // curv.Feature
+                    }
                     if (iptindex < ipt.Size())
                     {
                         curv.Feature = ipt.get(iptindex);
+                        curv.Type = "assigned";
                         iptindex++;
                     }
                     else
@@ -2272,16 +2443,16 @@ setIndex((ParseTree)pt.payload, "");
    * The actual version needs to assign values to these tables from the Clotho DB
    *
    */
-    private static  CelloGeneTable gt = new CelloGeneTable();
-    private static  CelloIPromoterTable ipt = new CelloIPromoterTable();
-    private static    CelloRPromoterTable rpt = new CelloRPromoterTable();
-    private static    CelloRBSTable rbst = new CelloRBSTable();
-    private static  CelloTerminatorTable tt = new CelloTerminatorTable();
+    private static CelloGeneTable gt = new CelloGeneTable();
+    private static CelloIPromoterTable ipt = new CelloIPromoterTable();
+    private static CelloRPromoterTable rpt = new CelloRPromoterTable();
+    private static CelloRBSTable rbst = new CelloRBSTable();
+    private static CelloTerminatorTable tt = new CelloTerminatorTable();
     private static CelloRGenePromoterTable rgpt = new CelloRGenePromoterTable();
-    private static  CelloGeneTable ogt = new CelloGeneTable();
+    private static CelloGeneTable ogt = new CelloGeneTable();
 
 
-    private static  DAGraph mappedg = new DAGraph(); //This graph is intialized after technology mapping phase (i.e. AssignParts function)
+    private static DAGraph mappedg = new DAGraph(); //This graph is intialized after technology mapping phase (i.e. AssignParts function)
                                                      //This shows the primary graph with connected motifs (genetic parts).
 
     private static DAGraph optMappedg = new DAGraph(); //This graph is initiated after running optimization function ("optimizeMappedGraph") over mappedg
@@ -2290,16 +2461,336 @@ setIndex((ParseTree)pt.payload, "");
 
     public static ArrayList<CelloGates> PartList= new ArrayList<CelloGates>(); //List of gates which is initialized by the user from GUI
 
+    public static HashMap<String, HashMap<String, Feature>> inputOutputList = new HashMap<String, HashMap<String, Feature>>();
 
-    public static HashMap<String, CelloCircuit> implementations = new HashMap<String, CelloCircuit>();
+    private static HashMap<Feature, CelloPrimitive> tfRelationTable = new HashMap<Feature, CelloPrimitive>();
+
+    public static HashMap<String, CelloCircuit> implementations = new LinkedHashMap<String, CelloCircuit>();
     //public static ArrayList<CelloCircuit> implementations = new ArrayList<CelloCircuit>();
 
-    private static String AST = "AST";
-    private static String NORBased  = "NORBased";
-    private static String NORnBased = "NORnBased";
+    public  static String AST = "AST";
+    public  static String NORBased  = "Transformed";
+    public  static String NORnBased = "NORnBased";
+
+    private static ArrayList<Feature> TFList= new ArrayList<Feature>();
+
+    static ArrayList<String> CreateTFList() {
+
+        ArrayList<String> result = new ArrayList<String>();
+        TFList = dbConnection.fetchTranscriptionFactors();
+        Iterator<Feature> iter = TFList.iterator();
+        while (iter.hasNext())
+        {
+            result.add(iter.next().getName());
+        }
+        return result;
+    }
+
+    static void setTFList(int[] selected) {
+
+        TFList = dbConnection.fetchTranscriptionFactors();
+        ArrayList<Feature>  newList = new ArrayList<Feature>();
+        for (int i =0; i< selected.length; i++)
+        {
+            newList.add(TFList.get(selected[i]));
+        }
+
+        TFList = newList;
+    }
+    static void setTFList(ArrayList<Feature> input)
+    {
+        TFList = input;
+    }
+
+    public static  ArrayList<Feature> getTFList ()
+    {
+        return TFList;
+    }
+
+    public static HashMap<String, HashMap<String, Feature>> getIOList()
+    {
+        return inputOutputList;
+    }
+    public static void setIOList(HashMap<String, HashMap<String, Feature>> l)
+    {
+        inputOutputList = l;
+    }
+
+    public static Set<String> getImplementation ()
+    {
+        return implementations.keySet();
+    }
+
+    private static void assignIO(DAGraph assignedgraph, String[] error) {
+        ArrayList<DAGVertex> inputs = assignedgraph.findLeaf();
+
+        Integer buffNum = 0;
+
+
+        for(DAGVertex currV: inputs)
+        {
+            Feature currTF = inputOutputList.get("input").get(currV.Name);
+            if (!tfRelationTable.containsKey(currTF))
+            {
+                error[0]+="No available promoter for input " + currV.Name + "!\n";
+
+            }else
+            {
+                
+                ArrayList<DAGVertex> promoters = new ArrayList<DAGVertex>();
+                for ( DAGEdge e : assignedgraph.Edges)
+                {
+                    if (e.To == currV)
+                        promoters.add(e.From);
+                }
+                CelloPrimitiveType type = tfRelationTable.get(currTF)._type;
+
+                for(DAGVertex prom: promoters)
+                {
+                    if (prom.Feature._type != type){
+                        prom = addBuffer(assignedgraph, currV, prom, type , buffNum);
+                        buffNum++;
+                        error[0]+= "Buffer added for input " + currV.Name +"! \n";
+                    }
+
+                    if (type == CelloPrimitiveType.IPromoter){
+                        prom.Feature =  (CelloIPromoter) tfRelationTable.get(currTF);
+                        prom.Type = "assigned";
+                    }
+                    else if (type == CelloPrimitiveType.RPromoter){
+                        prom.Feature =  (CelloRPromoter) tfRelationTable.get(currTF);
+                        prom.Type = "assigned";
+                    }
+                }
+
+            }
+        }
+
+        ArrayList<DAGVertex> outputs = assignedgraph.findRoots();
+
+        for (DAGVertex currV : outputs) //assuming an output is connected to a Terminator and then a Gene which we want to assign to
+        {
+           Feature currTF = inputOutputList.get("output").get(currV.Name);
+           if (!tfRelationTable.containsKey(currTF))
+           {
+               error[0]+="No available gene for output " + currV.Name + "!\n";
+           }else
+           {
+               //output format ==> output -> = -> term -> gene
+                DAGVertex outAssign= currV.Outgoing.To; //assuming fan-ins ==  1
+                DAGVertex outTerm = outAssign.Outgoing.To;
+                DAGVertex outGene  = outTerm.Outgoing.To;
+                outGene.Feature = (CelloGene) tfRelationTable.get(currTF);
+                outGene.Type = "assigned";
+           }
+        }
+        
+
+    }
+
+    private static DAGVertex addBuffer(DAGraph assignedgraph, DAGVertex currV, DAGVertex prom, CelloPrimitiveType type, Integer bufNum) {
+        DAGEdge output = prom.Outgoing;
+        while(output!= null)
+        {
+            if (output.To== currV)
+                break;
+            output= output.Next;
+        }
+
+        assignedgraph.Edges.remove(output);
+        assignedgraph.Vertices.remove(prom);
+
+        if (type== CelloPrimitiveType.IPromoter)
+        {
+            DAGVertex vRPrompoter = new DAGVertex("rpromoter", "", null, new CelloRPromoter());
+            DAGVertex vT = new DAGVertex("terminator","", null, new CelloTerminator());
+            DAGVertex vGene = new DAGVertex("gene", "", null, new CelloGene());
+            DAGVertex vRBS = new DAGVertex("rbs1", "", null, new CelloRBS());
+            DAGVertex vIPromoter = new DAGVertex("ipromoter", "", null, new CelloIPromoter());
+
+
+            DAGEdge eRPtoT = new DAGEdge( vRPrompoter, vT, null);
+            eRPtoT.Index = DAGEdge.numberofedges++;
+            DAGEdge eTtoGen = new DAGEdge( vT, vGene, null);
+            eTtoGen.Index = DAGEdge.numberofedges++;
+            DAGEdge eGenetoRBS = new DAGEdge( vGene,vRBS, null);
+            eGenetoRBS.Index = DAGEdge.numberofedges++;
+            DAGEdge eRBStoIP = new DAGEdge(vRBS, vIPromoter, null);
+            eRBStoIP.Index = DAGEdge.numberofedges++;
+            DAGEdge eIPtoInp = new DAGEdge(vIPromoter, currV, null);
+            eIPtoInp.Index = DAGEdge.numberofedges++;
+
+            ArrayList<DAGVertex> newVers  = new ArrayList<DAGVertex>();
+            newVers.add(vRPrompoter);
+            newVers.add(vT);
+            newVers.add(vGene);
+            newVers.add(vRBS);
+           newVers.add(vIPromoter);
+
+           for(DAGVertex v2: newVers)
+           {
+               v2.Index = DAGVertex.numberofvertex++;
+               v2.Cover = 3;
+               v2.subCover = bufNum;
+           }
+
+           vRPrompoter.Cover = prom.Cover;
+           vRPrompoter.subCover = prom.subCover;
+
+           assignedgraph.Vertices.addAll(newVers);
+           
+            assignedgraph.Edges.add(eRPtoT);
+            assignedgraph.Edges.add(eTtoGen);
+            assignedgraph.Edges.add(eGenetoRBS);
+            assignedgraph.Edges.add(eRBStoIP);
+            assignedgraph.Edges.add(eIPtoInp);
+
+            for(DAGEdge e : assignedgraph.Edges)
+            {
+                if (e.To == prom)
+                    e.To = vRPrompoter;
+                    
+            }
+
+            return vIPromoter;
+
+        }else
+         if(type== CelloPrimitiveType.RPromoter)
+         {
+            DAGVertex vRPrompoter = new DAGVertex("rpromoter", "", null, new CelloRPromoter());
+            DAGVertex vT = new DAGVertex("terminator","", null, new CelloTerminator());
+            DAGVertex vGene = new DAGVertex("gene", "", null, new CelloGene());
+            DAGVertex vRBS = new DAGVertex("rbs1", "", null, new CelloRBS());
+            DAGVertex vRPromoter2 = new DAGVertex("ipromoter", "", null, new CelloRPromoter());
+
+            DAGEdge eRPtoT = new DAGEdge( vRPrompoter, vT, null);
+            eRPtoT.Index = DAGEdge.numberofedges++;
+            DAGEdge eTtoGen = new DAGEdge( vT, vGene, null);
+            eTtoGen.Index = DAGEdge.numberofedges++;
+            DAGEdge eGenetoRBS = new DAGEdge( vGene,vRBS, null);
+            eGenetoRBS.Index = DAGEdge.numberofedges++;
+            DAGEdge eRBStoIP = new DAGEdge(vRBS, vRPromoter2, null);
+            eRBStoIP.Index = DAGEdge.numberofedges++;
+            DAGEdge eIPtoInp = new DAGEdge(vRPromoter2, currV, null);
+            eIPtoInp.Index = DAGEdge.numberofedges++;
+
+            ArrayList<DAGVertex> newVers  = new ArrayList<DAGVertex>();
+            newVers.add(vRPrompoter);
+            newVers.add(vT);
+            newVers.add(vGene);
+            newVers.add(vRBS);
+           newVers.add(vRPromoter2);
+
+           for(DAGVertex v2: newVers)
+           {
+               v2.Index = DAGVertex.numberofvertex++;
+               v2.Cover = 4;
+               v2.subCover = bufNum;
+           }
+
+           vRPrompoter.Cover = prom.Cover;
+           vRPrompoter.subCover = prom.subCover;
+
+           assignedgraph.Vertices.addAll(newVers);
+            assignedgraph.Edges.add(eRPtoT);
+            assignedgraph.Edges.add(eTtoGen);
+            assignedgraph.Edges.add(eGenetoRBS);
+            assignedgraph.Edges.add(eRBStoIP);
+            assignedgraph.Edges.add(eIPtoInp);
+
+            for(DAGEdge e : assignedgraph.Edges)
+            {
+                if (e.To == prom)
+                    e.To = vRPrompoter;
+
+            }
+
+            return  vRPromoter2;
+            }
+
+        return prom;
+    }
+
+    static String MakeCompositePart(String Key) {
+        String result = "";
+
+        DAGraph selectedG = implementations.get(Key).getMappedGraph();
+
+        HashMap<String, ArrayList<Part>> cpMap = selectedG.makeCompositePart();
 
 
 
+        return result;
+    }
 
-    
+    static void findBestSolution(int criteria, int target , String[] error) {
+        if (criteria== -1 | target==-1 )
+        {
+            error[0]= "The criteria is not defined for finding the best solution!\n";
+            return;
+        }
+        String bestKey ="" ;
+        int minCount = Integer.MAX_VALUE;
+        int maxCount = Integer.MIN_VALUE;
+        for(String key: implementations.keySet())
+        {
+            int count = 0;
+            CelloCircuit curC = implementations.get(key);
+            if (!curC.getMappedGraph().Vertices.isEmpty()){
+                DAGraph curG = curC.getMappedGraph();
+                for (DAGVertex v : curG.Vertices)
+                {
+                    if (criteria==0 ){ //All primitives need to be counted
+                        if (v.Feature!= null)
+                            count++;
+                    }else if (criteria==1){//All reppressor promoters needs to be counted
+                        if (v.Feature!=null)
+                            if (v.Feature._type == CelloPrimitiveType.RPromoter)
+                                count++;
+                    }else if (criteria==2){//All inducible promoters need to be counted
+                        if (v.Feature!= null)
+                            if (v.Feature._type == CelloPrimitiveType.IPromoter)
+                                count++;
+                    }
+                }
+
+                if (target == 0){
+                    if (minCount>count)
+                    {
+                        minCount = count;
+                        bestKey = key;
+                    }
+                }else if(target==1){
+                    if (maxCount<count)
+                    {
+                        maxCount = count;
+                        bestKey = key;
+                    }
+                }
+            }
+        }
+        
+        if (!implementations.containsKey(bestKey))
+        {
+            error[0]= "No best solution found! Check if mapping has been done!\n";
+            return;
+        }
+        
+        CelloCircuit bestC = new CelloCircuit();
+        bestC.setInputGraph(implementations.get(bestKey).getInputGraph().Copy());
+        bestC.setMappedGraph(implementations.get(bestKey).getMappedGraph().Copy());
+        bestC.setIsOptimized(implementations.get(bestKey).isOptimized());
+        bestC.setIsTransferred(implementations.get(bestKey).isTransferred());
+        
+        implementations.put("Best Solution", bestC);
+        
+        error[0]="The best implementation based on the seleted critera is " + bestKey +"!\n";
+        
+    }
+
+
+
+       
+
+
 }

@@ -227,6 +227,12 @@ public class Plate extends ObjBase {
         setChanged(org.clothocore.api.dnd.RefreshEvent.Condition.NAME_CHANGED);
     }
 
+    public void setLocation(String location) {
+        _plateDatum._location = location;
+
+        //need to add the new RefreshEvent called LOCATION_CHANGED
+        //setChanged(org.clothocore.api.dnd.RefreshEvent.Condition.LOCATION_CHANGED);
+    }
     public void changeAuthor( Person newauthor ) {
         if(newauthor==null) {
             fireData(new RefreshEvent(this, RefreshEvent.Condition.AUTHOR_CHANGED));

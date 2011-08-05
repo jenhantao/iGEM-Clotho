@@ -5,6 +5,8 @@
 
 package org.clothocad.tool.cello;
 
+import org.clothocore.api.data.Feature;
+
 /**
  *
  * @author Douglas Densmore
@@ -29,6 +31,7 @@ public class CelloIPromoter extends CelloPrimitive {
         _id = cip._id;
         _sequence = cip._sequence;
         _type = cip._type;
+        _feature = cip._feature;
     }
 
     public CelloIPromoter Copy()
@@ -48,7 +51,15 @@ public class CelloIPromoter extends CelloPrimitive {
     {
         _id = i;
     }
+    public void setFeature(Feature f)
+    {
+        _feature = f;
+    }
 
+    public Feature getFeature ()
+    {
+        return this._feature;
+    }
     @Override
     public String print()
     {

@@ -5,6 +5,8 @@
 
 package org.clothocad.tool.cello;
 
+import org.clothocore.api.data.Feature;
+
 /**
  *
  * @author Douglas Densmore
@@ -49,6 +51,16 @@ public class CelloTerminator extends CelloPrimitive {
     public void setId(int i)
     {
         _id = i;
+    }
+
+    public void setFeature(Feature f)
+    {
+        _feature = f;
+    }
+
+    public Feature getFeature ()
+    {
+        return this._feature;
     }
 
     @Override

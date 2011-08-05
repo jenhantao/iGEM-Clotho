@@ -27,9 +27,12 @@ import org.clothocore.api.core.Collector;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import javax.swing.JOptionPane;
 import org.clothocore.api.dnd.RefreshEvent;
 import org.clothocore.api.plugin.ClothoConnection;
+import org.clothocore.api.plugin.ClothoConnection.ClothoQuery;
+import org.clothocore.core.Hub;
 
 /**
  * @author J. Christopher Anderson
@@ -49,9 +52,21 @@ public abstract class Sample extends ObjBase {
      * @param myvolume how many uL of liquid are in the new Sample
      * @param author who is creating the Sample
      */
-    public Sample( String name, double myvolume, Person author ) {
+    public Sample( String name, double myvolume, Person author, SampleType stype ) {
         super( );
-        _samDatum = new OligoSample.OligoSampleDatum();
+        switch(stype) {
+            case PLASMID_SAMPLE:
+                _samDatum = new PlasmidSample.PlasmidSampleDatum();
+                break;
+            case OLIGO_SAMPLE:
+                _samDatum = new OligoSample.OligoSampleDatum();
+                break;
+            case STRAIN_SAMPLE:
+                _samDatum = new StrainSample.StrainSampleDatum();
+                break;
+
+        }
+
         _datum = _samDatum;
         _datum.name = name;
         _datum.dateCreated = new Date();
@@ -124,7 +139,7 @@ public abstract class Sample extends ObjBase {
 
     /* SETTERS
      * */
-    
+
     public boolean PUT_SampleToContainer( Container newContainer ) {
         if ( newContainer.EVT_SampleToContainer( this ) ) {
             System.out.println("PUT_SampleToContainer called");
@@ -142,9 +157,9 @@ public abstract class Sample extends ObjBase {
     /**
      * Method for transferring liquid from one Container to another.  Involves duplicating the Sample
      * and putting it into the new Container and adjusting the volumes.
-     * 
+     *
      * Method is rejected if the Container already has a Sample or there is insufficient liquid present.
-     * 
+     *
      * @param newcon
      * @param dvol
      * @return
@@ -163,6 +178,55 @@ public abstract class Sample extends ObjBase {
         _samDatum._volume = _samDatum._volume - dvol;
         setChanged(RefreshEvent.Condition.VOLUME_CHANGED);
         return true;
+    }
+
+    /**
+     * Change the quality of the sample.  Quality refers to the degree of confidence to which the sample
+     * reflects its composition.  Values are:
+     * 0 - Wrong / Fails
+     * 1 - Unknown / Untested
+     * 2 - Caution
+     * 3 - works / functional
+     * 4 - Sequencing confirmed
+     * @param quality
+     */
+    public void changeQuality(short quality) {
+        if(quality>-1 && quality < 5) {
+            _samDatum._quality =  quality;
+            setChanged(RefreshEvent.Condition.QUALITY_CHANGED);
+        } else {
+            fireData(new RefreshEvent(this, RefreshEvent.Condition.QUALITY_CHANGED));
+        }
+    }
+
+    /**
+     * Change the volume of the Sample
+     * @param adub
+     */
+    public void changeVolume(Double adub) {
+        if(adub<0) {
+            fireData(new RefreshEvent(this, RefreshEvent.Condition.VOLUME_CHANGED));
+            return;
+        }
+        _samDatum._volume = adub;
+        setChanged(RefreshEvent.Condition.VOLUME_CHANGED);
+    }
+
+    public void changeConcentration(double conc)
+    {
+        if (conc < 0) {
+            fireData(new RefreshEvent(this,RefreshEvent.Condition.PLASMID_CHANGED));
+            return;
+        }
+        _samDatum._concentration = conc;
+        setChanged(RefreshEvent.Condition.VOLUME_CHANGED);
+    }
+    public void changeAuthor(Person author) {
+        if(author==null) {
+            fireData(new RefreshEvent(this, RefreshEvent.Condition.AUTHOR_CHANGED));
+        }
+        _samDatum._authorUUID = author.getUUID();
+        setChanged(RefreshEvent.Condition.AUTHOR_CHANGED);
     }
 
     /* GETTERS
@@ -220,7 +284,21 @@ public abstract class Sample extends ObjBase {
         return out;
     }
 
-    public abstract sampleType getSampleType();
+    public static Sample retrieveByName( String name ) {
+        if ( name.length() == 0 ) {
+            return null;
+        }
+        ClothoQuery cq = Hub.defaultConnection.createQuery( ObjType.SAMPLE );
+        cq.contains( Sample.Fields.NAME, name, false );
+        List l = cq.getResults();
+        if ( l.isEmpty() ) {
+            return null;
+        }
+        Sample p = (Sample) l.get( 0 );
+        return p;
+    }
+
+    public abstract SampleType getSampleType();
     /*-----------------
     variables
     -----------------*/
@@ -243,9 +321,9 @@ public abstract class Sample extends ObjBase {
         }
     }
 
-    public enum sampleType {
+    public enum SampleType {
 
-        PLASMID_SAMPLE, OLIGO_SAMPLE, CELL_SAMPLE
+        PLASMID_SAMPLE, OLIGO_SAMPLE, STRAIN_SAMPLE, CELL_SAMPLE
     };
 
     /******* FIELDS *******/

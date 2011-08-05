@@ -36,6 +36,9 @@ public class CelloTerminatorTable {
         return _table.get(i);
     }
 
+     public ArrayList<CelloTerminator> getTable(){
+         return _table;
+    }
 
     private ArrayList<CelloTerminator> _table;
 }

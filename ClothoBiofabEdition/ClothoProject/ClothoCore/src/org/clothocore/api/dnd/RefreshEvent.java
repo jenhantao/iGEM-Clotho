@@ -275,7 +275,7 @@ public class RefreshEvent extends EventObject {
         /**
          * A family was added or removed from a Feature
          */
-        FAMILY_TO_FEATURE,
+        FAMILY_TO_FEATURE, QUALITY_CHANGED, OLIGO_CHANGED,
 
     }
 

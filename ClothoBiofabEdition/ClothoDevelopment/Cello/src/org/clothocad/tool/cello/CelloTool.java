@@ -24,7 +24,13 @@ ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.clothocad.tool.cello;
 
+import java.awt.Window;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import org.clothocore.api.core.Collector;
 import org.clothocore.api.data.ObjBase;
+import org.clothocore.api.data.ObjType;
 import org.clothocore.api.plugin.ClothoTool;
 
 /**
@@ -35,23 +41,64 @@ public class CelloTool implements ClothoTool {
 
     @Override
     public void launch() {
-        CelloGUI gui = new CelloGUI();
-        gui.setVisible(true);
+
+        boolean flag = true;
+        if(!Collector.isConnected()) {
+            JOptionPane.showMessageDialog( null, "Database connection required for complete functionality!",
+                                           "Not connected", JOptionPane.WARNING_MESSAGE );
+            flag = false;
+            //return;
+        }
+
+
+        CelloGUINew cg = new CelloGUINew(flag);
+        cg.setVisible(true);
+
+        //pig.add(new WeakReference(new CelloGUI()));
+
+}
+
+
+      @Override
+    public void launch(ObjBase o) {
+        if(!o.getType().equals(ObjType.FEATURERELATION)) {
+            return;
+        }
+        if(!Collector.isConnected()) {
+            JOptionPane.showMessageDialog( null, "Database connection required to launch this tool",
+                                           "Not connected", JOptionPane.ERROR_MESSAGE );
+            return;
+        }
+
+        CelloGUI cg = new CelloGUI();
+        cg.setVisible(true);
+
+        //pig.add(new WeakReference(new CelloGUI()));
     }
 
-    @Override
-    public void launch(ObjBase o) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 
     @Override
     public void close() {
-        throw new UnsupportedOperationException("Not supported yet.");
+       /* for(WeakReference<Window> wf: pig) {
+            Window gui = (Window) wf.get();
+            if(gui!=null) {
+                gui.dispose();
+            }
+        }
+        * 
+        */
     }
 
     @Override
     public void init() {
         throw new UnsupportedOperationException("Not supported yet.");
-    }
+   }
+
+
+
+/*-----------------
+     variables
+ -----------------*/
+        private ArrayList<WeakReference<Window>> pig= new ArrayList<WeakReference<Window>>();
 }
 

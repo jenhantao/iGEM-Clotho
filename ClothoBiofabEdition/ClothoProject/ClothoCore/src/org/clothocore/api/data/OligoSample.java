@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
+import org.clothocore.api.dnd.RefreshEvent;
 import org.clothocore.api.plugin.ClothoConnection;
 
 /**
@@ -63,7 +64,9 @@ public class OligoSample extends Sample {
      * @param author who is creating the Sample
      */
     private OligoSample( Oligo myoligo, double myvolume, Person author ) {
-        super( myoligo.getName(), myvolume, author );
+        super( myoligo.getName(), myvolume, author, SampleType.OLIGO_SAMPLE );
+        _oliDatum = (OligoSampleDatum) _samDatum;
+        System.out.println( myoligo.getUUID());
         _oliDatum._oligoUUID = myoligo.getUUID();
 
     }
@@ -78,7 +81,21 @@ public class OligoSample extends Sample {
      * @return
      */
     public static OligoSample generateOligoSample( Oligo myoligo, Container mycontainer, double myvolume, Person author ) {
+        if(myoligo==null) {
+            return null;
+        }
+        if(mycontainer==null) {
+            return null;
+        }
+        if(mycontainer.getSample()!=null) {
+            return null;
+        }
+        if(author==null) {
+            return null;
+        }
+
         OligoSample ps = new OligoSample( myoligo, myvolume, author );
+        
         if ( ps.PUT_SampleToContainer( mycontainer ) ) {
             return ps;
         }
@@ -192,6 +209,18 @@ public class OligoSample extends Sample {
         return allObjects;
     }
 
+    /* SETTERS
+     */
+
+    public void changeOligo(Oligo oligo) {
+        if(oligo==null) {
+            fireData(new RefreshEvent(this, RefreshEvent.Condition.OLIGO_CHANGED));
+        } else {
+            _oliDatum._oligoUUID = oligo.getUUID();
+            setChanged(RefreshEvent.Condition.OLIGO_CHANGED);
+        }
+    }
+
     /* GETTERS
      */
 
@@ -207,8 +236,8 @@ public class OligoSample extends Sample {
     }
 
     @Override
-    public sampleType getSampleType() {
-        return sampleType.OLIGO_SAMPLE;
+    public SampleType getSampleType() {
+        return SampleType.OLIGO_SAMPLE;
     }
     /*-----------------
     variables
