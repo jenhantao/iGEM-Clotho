@@ -20,6 +20,8 @@ public class FeatureChompGUI extends javax.swing.JFrame {
     public FeatureChompGUI() {
         _controller = new FeatureChompController(this);
         initComponents();
+        this.setVisible(false);
+        _controller.switchViews();
     }
 
     /** This method is called from within the constructor to
@@ -31,18 +33,26 @@ public class FeatureChompGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        jMenuItem2 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(org.openide.util.NbBundle.getMessage(FeatureChompGUI.class, "FeatureChompGUI.title")); // NOI18N
 
-        jLabel1.setText(org.openide.util.NbBundle.getMessage(FeatureChompGUI.class, "FeatureChompGUI.jLabel1.text")); // NOI18N
-
         jMenu1.setText(org.openide.util.NbBundle.getMessage(FeatureChompGUI.class, "FeatureChompGUI.jMenu1.text")); // NOI18N
+
+        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem2.setText(org.openide.util.NbBundle.getMessage(FeatureChompGUI.class, "FeatureChompGUI.jMenuItem2.text")); // NOI18N
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem2);
+
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText(org.openide.util.NbBundle.getMessage(FeatureChompGUI.class, "FeatureChompGUI.jMenu2.text")); // NOI18N
@@ -63,17 +73,11 @@ public class FeatureChompGUI extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(165, 165, 165)
-                .addComponent(jLabel1)
-                .addContainerGap(284, Short.MAX_VALUE))
+            .addGap(0, 486, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(117, 117, 117)
-                .addComponent(jLabel1)
-                .addContainerGap(138, Short.MAX_VALUE))
+            .addGap(0, 269, Short.MAX_VALUE)
         );
 
         pack();
@@ -82,6 +86,10 @@ public class FeatureChompGUI extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         _controller.switchViews();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+_controller.close();
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -96,10 +104,10 @@ public class FeatureChompGUI extends javax.swing.JFrame {
     }
     private FeatureChompController _controller;
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     // End of variables declaration//GEN-END:variables
 }

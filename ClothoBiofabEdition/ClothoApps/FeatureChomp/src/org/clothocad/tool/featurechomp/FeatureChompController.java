@@ -133,56 +133,6 @@ public class FeatureChompController {
 
 
 
-    public boolean parseForGenbankFeatures(String sequence, ObjLink collectionLink, ArrayList<String> inputLines) throws Exception {
-        Collection coll = Collector.getCollection(collectionLink.uuid);
-        int size = inputLines.size();
-        if (size > 0) {
-            for (int i = 0; i < size; i++) {
-                if (inputLines.get(i).substring(inputLines.get(i).length() - 1).matches("\\d") && !inputLines.get(i).startsWith("/")) {
-                    String[] tokens = inputLines.get(i).split("[\\s[\\p{Punct}]]+");
-                    String seq = sequence.substring(Integer.parseInt(tokens[tokens.length - 2]) - 1, Integer.parseInt(tokens[tokens.length - 1]) - 1);
-                    if (!tokens[0].equalsIgnoreCase("source")) {//source is a feature that is the entire sequence. useless to retrieve this
-                        i++;
-                        while (!inputLines.get(i).contains("\"")) {
-                            i++;
-                        }
-                        String name = inputLines.get(i);
-                        name = name.substring(name.indexOf("\"") + 1, name.lastIndexOf("\""));
-                        Feature newFeature = Feature.generateFeature(name, seq, Collector.getCurrentUser(), false);
-                        if (newFeature != null) {
-                            Collector.add(newFeature);
-                            coll.addObject(newFeature);
-                            newFeature.saveDefault();
-                            coll.saveDefault();
-
-                        }
-                    }
-                }
-            }
-
-        }
-        javax.swing.JOptionPane.showMessageDialog(null, "Finished importing features!", "Sequence View Import", JOptionPane.INFORMATION_MESSAGE);
-        return true;
-    }
-
-    public boolean parseForApEFeatures(ObjLink collectionLink, ArrayList<String> inputLines) throws Exception {
-        Collection coll = Collector.getCollection(collectionLink.uuid);
-        int size = inputLines.size();
-        if (size > 0) {
-            for (int i = 0; i < size; i++) {
-                String[] tokens = inputLines.get(i).split("\\t");
-                Feature newFeature = Feature.generateFeature(tokens[0], tokens[1], Collector.getCurrentUser(), false);
-                if (newFeature != null) {
-                    Collector.add(newFeature);
-                    coll.addObject(newFeature);
-                    newFeature.saveDefault();
-                    coll.saveDefault();
-                }
-            }
-        }
-        javax.swing.JOptionPane.showMessageDialog(null, "Finished importing features!", "Sequence View Import", JOptionPane.INFORMATION_MESSAGE);
-        return true;
-    }
 
 
     
@@ -208,7 +158,7 @@ public class FeatureChompController {
                     JScrollPane sp = new JScrollPane(guiContentPane);
                     _tcView.add(menu, BorderLayout.NORTH);
                     _tcView.add(sp, BorderLayout.CENTER);
-                    _tcView.setName("Hello World");
+                    _tcView.setName("Feature Chomp");
                     _tcView.open();
                     _tcView.requestActive();
 
@@ -217,5 +167,13 @@ public class FeatureChompController {
             _frameView.dispose();
             _isTC = true;
         }
+    }
+
+    public void close() {
+    if (_isTC) {
+        _tcView.close();
+    } else {
+        _frameView.dispose();
+    }
     }
 }
