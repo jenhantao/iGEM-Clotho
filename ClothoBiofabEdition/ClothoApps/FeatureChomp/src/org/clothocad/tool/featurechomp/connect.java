@@ -26,6 +26,8 @@ package org.clothocad.tool.featurechomp;
 import java.awt.Window;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import org.clothocore.api.core.Collector;
 import org.clothocore.api.data.ObjBase;
 import org.clothocore.api.plugin.ClothoTool;
 
@@ -37,9 +39,13 @@ public class connect implements ClothoTool {
 
     @Override
     public void launch() {
-            FeatureChompGUI frame = new FeatureChompGUI();
-            frame.pack();
-            frame.setVisible(true);
+        if (!Collector.isConnected()) {
+            JOptionPane.showMessageDialog(null, "Database connection required to launch this tool",
+                    "Not connected", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        FeatureChompGUI frame = new FeatureChompGUI();
+
             pig.add(new WeakReference(frame));
        
     }

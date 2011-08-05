@@ -10,14 +10,20 @@
  */
 package org.clothocad.tool.trumpet;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.JDialog;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.ListModel;
 import org.clothocore.api.core.Collector;
@@ -62,7 +68,7 @@ public class TrumpetGUI extends javax.swing.JFrame {
 
         
         // hard coding the addition of parts to the parts list
-        addPartsAndInvertases(5,5);
+        addPartsAndInvertases(3,3);
 
         this._controller.setCurrentModel(new LinkSort(this._controller.getNumberOfParts(),true));
 
@@ -98,7 +104,7 @@ public class TrumpetGUI extends javax.swing.JFrame {
     public void addPartsAndInvertases(int parts, int invs)
     {
         // set the format to the same format of the parts we are going to add
-        jFormatComboBox.setSelectedIndex(5);
+        jFormatComboBox.setSelectedIndex(2);
 
         // get all part objects
         ArrayList<Part> test = Collector.getAll(ObjType.PART);
@@ -110,7 +116,7 @@ public class TrumpetGUI extends javax.swing.JFrame {
         while ((numAdded<parts) && (i<test.size()))
         {
 
-            if (test.get(i).getFormat().getName().equals("RFC10"))
+            if (test.get(i).getFormat().getName().equals("Freeform"))
             {
                 _controller.appendElement(jPartsList, ("P"+((numAdded++)+1)+": "+test.get(i).toString()));
                 // update number of parts
@@ -123,7 +129,7 @@ public class TrumpetGUI extends javax.swing.JFrame {
         while ((numAdded<invs) && (i<test.size()))
         {
 
-            if (test.get(i).getFormat().getName().equals("RFC10"))
+            if (test.get(i).getFormat().getName().equals("Freeform"))
             {
                 _controller.appendElement(jInvertaseList, (test.get(i).toString()));
 
@@ -920,9 +926,16 @@ public class TrumpetGUI extends javax.swing.JFrame {
 
         jHelpMenu.setText(org.openide.util.NbBundle.getMessage(TrumpetGUI.class, "TrumpetGUI.jHelpMenu.text")); // NOI18N
 
+        jInstructionsMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.SHIFT_MASK));
         jInstructionsMenuItem.setText(org.openide.util.NbBundle.getMessage(TrumpetGUI.class, "TrumpetGUI.jInstructionsMenuItem.text")); // NOI18N
+        jInstructionsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jInstructionsMenuItemActionPerformed(evt);
+            }
+        });
         jHelpMenu.add(jInstructionsMenuItem);
 
+        jVersionMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.SHIFT_MASK));
         jVersionMenuItem.setText(org.openide.util.NbBundle.getMessage(TrumpetGUI.class, "TrumpetGUI.jVersionMenuItem.text")); // NOI18N
         jVersionMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1141,7 +1154,45 @@ public class TrumpetGUI extends javax.swing.JFrame {
 
     private void jVersionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jVersionMenuItemActionPerformed
         // TODO add your handling code here:
+
+        //custom title, error icon
+        JOptionPane.showMessageDialog(new JFrame(),
+            "Trumpet v1.0",
+            "Trumpet Version",
+            JOptionPane.PLAIN_MESSAGE);
+
     }//GEN-LAST:event_jVersionMenuItemActionPerformed
+
+    private void jInstructionsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jInstructionsMenuItemActionPerformed
+        // when the instructions button is pressed
+        JDialog instructions = new JDialog(new JFrame(), "Test");
+        instructions.setMinimumSize(new Dimension(300,100));
+        instructions.setVisible(true);
+
+//        String url = "";
+        instructions.setLayout(new BorderLayout());
+
+        JPanel panel = new JPanel();
+
+        String url = "/src/org/clothocad/tool/trumpet/InstructionSet.html";
+        try {
+          JEditorPane instructionPane = new JEditorPane(url);
+          instructionPane.setEditable(false);
+          panel.add(instructionPane);
+        } catch(IOException ioe) {
+          System.err.println("Error displaying " + url);
+        }
+
+        //Put the editor pane in a scroll pane.
+        JScrollPane editorScrollPane = new JScrollPane(panel);
+        editorScrollPane.setVerticalScrollBarPolicy(
+                        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+//        editorScrollPane.setPreferredSize(new Dimension(250, 145));
+//        editorScrollPane.setMinimumSize(new Dimension(10, 10));
+        instructions.add(editorScrollPane, BorderLayout.CENTER);
+        
+
+    }//GEN-LAST:event_jInstructionsMenuItemActionPerformed
 
 
 

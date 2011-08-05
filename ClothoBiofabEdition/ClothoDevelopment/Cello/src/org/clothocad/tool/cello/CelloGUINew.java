@@ -145,10 +145,10 @@ public class CelloGUINew extends javax.swing.JFrame {
         RBMin = new javax.swing.JRadioButton();
         jLabel1 = new javax.swing.JLabel();
         TPResult = new javax.swing.JTabbedPane();
-        SPLog = new javax.swing.JScrollPane();
-        TALog = new javax.swing.JTextArea();
         SPOutput = new javax.swing.JScrollPane();
         TAResult = new javax.swing.JTextArea();
+        SPLog = new javax.swing.JScrollPane();
+        TALog = new javax.swing.JTextArea();
         PGraphView = new javax.swing.JPanel();
         CBMappedGV = new javax.swing.JCheckBox();
         CBImplementationsGV = new javax.swing.JComboBox();
@@ -179,7 +179,7 @@ public class CelloGUINew extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(org.openide.util.NbBundle.getMessage(CelloGUINew.class, "CelloGUINew.title")); // NOI18N
-        setMinimumSize(new java.awt.Dimension(948, 598));
+        setMinimumSize(new java.awt.Dimension(939, 751));
 
         TFAddress.setEditable(false);
         TFAddress.setFont(new java.awt.Font("Tahoma", 1, 11));
@@ -212,7 +212,7 @@ public class CelloGUINew extends javax.swing.JFrame {
         PIOTFConstraintLayout.setHorizontalGroup(
             PIOTFConstraintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PIOTFConstraintLayout.createSequentialGroup()
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(PIOTFConstraintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(BTFSelect, 0, 0, Short.MAX_VALUE)
@@ -224,7 +224,7 @@ public class CelloGUINew extends javax.swing.JFrame {
             .addGroup(PIOTFConstraintLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(PIOTFConstraintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
                     .addGroup(PIOTFConstraintLayout.createSequentialGroup()
                         .addComponent(BTFSelect)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -397,7 +397,7 @@ public class CelloGUINew extends javax.swing.JFrame {
                 .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(BPackCompositePartH)
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         PHomeLayout.setVerticalGroup(
             PHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -472,7 +472,7 @@ public class CelloGUINew extends javax.swing.JFrame {
                 .addComponent(CBTransfromNOR)
                 .addGap(36, 36, 36)
                 .addComponent(BCompileandGenerateGraph)
-                .addContainerGap(556, Short.MAX_VALUE))
+                .addContainerGap(542, Short.MAX_VALUE))
         );
         PCompileLayout.setVerticalGroup(
             PCompileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -532,7 +532,7 @@ public class CelloGUINew extends javax.swing.JFrame {
                     .addComponent(RBRemoveDoubleInvertersbutNORS))
                 .addGap(27, 27, 27)
                 .addComponent(BGateLevelOptimize)
-                .addContainerGap(346, Short.MAX_VALUE))
+                .addContainerGap(332, Short.MAX_VALUE))
         );
         PGateLevelOptimizeLayout.setVerticalGroup(
             PGateLevelOptimizeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -595,7 +595,7 @@ public class CelloGUINew extends javax.swing.JFrame {
                     .addComponent(CBHaybridDual))
                 .addGap(18, 18, 18)
                 .addComponent(BMapping)
-                .addContainerGap(426, Short.MAX_VALUE))
+                .addContainerGap(412, Short.MAX_VALUE))
         );
         PMappingLayout.setVerticalGroup(
             PMappingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -655,7 +655,7 @@ public class CelloGUINew extends javax.swing.JFrame {
                     .addComponent(CBFindRepeatedPatterns))
                 .addGap(31, 31, 31)
                 .addComponent(BMotifLevelOptimization)
-                .addContainerGap(423, Short.MAX_VALUE))
+                .addContainerGap(409, Short.MAX_VALUE))
         );
         PMotifLevelOptimizationLayout.setVerticalGroup(
             PMotifLevelOptimizationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -810,7 +810,7 @@ public class CelloGUINew extends javax.swing.JFrame {
                 .addComponent(CBImplementationsP, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(BPackCompositePart)
-                .addContainerGap(93, Short.MAX_VALUE))
+                .addContainerGap(79, Short.MAX_VALUE))
         );
         PAssignSequenceLayout.setVerticalGroup(
             PAssignSequenceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -845,14 +845,6 @@ public class CelloGUINew extends javax.swing.JFrame {
 
         jLabel1.setText(org.openide.util.NbBundle.getMessage(CelloGUINew.class, "CelloGUINew.jLabel1.text")); // NOI18N
 
-        SPLog.setToolTipText(org.openide.util.NbBundle.getMessage(CelloGUINew.class, "CelloGUINew.SPLog.toolTipText")); // NOI18N
-
-        TALog.setColumns(20);
-        TALog.setRows(5);
-        SPLog.setViewportView(TALog);
-
-        TPResult.addTab(org.openide.util.NbBundle.getMessage(CelloGUINew.class, "CelloGUINew.SPLog.TabConstraints.tabTitle"), SPLog); // NOI18N
-
         SPOutput.setToolTipText(org.openide.util.NbBundle.getMessage(CelloGUINew.class, "CelloGUINew.SPOutput.toolTipText")); // NOI18N
 
         TAResult.setColumns(20);
@@ -860,6 +852,14 @@ public class CelloGUINew extends javax.swing.JFrame {
         SPOutput.setViewportView(TAResult);
 
         TPResult.addTab(org.openide.util.NbBundle.getMessage(CelloGUINew.class, "CelloGUINew.SPOutput.TabConstraints.tabTitle"), SPOutput); // NOI18N
+
+        SPLog.setToolTipText(org.openide.util.NbBundle.getMessage(CelloGUINew.class, "CelloGUINew.SPLog.toolTipText")); // NOI18N
+
+        TALog.setColumns(20);
+        TALog.setRows(5);
+        SPLog.setViewportView(TALog);
+
+        TPResult.addTab(org.openide.util.NbBundle.getMessage(CelloGUINew.class, "CelloGUINew.SPLog.TabConstraints.tabTitle"), SPLog); // NOI18N
 
         PGraphView.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(CelloGUINew.class, "CelloGUINew.PGraphView.border.title"))); // NOI18N
 
@@ -898,26 +898,26 @@ public class CelloGUINew extends javax.swing.JFrame {
         PGraphViewChild.setLayout(PGraphViewChildLayout);
         PGraphViewChildLayout.setHorizontalGroup(
             PGraphViewChildLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 794, Short.MAX_VALUE)
+            .addGap(0, 394, Short.MAX_VALUE)
         );
         PGraphViewChildLayout.setVerticalGroup(
             PGraphViewChildLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 453, Short.MAX_VALUE)
+            .addGap(0, 320, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout PGraphViewLayout = new javax.swing.GroupLayout(PGraphView);
         PGraphView.setLayout(PGraphViewLayout);
         PGraphViewLayout.setHorizontalGroup(
             PGraphViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PGraphViewLayout.createSequentialGroup()
+            .addGroup(PGraphViewLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(PGraphViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(PGraphViewChild, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(PGraphViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(PGraphViewChild, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(PGraphViewLayout.createSequentialGroup()
                         .addComponent(CBImplementationsGV, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(CBMappedGV)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 444, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
                         .addComponent(BShowGraph, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -930,7 +930,8 @@ public class CelloGUINew extends javax.swing.JFrame {
                         .addComponent(CBMappedGV))
                     .addComponent(BShowGraph))
                 .addGap(18, 18, 18)
-                .addComponent(PGraphViewChild, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(PGraphViewChild, javax.swing.GroupLayout.PREFERRED_SIZE, 322, Short.MAX_VALUE)
+                .addGap(8, 8, 8))
         );
 
         CBMappedGV.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(CelloGUINew.class, "CelloGUINew.CBMappedGV.AccessibleContext.accessibleName")); // NOI18N
@@ -1007,19 +1008,19 @@ public class CelloGUINew extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(TPControl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 933, Short.MAX_VALUE)
+                    .addComponent(TPControl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 919, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(PIOTFConstraint, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(PGraphView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(PGraphView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(PIOTFConstraint, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(TPResult, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(TPResult, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(TFAddress, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE))
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE))))
+                                .addComponent(TFAddress, javax.swing.GroupLayout.DEFAULT_SIZE, 409, Short.MAX_VALUE))
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1033,14 +1034,13 @@ public class CelloGUINew extends javax.swing.JFrame {
                             .addComponent(TFAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 513, Short.MAX_VALUE)
-                        .addGap(2, 2, 2))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(PGraphView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE))
+                    .addComponent(PGraphView, 0, 407, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(PIOTFConstraint, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(TPResult, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)))
+                    .addComponent(TPResult, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                    .addComponent(PIOTFConstraint, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();

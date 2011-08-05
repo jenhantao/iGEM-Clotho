@@ -58,7 +58,6 @@ public class ImportFeaturesWindow extends javax.swing.JFrame {
         collectionComboBox = new javax.swing.JComboBox();
         yesButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         statusLabel = new javax.swing.JLabel();
 
@@ -83,8 +82,6 @@ public class ImportFeaturesWindow extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText(org.openide.util.NbBundle.getMessage(ImportFeaturesWindow.class, "ImportFeaturesWindow.jLabel1.text")); // NOI18N
-
         jLabel2.setText(org.openide.util.NbBundle.getMessage(ImportFeaturesWindow.class, "ImportFeaturesWindow.jLabel2.text")); // NOI18N
 
         statusLabel.setText(org.openide.util.NbBundle.getMessage(ImportFeaturesWindow.class, "ImportFeaturesWindow.statusLabel.text")); // NOI18N
@@ -96,11 +93,10 @@ public class ImportFeaturesWindow extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(statusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 158, Short.MAX_VALUE))
+                        .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(collectionComboBox, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
@@ -116,8 +112,6 @@ public class ImportFeaturesWindow extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(collectionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -127,7 +121,7 @@ public class ImportFeaturesWindow extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
                     .addComponent(statusLabel))
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cancelButton, yesButton});
@@ -193,7 +187,6 @@ public class ImportFeaturesWindow extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JComboBox collectionComboBox;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel statusLabel;
     private javax.swing.JButton yesButton;

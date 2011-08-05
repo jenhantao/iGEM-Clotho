@@ -20,8 +20,8 @@ public class FeatureChompGUI extends javax.swing.JFrame {
     public FeatureChompGUI() {
         _controller = new FeatureChompController(this);
         initComponents();
-        this.setVisible(false);
         _controller.switchViews();
+
     }
 
     /** This method is called from within the constructor to
@@ -33,6 +33,11 @@ public class FeatureChompGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        importGenbankButton = new javax.swing.JButton();
+        importApeButton = new javax.swing.JButton();
+        statusLabel = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -41,6 +46,57 @@ public class FeatureChompGUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(org.openide.util.NbBundle.getMessage(FeatureChompGUI.class, "FeatureChompGUI.title")); // NOI18N
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel1.setText(org.openide.util.NbBundle.getMessage(FeatureChompGUI.class, "FeatureChompGUI.jLabel1.text")); // NOI18N
+
+        importGenbankButton.setText(org.openide.util.NbBundle.getMessage(FeatureChompGUI.class, "FeatureChompGUI.importGenbankButton.text")); // NOI18N
+        importGenbankButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importGenbankButtonActionPerformed(evt);
+            }
+        });
+
+        importApeButton.setText(org.openide.util.NbBundle.getMessage(FeatureChompGUI.class, "FeatureChompGUI.importApeButton.text")); // NOI18N
+        importApeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importApeButtonActionPerformed(evt);
+            }
+        });
+
+        statusLabel.setText(org.openide.util.NbBundle.getMessage(FeatureChompGUI.class, "FeatureChompGUI.statusLabel.text")); // NOI18N
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(importGenbankButton, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
+                        .addGap(14, 14, 14))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(importApeButton)
+                        .addGap(32, 32, 32))
+                    .addComponent(jLabel1)
+                    .addComponent(statusLabel))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(importGenbankButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(importApeButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(statusLabel)
+                .addContainerGap(7, Short.MAX_VALUE))
+        );
 
         jMenu1.setText(org.openide.util.NbBundle.getMessage(FeatureChompGUI.class, "FeatureChompGUI.jMenu1.text")); // NOI18N
 
@@ -73,11 +129,17 @@ public class FeatureChompGUI extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 486, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 269, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -88,8 +150,20 @@ public class FeatureChompGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-_controller.close();
+        _controller.close();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void importGenbankButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importGenbankButtonActionPerformed
+        statusLabel.setText("Status: importing genbank features, please wait");
+
+        _controller.importGenbankFeatures();
+    }//GEN-LAST:event_importGenbankButtonActionPerformed
+
+    private void importApeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importApeButtonActionPerformed
+        statusLabel.setText("Status: importing ApE features, please wait");
+        _controller.importApEFeatures();
+
+    }//GEN-LAST:event_importApeButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -104,10 +178,15 @@ _controller.close();
     }
     private FeatureChompController _controller;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton importApeButton;
+    private javax.swing.JButton importGenbankButton;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel statusLabel;
     // End of variables declaration//GEN-END:variables
 }

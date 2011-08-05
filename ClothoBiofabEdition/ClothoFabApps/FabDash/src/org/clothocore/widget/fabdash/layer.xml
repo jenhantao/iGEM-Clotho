@@ -11,6 +11,7 @@
                 <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
             </file>
             <file name="org-clothocore-widget-fabdash-PopulateTools.instance"/>
+<!--            <file name="org-clothocore-widget-fabdash-FileMenuPopulator.instance"/>-->
         </folder>
     </folder>
     <folder name="Menu">
