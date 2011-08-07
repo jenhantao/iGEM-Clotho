@@ -62,7 +62,6 @@ public class SearchBar extends JPanel {
 
                 if(e.getClickCount()==2) {
                     try {
-                        System.out.println(mainPane.getComponent(0));
                         ObjBase obj = (ObjBase) _lister.getSelectedValue();
                         obj.launchDefaultViewer();
                     } catch(Exception ex) {

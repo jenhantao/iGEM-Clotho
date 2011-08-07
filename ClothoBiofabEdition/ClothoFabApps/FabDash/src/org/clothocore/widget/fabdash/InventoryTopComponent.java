@@ -53,6 +53,7 @@ import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.LifecycleManager;
 
 @ConvertAsProperties(dtd = "-//org.clothocore.widget.fabdash//Inventory//EN", autostore = false)
 public final class InventoryTopComponent extends TopComponent {
@@ -178,6 +179,22 @@ public final class InventoryTopComponent extends TopComponent {
                             return false;
                         }
                     });
+                    plasmidsTable.addMouseListener(new MouseAdapter() {
+
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+
+                            if (e.getClickCount() == 2) {
+                                try {
+                                    Plasmid aplas = Plasmid.retrieveByName((String) plasmidsTable.getValueAt(plasmidsTable.getSelectedRow(), 0));
+//                        ObjBase obj = (ObjBase) _lister.getSelectedValue();
+//                        obj.launchDefaultViewer();
+                                    aplas.launchDefaultViewer();
+                                } catch (Exception ex) {
+                                }
+                            }
+                        }
+                    });
                     //populate the Oligo tab
                     ArrayList<ObjLink> allOligos = Collector.getAllLinksOf(ObjType.OLIGO);
                     Object[][] oligoTableModel = new Object[allOligos.size()][2];
@@ -194,6 +211,22 @@ public final class InventoryTopComponent extends TopComponent {
                         @Override
                         public boolean isCellEditable(int rowIndex, int mColIndex) {
                             return false;
+                        }
+                    });
+                    oligosTable.addMouseListener(new MouseAdapter() {
+
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+
+                            if (e.getClickCount() == 2) {
+                                try {
+                                    Oligo aol = Oligo.retrieveByName((String) oligosTable.getValueAt(oligosTable.getSelectedRow(), 0));
+//                        ObjBase obj = (ObjBase) _lister.getSelectedValue();
+//                        obj.launchDefaultViewer();
+                                    aol.launchDefaultViewer();
+                                } catch (Exception ex) {
+                                }
+                            }
                         }
                     });
                     //populate the Vectors tab is below
@@ -214,7 +247,22 @@ public final class InventoryTopComponent extends TopComponent {
                             return false;
                         }
                     });
+                  vectorsTable.addMouseListener(new MouseAdapter() {
 
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+
+                            if (e.getClickCount() == 2) {
+                                try {
+                                    Vector avect = Vector.retrieveByName((String) vectorsTable.getValueAt(vectorsTable.getSelectedRow(), 0));
+//                        ObjBase obj = (ObjBase) _lister.getSelectedValue();
+//                        obj.launchDefaultViewer();
+                                    avect.launchDefaultViewer();
+                                } catch (Exception ex) {
+                                }
+                            }
+                        }
+                    });
 
                     //Code for populating the Parts tab is below
                     ArrayList<ObjLink> allParts = Collector.getAllLinksOf(ObjType.PART);
@@ -232,6 +280,22 @@ public final class InventoryTopComponent extends TopComponent {
                         @Override
                         public boolean isCellEditable(int rowIndex, int mColIndex) {
                             return false;
+                        }
+                    });
+                                      partsTable.addMouseListener(new MouseAdapter() {
+
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+
+                            if (e.getClickCount() == 2) {
+                                try {
+                                    Part apart = Part.retrieveByName((String) partsTable.getValueAt(partsTable.getSelectedRow(), 0));
+//                        ObjBase obj = (ObjBase) _lister.getSelectedValue();
+//                        obj.launchDefaultViewer();
+                                    apart.launchDefaultViewer();
+                                } catch (Exception ex) {
+                                }
+                            }
                         }
                     });
                     oligosTable.setEnabled(true);
@@ -288,7 +352,6 @@ public final class InventoryTopComponent extends TopComponent {
         plasmidsScrollPane = new javax.swing.JScrollPane();
         plasmidsTable = new javax.swing.JTable();
         refreshButton = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
 
         setLayout(new java.awt.BorderLayout());
@@ -576,8 +639,6 @@ public final class InventoryTopComponent extends TopComponent {
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.jButton1.text")); // NOI18N
-
         javax.swing.GroupLayout inventoryPanelLayout = new javax.swing.GroupLayout(inventoryPanel);
         inventoryPanel.setLayout(inventoryPanelLayout);
         inventoryPanelLayout.setHorizontalGroup(
@@ -587,18 +648,14 @@ public final class InventoryTopComponent extends TopComponent {
                 .addComponent(inventoryTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, inventoryPanelLayout.createSequentialGroup()
-                .addContainerGap(194, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addContainerGap(279, Short.MAX_VALUE)
                 .addComponent(refreshButton)
                 .addContainerGap())
         );
         inventoryPanelLayout.setVerticalGroup(
             inventoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(inventoryPanelLayout.createSequentialGroup()
-                .addGroup(inventoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(refreshButton)
-                    .addComponent(jButton1))
+                .addComponent(refreshButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(inventoryTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
                 .addContainerGap())
@@ -709,7 +766,6 @@ public final class InventoryTopComponent extends TopComponent {
     private javax.swing.JLabel currentUserLabel;
     private javax.swing.JPanel inventoryPanel;
     protected javax.swing.JTabbedPane inventoryTabbedPane;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
