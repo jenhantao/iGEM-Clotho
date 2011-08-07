@@ -27,6 +27,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -60,7 +61,32 @@ public class SuperSearch extends JPanel {
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
         this.setBorder(blackline);
-        jtf = new JTextField();
+        jtf = new JTextField("Enter a search term");
+        
+        jtf.addMouseListener(new MouseListener() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                jtf.setText("");
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                jtf.setText("");
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+        });
         ImageIcon searchImg = ImageUtilities.loadImageIcon("org/clothocore/widget/fabdash/images/search.png", false);
         searchTB = new TransparentButton(searchImg);
         searchTB.setExitAlpha(1.0f);
