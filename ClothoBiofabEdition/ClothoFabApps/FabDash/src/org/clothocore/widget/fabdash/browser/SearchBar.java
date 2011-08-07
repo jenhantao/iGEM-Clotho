@@ -28,6 +28,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
@@ -132,7 +133,7 @@ public class SearchBar extends JPanel {
             }
 
             @Override
-            public Object getElementAt(int index) {
+            public ObjBase getElementAt(int index) {
                 return outcoll.getAll(type).get(index);
             }
 
@@ -145,7 +146,32 @@ public class SearchBar extends JPanel {
             }
         });
         repaint();
-        _obp = new ObjBasePopup(list, outcoll);
+        list.addMouseListener(new MouseListener() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (list.getSelectedIndex()>-1) {
+                _obp=new ObjBasePopup(list, (ObjBase) list.getModel().getElementAt(list.getSelectedIndex()));
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+            
+        });
     }
 
     public void createTabs(final Collection outcoll){
@@ -160,11 +186,11 @@ public class SearchBar extends JPanel {
 
                 // if some objects exist of that type
                 JScrollPane dynScroller = new JScrollPane();    // create new scroller
-                JList dynLister = new JList();                  // create new jList
+                final JList dynLister = new JList();                  // create new jList
                 dynScroller.setViewportView(dynLister);         // put the list in the scroller
                 setResults(outcoll,myObj,dynLister);          // set the results for lister
                 mainPane.addTab(myObj.toString(), dynScroller);    // add a pane for the user
-                _obp = new ObjBasePopup(dynLister,(ObjBase) result.get(0));
+//                _obp = new ObjBasePopup(dynLister,(ObjBase) result.get(0));
 
             }
 

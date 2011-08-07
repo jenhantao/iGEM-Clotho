@@ -624,6 +624,7 @@ public final class InventoryTopComponent extends TopComponent {
                 return canEdit [columnIndex];
             }
         });
+        plasmidsTable.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         plasmidsTable.setEnabled(false);
         plasmidsTable.setFillsViewportHeight(true);
         plasmidsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
