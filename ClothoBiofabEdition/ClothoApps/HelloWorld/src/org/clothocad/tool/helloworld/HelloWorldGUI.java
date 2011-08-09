@@ -10,16 +10,31 @@
  */
 package org.clothocad.tool.helloworld;
 
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import javax.swing.DropMode;
+import javax.swing.ImageIcon;
+import javax.swing.TransferHandler;
+import org.clothocore.api.data.ObjBase;
+import org.openide.util.Exceptions;
+
 /**
  *
  * @author jenhan
  */
-public class HelloWorldGUI extends javax.swing.JFrame {
+public class HelloWorldGUI extends javax.swing.JFrame implements ObjBaseDropTarget {
 
     /** Creates new form HelloWorldGUI */
     public HelloWorldGUI() {
         _controller = new HelloWorldController(this);
         initComponents();
+        jTextArea1.setTransferHandler(new ObjBaseTransferHandler(this));
+
+
     }
 
     /** This method is called from within the constructor to
@@ -32,15 +47,34 @@ public class HelloWorldGUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(org.openide.util.NbBundle.getMessage(HelloWorldGUI.class, "HelloWorldGUI.title")); // NOI18N
 
         jLabel1.setText(org.openide.util.NbBundle.getMessage(HelloWorldGUI.class, "HelloWorldGUI.jLabel1.text")); // NOI18N
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/clothocad/tool/helloworld/logo.png"))); // NOI18N
+        jLabel2.setText(org.openide.util.NbBundle.getMessage(HelloWorldGUI.class, "HelloWorldGUI.jLabel2.text")); // NOI18N
+
+        jButton1.setText(org.openide.util.NbBundle.getMessage(HelloWorldGUI.class, "HelloWorldGUI.jButton1.text")); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jTextArea1.setDropMode(javax.swing.DropMode.INSERT);
+        jScrollPane1.setViewportView(jTextArea1);
 
         jMenu1.setText(org.openide.util.NbBundle.getMessage(HelloWorldGUI.class, "HelloWorldGUI.jMenu1.text")); // NOI18N
         jMenuBar1.add(jMenu1);
@@ -64,16 +98,28 @@ public class HelloWorldGUI extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(165, 165, 165)
-                .addComponent(jLabel1)
-                .addContainerGap(154, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jButton1))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jLabel2)
+                        .addComponent(jLabel1)))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(117, 117, 117)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
-                .addContainerGap(138, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(61, Short.MAX_VALUE))
         );
 
         pack();
@@ -82,6 +128,13 @@ public class HelloWorldGUI extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         _controller.switchViews();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    ImageIcon ii = new ImageIcon(getClass().getResource("/org/clothocad/tool/helloworld/jack.png"));
+    jLabel2.setIcon(ii);
+    this.pack();
+
+}//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -96,10 +149,20 @@ public class HelloWorldGUI extends javax.swing.JFrame {
     }
     private HelloWorldController _controller;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void handleDropedObject(ObjBase o) {
+        jTextArea1.append("\n"+o.getName()+"\n"+o.getType());
+        
+    }
 }

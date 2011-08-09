@@ -33,12 +33,18 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import org.clothocore.api.core.Collator;
 import org.clothocore.api.core.wrapper.ToolWrapper;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionRegistration;
 import org.openide.util.actions.Presenter;
 
 /**
  *
  * @author jcanderson_Home
  */
+//@ActionID(id = "org.clothocore.widget.fabdash.PopulateTools", category = "Window")
+//@ActionRegistration(displayName = "#TODO")
+//@ActionReference(path = "Menu/Apps", position = 0)
 public class PopulateTools extends AbstractAction implements Presenter.Menu {
 
     @Override
