@@ -23,16 +23,12 @@ ENHANCEMENTS, OR MODIFICATIONS..
  */
 package org.clothocore.widget.fabdash;
 
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.logging.Logger;
-import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
-import javax.swing.TransferHandler;
 import org.clothocore.api.core.Collator;
 
 import org.clothocore.api.core.Collector;

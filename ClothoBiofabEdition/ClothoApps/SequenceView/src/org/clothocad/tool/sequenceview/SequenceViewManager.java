@@ -189,7 +189,7 @@ public class SequenceViewManager implements ClothoTool {
             _sequenceViewArray.get(_currentSequenceViewIndex).setSequence(sequence);
             _sequenceViewArray.get(_currentSequenceViewIndex).getSequenceView().setVisible(true);
             _sequenceViewArray.get(_currentSequenceViewIndex).getSequenceView().requestFocus();
-            _sequenceViewArray.get(_currentSequenceViewIndex).getSequenceView().getOutputTextArea().setText("Loaded Clotho object: " + o.getName());
+            _sequenceViewArray.get(_currentSequenceViewIndex).getSequenceView().getOutputTextArea().setText("Loaded Clotho "+o.getType()+": " + o.getName());
             _currentSequenceViewIndex++;
 
         }

@@ -64,6 +64,7 @@ import javax.swing.text.Highlighter.HighlightPainter;
 import javax.swing.text.Position;
 import javax.swing.undo.*;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
@@ -75,6 +76,7 @@ import javax.swing.text.Highlighter.Highlight;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Keymap;
 import org.clothocore.api.data.NucSeq;
+import org.clothocore.api.data.ObjBase;
 import org.clothocore.util.dialog.ClothoDialogBox;
 import org.clothocore.util.chooser.ClothoOpenChooser;
 import org.clothocore.util.chooser.ClothoSaveChooser;
@@ -90,6 +92,10 @@ import org.clothocore.util.misc.BareBonesBrowserLaunch;
 import org.openide.util.Exceptions;
 import org.openide.windows.TopComponent;
 import org.clothocad.tool.primerdesigner.DesignFrame;
+import org.clothocore.api.data.ObjType;
+import org.clothocore.api.data.Oligo;
+import org.clothocore.api.data.Plasmid;
+import org.clothocore.api.data.Vector;
 
 /**
  * The sequence view of the design. An editable view for raw DNA data.
@@ -100,7 +106,7 @@ import org.clothocad.tool.primerdesigner.DesignFrame;
  * @author Matthew Johnson
  * @author Thien Nguyen
  */
-public class SequenceView {
+public class SequenceView implements ObjBaseDropTarget {
 
     private static int numOfSeqViews = 0;
 
@@ -225,6 +231,43 @@ public class SequenceView {
         DesignFrame someFrame = new DesignFrame(sequence);
     }
 
+    @Override
+    public void handleDropedObject(ObjBase o) {
+        String seq = "";
+        if (o.getType().equals(ObjType.PART)) {
+        } else if (o.getType().equals(ObjType.OLIGO)) {
+            seq = ((Oligo) o).getSeq().toString();
+        } else if (o.getType().equals(ObjType.FEATURE)) {
+            seq = ((Feature) o).getSeq().toString();
+        } else if (o.getType().equals(ObjType.VECTOR)) {
+            seq = ((Vector) o).getSeq().toString();
+        } else if (o.getType().equals(ObjType.PLASMID)) {
+            seq = ((Plasmid) o).getSeq().toString();
+        } else if (o.getType().equals(ObjType.NUCSEQ)) {
+            seq = ((NucSeq) o).getSeq().toString();
+        } else {
+            JOptionPane.showMessageDialog(null, "Sequence View doesn't support drag and drop with Clotho " + o.getType(), "Sequence View: Drag and Drop", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        String[] options = {"Insert", "Replace", "Cancel"};
+        int option = JOptionPane.showOptionDialog(null, "A Clotho object has been dropped.\nWhat do you want to do with it?", "SequenceView: Drag and Drop", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, "insert");
+        
+        if (option == 0) {
+            JTextPane ta = _sequenceview.get_TextArea();
+            String currentText = ta.getText();
+                        ta.setText(currentText.substring(0, ta.getCaretPosition()) + seq + currentText.substring(ta.getCaretPosition()));
+            _sequenceview.getOutputTextArea().setText("Inserted the sequence of Clotho " + o.getType() + ": " + o.getName());
+            sequenceChanged();
+        } else if (option == 1) {
+            JTextPane ta = _sequenceview.get_TextArea();
+            ta.setText(seq);
+            _sequenceview.getOutputTextArea().setText("Loaded Clotho " + o.getType() + ": " + o.getName());
+            sequenceChanged();
+        }
+
+
+    }
+
     class SequenceUndoableEditListener
             implements UndoableEditListener {
 
@@ -343,7 +386,7 @@ public class SequenceView {
 
         }
         if (_ORFs.size() == 0) {
-            System.out.println("No ORFs in this sequence");
+            _sequenceview.getOutputTextArea().setText("No ORFs in this sequence");
         }
     }
 
@@ -364,7 +407,7 @@ public class SequenceView {
             _revORFsCalculated = true;
         }
         if (_revORFs.size() == 0) {
-            System.out.println("No ORFs in this sequence");
+            _sequenceview.getOutputTextArea().setText("No ORFs in this sequence");
         }
     }
 

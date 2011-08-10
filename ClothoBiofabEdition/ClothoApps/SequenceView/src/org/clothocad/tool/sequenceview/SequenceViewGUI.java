@@ -53,8 +53,8 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         guiRootPane = null;
         _sv = sv;
         _firstResize = 0;
-        _minWidth = 850;
-        _minHeight = 400;
+//        _minWidth = 850;
+//        _minHeight = 400;
         initComponents();
 
         SequenceViewAdjustmentListener listener1 = new SequenceViewAdjustmentListener(jScrollPane1, jScrollPane2, _sv, 1);
@@ -65,6 +65,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         SequenceTextPane.getDocument().addDocumentListener(listener3);
         SequenceTextPane.setSelectedTextColor(Color.WHITE);
         SequenceTextPane.setSelectionColor(Color.GRAY);
+        SequenceTextPane.setTransferHandler(new ObjBaseTransferHandler(_sv));
         jLabel30.setVisible(false);
 
         setIconImage(ImageSource.getTinyLogo());
@@ -105,8 +106,8 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         });
 
         // Sets a minimum size to avoid strange resizing errors
-        java.awt.Dimension minDimensions = new java.awt.Dimension(_minWidth, _minHeight);
-        this.setMinimumSize(minDimensions);
+//        java.awt.Dimension minDimensions = new java.awt.Dimension(_minWidth, _minHeight);
+//        this.setMinimumSize(minDimensions);
 
         // Enables WordWrap in the two text areas
         CommentTextArea.setLineWrap(true);
@@ -616,7 +617,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(1336, Short.MAX_VALUE)
+                .addContainerGap(1472, Short.MAX_VALUE)
                 .addComponent(jLabel20)
                 .addGap(64, 64, 64))
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -696,7 +697,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(CircularCheckBox))
                         .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addComponent(featureNameJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 682, Short.MAX_VALUE)
+                            .addComponent(featureNameJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 765, Short.MAX_VALUE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(columnCountJLabel)))
                     .addContainerGap()))
@@ -704,7 +705,7 @@ public class SequenceViewGUI extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(40, Short.MAX_VALUE)
+                .addContainerGap(46, Short.MAX_VALUE)
                 .addComponent(jLabel20)
                 .addGap(22, 22, 22))
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -787,11 +788,11 @@ public class SequenceViewGUI extends javax.swing.JFrame {
             }
         });
         SequenceTextPane.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseDragged(java.awt.event.MouseEvent evt) {
-                SequenceViewGUI.this.mouseDragged(evt);
-            }
             public void mouseMoved(java.awt.event.MouseEvent evt) {
                 mouseMovedinTextPane(evt);
+            }
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                SequenceViewGUI.this.mouseDragged(evt);
             }
         });
         SequenceTextPane.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -800,14 +801,14 @@ public class SequenceViewGUI extends javax.swing.JFrame {
             }
         });
         SequenceTextPane.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                SequenceViewGUI.this.keyTyped(evt);
+            }
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 SequenceTextPaneKeyPressed(evt);
             }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 keyReleasedJTextPane(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                SequenceViewGUI.this.keyTyped(evt);
             }
         });
         jScrollPane1.setViewportView(SequenceTextPane);
@@ -851,26 +852,26 @@ public class SequenceViewGUI extends javax.swing.JFrame {
                         .addGap(28, 28, 28)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1326, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1485, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(19, 19, 19)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 729, Short.MAX_VALUE)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 807, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel32, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(32, 32, 32)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel33, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
+                                .addComponent(jLabel33, javax.swing.GroupLayout.DEFAULT_SIZE, 695, Short.MAX_VALUE)
                                 .addGap(83, 83, 83))
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 699, Short.MAX_VALUE)))
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 778, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(mainToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 1447, Short.MAX_VALUE))))
+                            .addComponent(mainToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 1604, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -1766,8 +1767,8 @@ if (sequence==null) {
     private JRootPane guiRootPane;
     private SequenceView _sv;
     private int _firstResize;
-    private int _minWidth;
-    private int _minHeight;
+//    private int _minWidth;
+//    private int _minHeight;
     private SequenceViewGUI _view;
     private AbstractDocument doc;
     // Variables declaration - do not modify//GEN-BEGIN:variables

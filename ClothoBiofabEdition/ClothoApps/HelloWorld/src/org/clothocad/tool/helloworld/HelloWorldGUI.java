@@ -10,17 +10,8 @@
  */
 package org.clothocad.tool.helloworld;
 
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import javax.swing.DropMode;
 import javax.swing.ImageIcon;
-import javax.swing.TransferHandler;
 import org.clothocore.api.data.ObjBase;
-import org.openide.util.Exceptions;
 
 /**
  *
