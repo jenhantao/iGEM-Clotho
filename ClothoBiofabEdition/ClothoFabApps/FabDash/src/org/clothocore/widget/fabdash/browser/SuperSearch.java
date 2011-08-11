@@ -60,7 +60,7 @@ public class SuperSearch extends JPanel {
         setBackground(Color.WHITE);
         this.setBorder(blackline);
         jtf = new JTextField("Enter a search term");
-        
+
         jtf.addMouseListener(new MouseListener() {
 
             @Override
@@ -83,6 +83,9 @@ public class SuperSearch extends JPanel {
 
             @Override
             public void mouseExited(MouseEvent e) {
+                if (jtf.getText().length() < 1) {
+                    jtf.setText("Enter a search term");
+                }
             }
         });
         ImageIcon searchImg = ImageUtilities.loadImageIcon("org/clothocore/widget/fabdash/images/search.png", false);

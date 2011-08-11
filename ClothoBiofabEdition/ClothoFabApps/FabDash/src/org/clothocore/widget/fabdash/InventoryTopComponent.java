@@ -26,6 +26,7 @@ package org.clothocore.widget.fabdash;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
@@ -51,6 +52,7 @@ import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.windows.Mode;
 
 @ConvertAsProperties(dtd = "-//org.clothocore.widget.fabdash//Inventory//EN", autostore = false)
 public final class InventoryTopComponent extends TopComponent {
@@ -62,14 +64,8 @@ public final class InventoryTopComponent extends TopComponent {
 
     public InventoryTopComponent() {
 
-
         initComponents();
-        for (ToolWrapper tw : Collator.getAllTools()) {
-            if (tw.getUUID().equals("org.clothocad.tool.toolappbrowser")) {
-                tw.launchTool();
-                break;
-            }
-        }
+
         changeButton.setEnabled(false);
         localRadioButton.setSelected(true);
         configurableRadioButton.setSelected(false);
@@ -157,6 +153,21 @@ public final class InventoryTopComponent extends TopComponent {
     }
 
     private void fetchInventoryInformation() {
+        TopComponent.Registry registry = TopComponent.getRegistry();
+        Set toolSet = registry.getOpened();
+        for (Object o : toolSet) {
+            TopComponent tc = (TopComponent) o;
+            if (!tc.getName().equals("Browser") && !tc.getName().equals("Output")) {
+                tc.close();
+            }
+        }
+        for (ToolWrapper tw : Collator.getAllTools()) {
+            if (tw.getUUID().equals("org.clothocad.tool.toolappbrowser")) {
+                tw.launchTool();
+                break;
+            }
+        }
+
 
         new SwingWorker() {
 

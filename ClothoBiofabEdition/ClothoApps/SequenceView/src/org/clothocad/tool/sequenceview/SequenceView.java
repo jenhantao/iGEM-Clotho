@@ -2010,10 +2010,10 @@ public class SequenceView implements ObjBaseDropTarget {
      * @param insertRParen
      */
     public void processCaret(CaretEvent evt,
-            JLabel startText, JLabel startValue, JLabel startIndex, JLabel startLParen, JLabel startRParen,
-            JLabel lengthText, JLabel lengthValue, JLabel lengthIndex, JLabel lengthLParen, JLabel lengthRParen,
-            JLabel endText, JLabel endValue, JLabel endIndex, JLabel endLParen, JLabel endRParen,
-            JLabel insertText, JLabel insertValue, JLabel insertIndex, JLabel insertLParen, JLabel insertRParen,
+            JLabel startText, JLabel startValue, JLabel startIndex,
+            JLabel lengthText, JLabel lengthValue, JLabel lengthIndex, 
+            JLabel endText, JLabel endValue, JLabel endIndex,
+            JLabel insertText, JLabel insertValue, JLabel insertIndex,
             JLabel gcText, JLabel gcValue, JLabel tmText, JLabel tmValue) {
 
 
@@ -2030,26 +2030,22 @@ public class SequenceView implements ObjBaseDropTarget {
             insertText.setVisible(true);
             insertValue.setVisible(true);
             insertIndex.setVisible(true);
-            insertLParen.setVisible(true);
-            insertRParen.setVisible(true);
+
 
             startText.setVisible(false);
             startValue.setVisible(false);
             startIndex.setVisible(false);
-            startLParen.setVisible(false);
-            startRParen.setVisible(false);
+  
 
             lengthText.setVisible(false);
             lengthValue.setVisible(false);
             lengthIndex.setVisible(false);
-            lengthLParen.setVisible(false);
-            lengthRParen.setVisible(false);
+
 
             endText.setVisible(false);
             endValue.setVisible(false);
             endIndex.setVisible(false);
-            endLParen.setVisible(false);
-            endRParen.setVisible(false);
+           
 
             gcText.setVisible(false);
             gcValue.setVisible(false);
@@ -2060,7 +2056,7 @@ public class SequenceView implements ObjBaseDropTarget {
             insert_start = dot + 1;
 
             insert_index = (insert_start - 1) % 3;
-            insertIndex.setText(insert_index.toString());
+            insertIndex.setText("<"+insert_index.toString()+">");
 
             insertValue.setText(insert_start.toString());
             //System.out.print("Caret update2 " + dot + " " + mark + " " + insert_index + "\n");    
@@ -2098,10 +2094,10 @@ public class SequenceView implements ObjBaseDropTarget {
      * @param insertRParen
      */
     public void processMouseHighlight(MouseEvent evt, JTextPane pane,
-            JLabel startText, JLabel startValue, JLabel startIndex, JLabel startLParen, JLabel startRParen,
-            JLabel lengthText, JLabel lengthValue, JLabel lengthIndex, JLabel lengthLParen, JLabel lengthRParen,
-            JLabel endText, JLabel endValue, JLabel endIndex, JLabel endLParen, JLabel endRParen,
-            JLabel insertText, JLabel insertValue, JLabel insertIndex, JLabel insertLParen, JLabel insertRParen,
+            JLabel startText, JLabel startValue, JLabel startIndex,
+            JLabel lengthText, JLabel lengthValue, JLabel lengthIndex,
+            JLabel endText, JLabel endValue, JLabel endIndex,
+            JLabel insertText, JLabel insertValue, JLabel insertIndex,
             JLabel gcText, JLabel gcValue, JLabel tmText, JLabel tmValue) {
 
         Caret caret = pane.getCaret();
@@ -2119,26 +2115,20 @@ public class SequenceView implements ObjBaseDropTarget {
             insertText.setVisible(false);
             insertValue.setVisible(false);
             insertIndex.setVisible(false);
-            insertLParen.setVisible(false);
-            insertRParen.setVisible(false);
-
+  
             startText.setVisible(true);
             startValue.setVisible(true);
             startIndex.setVisible(true);
-            startLParen.setVisible(true);
-            startRParen.setVisible(true);
 
             lengthText.setVisible(true);
             lengthValue.setVisible(true);
             lengthIndex.setVisible(true);
-            lengthLParen.setVisible(true);
-            lengthRParen.setVisible(true);
+
 
             endText.setVisible(true);
             endValue.setVisible(true);
             endIndex.setVisible(true);
-            endLParen.setVisible(true);
-            endRParen.setVisible(true);
+          
 
             gcText.setVisible(true);
             gcValue.setVisible(true);
@@ -2160,13 +2150,13 @@ public class SequenceView implements ObjBaseDropTarget {
             }
 
             length_index = len % 3;
-            lengthIndex.setText(length_index.toString());
+            lengthIndex.setText("<"+length_index.toString()+">");
 
             start_index = (sequence_start - 1) % 3;
-            startIndex.setText(start_index.toString());
+            startIndex.setText("<"+start_index.toString()+">");
 
             end_index = (sequence_end - 1) % 3;
-            endIndex.setText(end_index.toString());
+            endIndex.setText("<"+end_index.toString()+">");
 
             lengthValue.setText(len.toString());
 

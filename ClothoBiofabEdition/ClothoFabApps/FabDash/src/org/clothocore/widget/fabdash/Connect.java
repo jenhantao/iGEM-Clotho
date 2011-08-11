@@ -30,6 +30,8 @@ import org.clothocore.api.core.Collector;
 import org.clothocore.api.plugin.ClothoWidget;
 import org.clothocore.api.core.Collator;
 import org.clothocore.api.core.wrapper.ConnectionWrapper;
+import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
 
 /**
  *
@@ -58,6 +60,10 @@ public class Connect implements ClothoWidget  {
         };
         System.setOut(new PrintStream(out, true));
         System.setErr(new PrintStream(out, true));
+        
+        
+                
+
     }
 
     @Override
@@ -86,6 +92,10 @@ public class Connect implements ClothoWidget  {
 //                }
 //            }
 //        );
+        
+        
+        
+
     }
     ///////////////////////////////////////////////////////////////////
     ////                         private variables               ////
