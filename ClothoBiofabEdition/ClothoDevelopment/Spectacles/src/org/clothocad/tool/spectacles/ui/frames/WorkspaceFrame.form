@@ -510,8 +510,8 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="mainJTP" pref="1317" max="32767" attributes="2"/>
-                          <Component id="bottomJSP" alignment="0" pref="1317" max="32767" attributes="2"/>
+                          <Component id="mainJTP" pref="1385" max="32767" attributes="2"/>
+                          <Component id="bottomJSP" alignment="0" pref="1385" max="32767" attributes="2"/>
                       </Group>
                   </Group>
               </Group>
@@ -533,7 +533,7 @@
               <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="mainJTP" pref="296" max="32767" attributes="0"/>
+                      <Component id="mainJTP" pref="301" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="bottomJSP" min="-2" pref="111" max="-2" attributes="0"/>
                   </Group>

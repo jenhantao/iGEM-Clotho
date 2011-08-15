@@ -131,7 +131,7 @@ public class Spectacles implements ClothoTool {
     private static String _imageLocation = "src/org/clothocad/tool/spectacles/partsimages/";
     private static String _headerFilesLocation = "include/";
     private static boolean _runningSolo = true;
-
+//
     @Override
     public void launch(ObjBase o) {
         _runningSolo = false;

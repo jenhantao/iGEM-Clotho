@@ -233,6 +233,7 @@ public class SequenceView implements ObjBaseDropTarget {
 
     @Override
     public void handleDropedObject(ObjBase o) {
+        
         String seq = "";
         if (o.getType().equals(ObjType.PART)) {
         } else if (o.getType().equals(ObjType.OLIGO)) {

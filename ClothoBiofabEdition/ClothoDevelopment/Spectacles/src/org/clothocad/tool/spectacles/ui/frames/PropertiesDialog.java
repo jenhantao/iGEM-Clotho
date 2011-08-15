@@ -68,7 +68,6 @@ public class PropertiesDialog extends javax.swing.JDialog {
         ArrayList<ObjLink> links = Collector.getAllLinksOf(ObjType.FORMAT);
         final Object[] array = links.toArray();
         formatList.setModel(new javax.swing.DefaultComboBoxModel(array));
-
         _wsFrame = (WorkspaceFrame) parent;
     }
 
@@ -142,10 +141,10 @@ public class PropertiesDialog extends javax.swing.JDialog {
                 partsDescriptionField.setText((String)properties.get("Part_Description").getValue());
             }
 
-            /*partsFormatField.setEditable(true);
             if (properties.containsKey("Part_Format")){
-                partsFormatField.setText((String)properties.get("Part_Format").getValue());
-            }*/
+                ObjLink link = (ObjLink) formatList.getSelectedItem(); //formatList.setSelectedItem(_spartform
+                formatList.setName(link.name);
+            }
 
             partsSequenceArea.setEditable(true);
             if (properties.containsKey("Part_Sequence")){
@@ -656,8 +655,6 @@ public class PropertiesDialog extends javax.swing.JDialog {
         sequenceTextArea.setText("");
         partsNameField.setEditable(false);
         partsNameField.setText("");
-        //partsFormatField.setEditable(false);
-        //partsFormatField.setText("");
         partsDescriptionField.setEditable(false);
         partsDescriptionField.setText("");
         partsSequenceArea.setEditable(false);
@@ -696,10 +693,12 @@ public class PropertiesDialog extends javax.swing.JDialog {
         String sequence = partsSequenceArea.getText();
         ObjLink link = (ObjLink) formatList.getSelectedItem();
         Format form = Collector.getFormat(link.uuid);
+        //formatList.setName(form.toString());
+        _spartform = form;
 
         HashMap<String, Primitive> properties = _dpw.getPartPropertyValues();
 
-        //********* Create Feature using Clothocore method *********//
+        //*************************** Create Feature using Clothocore method ***************************//
 
         if (featname.isEmpty() == false) {
 
@@ -708,10 +707,17 @@ public class PropertiesDialog extends javax.swing.JDialog {
 
             //Feature property entry fields
 
-            //Clear properties if missing part info
+            //Clear part properties if missing part info
             if (name.isEmpty() == true || sequence.isEmpty() == true) {
-                //properties.clear();
+                properties.remove("Part_Name");
+                properties.remove("Part_Sequence");
+                properties.remove("Part_Format");
+                properties.remove("Part_Description");
                 partsSequenceArea.setText("");
+                partsNameField.setText("");
+                partsDescriptionField.setText("");
+                name = "";
+                description = "";
                 sequence = "";
             }
 
@@ -729,9 +735,10 @@ public class PropertiesDialog extends javax.swing.JDialog {
             _Collection.addObject(_feature);
 
             updateImageColor();
+
         }
 
-        //********* Create Part using Clothocore method *********//
+        //*************************** Create Part using Clothocore method ***************************//
 
         if (name.isEmpty() == false) {
 
@@ -750,7 +757,12 @@ public class PropertiesDialog extends javax.swing.JDialog {
 
             //Clear properties if missing feature info
             if (featname.isEmpty() == true || featseq.isEmpty() == true) {
-                //properties.clear();
+                properties.remove("Feature_Name");
+                properties.remove("Feature_Sequence");
+                sequenceTextArea.setText("");
+                nameTextField.setText("");
+                featname = "";
+                featseq = "";
             }
 
             Primitive partsName = new Primitive("Part_Name", "txt");
@@ -779,7 +791,7 @@ public class PropertiesDialog extends javax.swing.JDialog {
             updateImageColor();
         }
 
-        //********* Create Composite Part using Clothocore method *********//
+        //*************************** Create Composite Part using Clothocore method ***************************//
 
         if (cname.isEmpty() == false) {
 
@@ -940,6 +952,10 @@ public class PropertiesDialog extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_nameTextFieldActionPerformed
 
+    private void partsSequenceAreaActionPerformed(java.awt.event.ActionEvent evt){
+        partsSequenceArea.setText(sequenceTextArea.getText());
+    }
+
     private void partsDescriptionFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_partsDescriptionFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_partsDescriptionFieldActionPerformed
@@ -1009,11 +1025,13 @@ public class PropertiesDialog extends javax.swing.JDialog {
         String psname = partsNameField1.getText();
         if (psname.isEmpty() == false) {
             _spart = Part.retrieveByName(partsNameField1.getText());
+            _spartform = _spart.getFormat();
             if (_spart == null) {
                 JOptionPane.showMessageDialog(this, "No such Part exists!", "Try another Part name",
                 JOptionPane.ERROR_MESSAGE);
             } else {
             partsSequenceArea1.setText(_spart.getSeq().toString());
+            partsNameField1.setText(_spart.getName());
             }
         }
         
@@ -1024,10 +1042,12 @@ public class PropertiesDialog extends javax.swing.JDialog {
         HashMap<String, Primitive> properties = _dpw.getPartPropertyValues();
 
         //Assign information from Feature search to the Feature data entry
+        //formatList.setName(_spartform.toString());
         partsNameField.setText(partsNameField1.getText());
         partsNameField1.setText("");
         partsSequenceArea.setText(partsSequenceArea1.getText());
         partsSequenceArea1.setText("");
+
         renamePart();
 
         //Part property entry fields
@@ -1076,6 +1096,7 @@ public class PropertiesDialog extends javax.swing.JDialog {
         });
     }
 
+    private Format _spartform = null;
     private Collection _Collection = null;
     private Feature _feature = null;
     private Feature _sfeature = null;

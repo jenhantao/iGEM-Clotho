@@ -115,15 +115,16 @@ public class WorkspaceFrame extends javax.swing.JFrame {
             _notepad.setIconImage(ImageUtilities.loadImage(Spectacles.getIconPath()));
             jButtonRefreshParts.setEnabled(false);
         } else {
+            //String test = this.getClass().getResource("src/org/clothocad/tool/spectacles/partimages").toString();
             File iconFile = new File(Spectacles.getIconPath());
             System.out.println("icon file exists?: "+iconFile.exists());
             System.out.println(iconFile.toString());
-            try {
+            /*try {
                 setIconImage(ImageIO.read(iconFile));
                 _notepad.setIconImage(ImageIO.read(iconFile));
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
-            }
+            }*/
 
             // fileMenuSendSequenceView.setEnabled(true);
             // fileMenuSendAlgorithmManager.setEnabled(true);
@@ -509,6 +510,7 @@ public class WorkspaceFrame extends javax.swing.JFrame {
      */
     public void reloadThumbnailScenePalette() {
         _activeThumbnailScene.loadPalette();
+        System.out.print("HELLO");
     }
 
     /**

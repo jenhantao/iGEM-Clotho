@@ -88,12 +88,12 @@ public class PreferencesDialog extends javax.swing.JDialog {
                 _preferences.getBoolean("PropertiesDialogPopup", defaultPropertiesDialogPopup));
         checkBoxEugeneRuleChecking.setSelected(
                 _preferences.getBoolean("EugeneRuleChecking", defaultEugeneRuleChecking));
-        String location = _preferences.get("ImageLocation", "");
+        String location = _preferences.get("ImageLocation", "src/org/clothocad/tool/spectacles/partsimages");
         //System.out.println("Loading images: " + location);
         if (location.equals("")) {
             imagePathTextField.setText("");
         } else {
-            imagePathTextField.setText(location);
+            //imagePathTextField.setText(location);
             Spectacles.setImageLocation(location);
         }
         _imageLocationModified = false;

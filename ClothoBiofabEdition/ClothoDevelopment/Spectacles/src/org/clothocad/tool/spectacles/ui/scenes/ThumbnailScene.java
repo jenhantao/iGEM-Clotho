@@ -103,8 +103,10 @@ public class ThumbnailScene extends GraphScene {
      * a default palette is loaded instead.
      */
     public void loadPalette() {
+        System.out.print("HELLO");
         File dir = new File(Spectacles.getImageLocation());
         String[] partsImageNames = dir.list(pngFilter);
+        //String[] partsImageNames = this.getClass().getResource("/org/clothocad/tool/spectacles/partsimages").toString();
         if (partsImageNames == null) { // standalone mode
             // Pop up a warning if we're not using the default image location
             if (!Spectacles.getImageLocation().equals(PreferencesDialog.defaultImageLocation)) {
@@ -156,6 +158,7 @@ public class ThumbnailScene extends GraphScene {
         }
         if (_mainPalette.keySet().size() > 0) {
             setPalette(_mainPalette);
+            System.out.print("HELLO");
         } else {
             JOptionPane.showMessageDialog(_wsFrame,
                     "Problem loading part images; reverting to default part images.",
