@@ -88,7 +88,7 @@ public class PlateType extends ObjBase {
         return ObjType.PLATE_TYPE;
     }
 
-    protected static ObjBase importFromHashMap( String uuid, HashMap<String, Object> objHash ) {
+    public static ObjBase importFromHashMap( String uuid, HashMap<String, Object> objHash ) {
         String name = (String) objHash.get( "name" );
         Date dateCreated = getDateFromString( (String) objHash.get( "_dateCreated" ) );
         Date lastModified = getDateFromString( (String) objHash.get( "_lastModified" ) );
