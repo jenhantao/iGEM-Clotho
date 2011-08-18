@@ -47,11 +47,11 @@ public class ImportExport {
         /** write the headers ***********************************/
 
         HSSFRow myrow = sheet.createRow(0);
-        String[] headers = {"Row","Col","Container Name","BarCode","Sample Name","Sample Type",	"Quality","Concentration","Volume","Plasmid","Strain"};
-        for (int i= 0 ; i < headers.length; i++)
+       // String[] headers = {"Row","Col","Container Name","BarCode","Sample Name","Sample Type",	"Quality","Concentration","Volume","Plasmid","Strain","Author","Enzyme1","Enzyme2","Frozen-Stock"};
+        for (int i= 0 ; i < headerNames.length; i++)
         {
             HSSFCell cell   = myrow.createCell(i);
-            cell.setCellValue(new HSSFRichTextString(headers[i]));
+            cell.setCellValue(new HSSFRichTextString(headerNames[i]));
         }
         /** read data out of the plate*************************************/
         short rowCount =1;
@@ -59,7 +59,7 @@ public class ImportExport {
         {
             for (int col = 0; col < myPlate.getNumCols(); col ++)
             {
-                String containerName,barCode,sampleType,sampleName,quality,conc,vol,plasmid,strain;
+                String containerName,barCode,sampleType,sampleName,quality,conc,vol,plasmid,strain,author,enzyme1,enzyme2;
                 Container container =  myPlate.getContainerAt(row, col);
                 if (container !=null) {
                    containerName = (container.getName()==null || container.getName().length()==0)? "?":container.getName();
@@ -75,7 +75,38 @@ public class ImportExport {
                        plasmid = ps.getPlasmid().getName();
                        strain = ps.getSourceStrain().getName();
                        char ro = (char) ('A' +  row);
-                       writeRowToExcel(sheet,rowCount,Character.toString(ro),""+(col+1),containerName,barCode,sampleName,sampleType,quality,conc,vol,plasmid,strain);
+                       author = ps.getAuthor().getName();
+
+                       //if this is a gel sample we need to extract the two enzymes (enzyme1 and 2) from search tag table
+                       ArrayList<String> tags = ps.getSearchTags();
+                       boolean isGelSample = false;
+                       enzyme1="?"; enzyme2="?";
+                       for (int i = 0; i < tags.size(); i++)
+                       {
+                           if (tags.get(i).startsWith("enzyme1"))
+                           {
+                               isGelSample = true;
+                               enzyme1 = tags.get(i).substring(8);
+                           }
+                           else if (tags.get(i).startsWith("enzyme2"))
+                           {
+                               isGelSample = true;
+                               enzyme2 = tags.get(i).substring(8);
+                           }
+
+                       }
+                       //if this is a frozen-stock put in appropriate entry..
+                       String frozen_stock ="NO";
+                       for (int g = 0; g < tags.size(); g++)
+                       {
+                           if (tags.get(g).startsWith("frozen-stock"))
+                           {
+                               frozen_stock = "YES";
+                               break;
+                           }
+                       }
+
+                       writeRowToExcel(sheet,rowCount,Character.toString(ro),""+(col+1),containerName,barCode,sampleName,sampleType,quality,conc,vol,plasmid,strain,author,enzyme1,enzyme2,frozen_stock);
                        rowCount++;
                    }
                     
@@ -92,12 +123,12 @@ public class ImportExport {
         JOptionPane.showMessageDialog(null,"Export completed to file : "+filename);
     }
 
-    private void writeRowToExcel(HSSFSheet sheet,short rowCount,String row,String col, String containerName,String barCode,String sampleName,String sampleType, String quality, String conc, String vol, String plasmid,String strain)
+    private void writeRowToExcel(HSSFSheet sheet,short rowCount,String row,String col, String containerName,String barCode,String sampleName,String sampleType, String quality, String conc, String vol, String plasmid,String strain,String author,String enzyme1,String enzyme2,String frozen_stock)
     {
        // System.out.println("EXPORT OUTPUT:");
        // System.out.println(row + col + "container name :"+ containerName + "barcode : "+ barCode+ "sampleName : "+ sampleName +" sampleType : "+ sampleType + "quality : "+ quality + "conc :" + conc + "vol : "+ vol +"plasmid : "+ plasmid + "strain : " +strain);
        String msg = row + col + "container name :"+ containerName + "barcode : "+ barCode+ "sampleName : "+ sampleName +" sampleType : "+ sampleType + "quality : "+ quality + "conc :" + conc + "vol : "+ vol +"plasmid : "+ plasmid + "strain : " +strain;
-       String [] args = {row,col, containerName,barCode,sampleName,sampleType,quality,conc,vol,plasmid,strain};
+       String [] args = {row,col, containerName,barCode,sampleName,sampleType,quality,conc,vol,plasmid,strain,author,enzyme1,enzyme2,frozen_stock};
       // JOptionPane.showMessageDialog(null, msg);
 
         HSSFRow myrow = sheet.createRow(rowCount);
@@ -187,10 +218,17 @@ public class ImportExport {
     private void makeSample(List data) throws IllegalArgumentException
     {
        if (data.size()!=headerNames.length)
+       {
            return;
+       }
 
         HSSFCell plasmid = (HSSFCell)data.get(header.PLASMID.ordinal());
         HSSFCell strain = (HSSFCell)data.get(header.STRAIN.ordinal());
+        HSSFCell person = (HSSFCell)data.get(header.AUTHOR.ordinal());
+        HSSFCell enz1 = (HSSFCell)data.get(header.ENZYME1.ordinal());
+        HSSFCell enz2 = (HSSFCell)data.get(header.ENZYME2.ordinal());
+        HSSFCell frozen_stock = (HSSFCell)data.get(header.FROZEN_STOCK.ordinal());
+
         validatePlasmid(plasmid.getStringCellValue());
         validateStrain(strain.getStringCellValue());
 
@@ -208,6 +246,15 @@ public class ImportExport {
         {
            this.errorFlag =true;
            throw new IllegalArgumentException("ImportExport: ERROR, strain "+strain.getStringCellValue()+" cannot be found in DB!");
+
+        }
+
+        //retrieve author
+        Person myPerson = Person.retrieveByName(person.getStringCellValue());
+        if (myPerson == null)
+        {
+            this.errorFlag =true;
+            throw new IllegalArgumentException("ImportExport:ERROR, Person :"+person.getStringCellValue()+" cannot be found in DB!");
 
         }
 
@@ -240,7 +287,9 @@ public class ImportExport {
         ccell.setCellType(Cell.CELL_TYPE_STRING);
         double conc =Double.parseDouble(ccell.getStringCellValue());
 
-
+        //if this is a gel sample, then retrieve enzyme1 and enzyme2
+        String enzyme1 = enz1.getStringCellValue();
+        String enzyme2 = enz2.getStringCellValue();
 
         //retrieve container name plasmid name and barcode
         HSSFCell containerNameCell = (HSSFCell)data.get(header.CONTAINERNAME.ordinal());
@@ -252,15 +301,38 @@ public class ImportExport {
         /** Create a Plasmid sample. For now I am assuming that sample type is only plasmid sample
          * this needs to be changed in subsequent revisions..
          */
-        Person person =this.myPlate.getAuthor();
+       // Person person =this.myPlate.getAuthor();
         PlasmidSample pls = (PlasmidSample)myContainer.getSample();
-        if (pls == null)
-            pls =PlasmidSample.generatePlasmidSample(myPlasmid, myStrain, myContainer, vol, person);
+        if (pls!=null)
+        {
+           int opt = JOptionPane.showConfirmDialog(null,"Overwrite Row = "+rowCell.getStringCellValue()+" Col = "+col+" ?");
+            if (opt!=JOptionPane.OK_OPTION)
+                return;
+
+        }
+        else
+            pls =PlasmidSample.generatePlasmidSample(myPlasmid, myStrain, myContainer, vol, myPerson);
         pls.changeName(sampleNameCell.getStringCellValue());
         pls.changeVolume(vol);
         pls.changeQuality((short)quality);
         pls.changeConcentration(conc);
+        //put in appropriate tags if this is a gel Sample;
+        // note that BOTH enzyme1 and enzyme2 should be specified in order for this
+        // to be a legitimate gel sample!
+        if (!(enzyme1.equals("?") || enzyme2.equals("?")))
+        {
+            pls.addSearchTag("gel-sample");
+            pls.addSearchTag("enzyme1 "+enzyme1);
+            pls.addSearchTag("enzyme2 "+enzyme2);
+        }
+
+        //if this is a frozen stock, put in appropriate search tags to notify that!
+        if (frozen_stock.getStringCellValue().equalsIgnoreCase("yes"))
+        {
+            pls.addSearchTag("frozen-stock");
+        }
         pls.saveDefault();
+
 
         boolean change =false;
         if (!(newContainerName.equals("?")))
@@ -300,14 +372,8 @@ public class ImportExport {
 
 private Plate myPlate;
 private boolean errorFlag=false;
-public static enum header {ROW,COL,CONTAINERNAME,BARCODE,SAMPLENAME,SAMPLETYPE,QUALITY,CONC,VOL,PLASMID,STRAIN };
-public static String[] headerNames = {"Row","Col","Container Name","BarCode","Sample Name","Sample Type","Quality","Concentration","Volume","Plasmid","Strain"};
-
-
-
-
-
-
+public static enum header {ROW,COL,CONTAINERNAME,BARCODE,SAMPLENAME,SAMPLETYPE,QUALITY,CONC,VOL,PLASMID,STRAIN,AUTHOR,ENZYME1,ENZYME2,FROZEN_STOCK};
+public static String[] headerNames = {"Row","Col","Container Name","BarCode","Sample Name","Sample Type","Quality","Concentration","Volume","Plasmid","Strain","Author","Enzyme1","Enzyme2","Frozen-Stock"};
 
 
 }

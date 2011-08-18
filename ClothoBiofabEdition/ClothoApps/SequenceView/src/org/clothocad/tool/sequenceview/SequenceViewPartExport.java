@@ -143,12 +143,8 @@ public class SequenceViewPartExport extends javax.swing.JFrame {
         objectTypeComboBox.setSelectedIndex(-1);
         formatComboBox.setEnabled(false);
         formatLabel.setEnabled(false);
-        if (dataTextPane.getText().length() < 1) {
-            this.dispose();
-        } else {
-            this.setVisible(true);
 
-        }
+        this.setVisible(true);
     }
 
     public boolean wholeSeqSel() {

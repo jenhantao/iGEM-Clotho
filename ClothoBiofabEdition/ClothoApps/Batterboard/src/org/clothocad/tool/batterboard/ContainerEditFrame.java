@@ -31,9 +31,16 @@ public class ContainerEditFrame extends javax.swing.JFrame {
         this.myPlate = plate;
         this.selectedContainer = myC;
         populateContainer();
+        if (!(this.jCheckBoxGelSample.isSelected()))
+        {
+            this.jTextFieldEnzyme1.setEditable(false);
+            this.jTextFieldEnzyme2.setEditable(false);
+        }
     }
     public ContainerEditFrame() {
-        initComponents();
+        //initComponents();
+        this.myInitiate();
+        
         //populate plasmid dropdown
         Iterator i = plasmidList.iterator();
         while (i.hasNext()){
@@ -68,6 +75,36 @@ public class ContainerEditFrame extends javax.swing.JFrame {
             this.concentrationText.setText(""+pls.getConcentration());
             this.qualityText.setText(""+pls.getQuality());
             this.volumeText.setText(""+pls.getVolume());
+
+            //get search tags if a gel-sample or frozen-stock and turn the appropriate
+            //check boxes on
+
+            ArrayList<String> tags = pls.getSearchTags();
+            for (String s : tags)
+            {
+                if (s.equals("gel-sample"))
+                {
+                    this.jCheckBoxGelSample.setSelected(true);
+                    for (String e : tags)
+                    {
+                        if (e.startsWith("enzyme1"))
+                        {
+                            String enzyme1 = e.substring(8);
+                            this.jTextFieldEnzyme1.setText(""+enzyme1);
+                        }
+                        else if(e.startsWith("enzyme2"))
+                        {
+                            String enzyme2 = e.substring(8);
+                            this.jTextFieldEnzyme2.setText(""+enzyme2);
+                        }
+                    }
+                }
+
+                if (s.equals("frozen-stock"))
+                {
+                    this.jCheckBoxisFrozenStock.setSelected(true);
+                }
+            }
 
         }
     }
@@ -115,6 +152,7 @@ public class ContainerEditFrame extends javax.swing.JFrame {
         cancel = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
         qualityText = new javax.swing.JTextField();
+        jCheckBoxisFrozenStock = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -198,6 +236,13 @@ public class ContainerEditFrame extends javax.swing.JFrame {
 
         qualityText.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.qualityText.text")); // NOI18N
 
+        jCheckBoxisFrozenStock.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.jCheckBoxisFrozenStock.text")); // NOI18N
+        jCheckBoxisFrozenStock.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxisFrozenStockActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -225,7 +270,7 @@ public class ContainerEditFrame extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(jLabel11)
                         .addGap(18, 18, 18)
-                        .addComponent(volumeText, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
+                        .addComponent(volumeText, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
                         .addGap(16, 16, 16)
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -246,9 +291,6 @@ public class ContainerEditFrame extends javax.swing.JFrame {
                                 .addComponent(jLabel9)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jComboBoxPlasmid, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jCheckBoxGelSample))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -275,6 +317,12 @@ public class ContainerEditFrame extends javax.swing.JFrame {
                                 .addComponent(sampleName))
                             .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING))))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jCheckBoxGelSample)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+                .addComponent(jCheckBoxisFrozenStock)
+                .addGap(59, 59, 59))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -316,7 +364,9 @@ public class ContainerEditFrame extends javax.swing.JFrame {
                     .addComponent(jLabel10)
                     .addComponent(jComboBoxStrain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jCheckBoxGelSample)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCheckBoxGelSample)
+                    .addComponent(jCheckBoxisFrozenStock))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldEnzyme1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -335,6 +385,267 @@ public class ContainerEditFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void myInitiate()
+    {
+         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        containerName = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        barcode = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        sampleName = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jComboBoxPlasmid = new javax.swing.JComboBox();
+        jLabel10 = new javax.swing.JLabel();
+        jComboBoxStrain = new javax.swing.JComboBox();
+        sampleTypeBox = new javax.swing.JComboBox();
+        jLabel11 = new javax.swing.JLabel();
+        volumeText = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        concentrationText = new javax.swing.JTextField();
+        jCheckBoxGelSample = new javax.swing.JCheckBox();
+        jTextFieldEnzyme1 = new javax.swing.JTextField();
+        jTextFieldEnzyme2 = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        save = new javax.swing.JButton();
+        cancel = new javax.swing.JButton();
+        jLabel13 = new javax.swing.JLabel();
+        qualityText = new javax.swing.JTextField();
+        jCheckBoxisFrozenStock = new javax.swing.JCheckBox();
+
+       // setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18));
+        jLabel1.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.jLabel1.text")); // NOI18N
+
+        jLabel2.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.jLabel2.text")); // NOI18N
+
+        containerName.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.containerName.text")); // NOI18N
+        containerName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                containerNameActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.jLabel3.text")); // NOI18N
+
+        barcode.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.barcode.text")); // NOI18N
+
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18));
+        jLabel6.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.jLabel6.text")); // NOI18N
+
+        jLabel7.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.jLabel7.text")); // NOI18N
+
+        sampleName.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.sampleName.text")); // NOI18N
+
+        jLabel8.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.jLabel8.text")); // NOI18N
+
+        jLabel9.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.jLabel9.text")); // NOI18N
+
+        jLabel10.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.jLabel10.text")); // NOI18N
+
+        jLabel11.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.jLabel11.text")); // NOI18N
+
+        volumeText.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.volumeText.text")); // NOI18N
+        volumeText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                volumeTextActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.jLabel4.text")); // NOI18N
+
+        concentrationText.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.concentrationText.text")); // NOI18N
+        concentrationText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                concentrationTextActionPerformed(evt);
+            }
+        });
+
+        jCheckBoxGelSample.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.jCheckBoxGelSample.text")); // NOI18N
+        jCheckBoxGelSample.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxGelSampleActionPerformed(evt);
+            }
+        });
+
+        jTextFieldEnzyme1.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.jTextFieldEnzyme1.text")); // NOI18N
+
+        jTextFieldEnzyme2.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.jTextFieldEnzyme2.text")); // NOI18N
+
+        jLabel5.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.jLabel5.text")); // NOI18N
+
+        jLabel12.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.jLabel12.text")); // NOI18N
+
+        save.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.save.text")); // NOI18N
+        save.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveActionPerformed(evt);
+            }
+        });
+
+        cancel.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.cancel.text")); // NOI18N
+        cancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelActionPerformed(evt);
+            }
+        });
+
+        jLabel13.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.jLabel13.text")); // NOI18N
+
+        qualityText.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.qualityText.text")); // NOI18N
+
+        jCheckBoxisFrozenStock.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.jCheckBoxisFrozenStock.text")); // NOI18N
+        jCheckBoxisFrozenStock.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxisFrozenStockActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(barcode)
+                            .addComponent(containerName, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(sampleTypeBox, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel11)
+                        .addGap(18, 18, 18)
+                        .addComponent(volumeText, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
+                        .addGap(16, 16, 16)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(concentrationText, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel13)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(qualityText, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(9, 9, 9))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jComboBoxStrain, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jLabel9)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jComboBoxPlasmid, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldEnzyme1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addComponent(jLabel12))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jTextFieldEnzyme2, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(save)
+                        .addGap(18, 18, 18)
+                        .addComponent(cancel))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(sampleName))
+                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING))))
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jCheckBoxGelSample)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+                .addComponent(jCheckBoxisFrozenStock)
+                .addGap(59, 59, 59))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(containerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(barcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(sampleName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(sampleTypeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(qualityText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel13)
+                    .addComponent(concentrationText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(volumeText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(jComboBoxPlasmid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(jComboBoxStrain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCheckBoxGelSample)
+                    .addComponent(jCheckBoxisFrozenStock))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldEnzyme1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldEnzyme2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel12))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(save)
+                    .addComponent(cancel))
+                .addContainerGap())
+        );
+
+        pack();
+    }
     private void containerNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_containerNameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_containerNameActionPerformed
@@ -349,6 +660,19 @@ public class ContainerEditFrame extends javax.swing.JFrame {
 
     private void jCheckBoxGelSampleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxGelSampleActionPerformed
         // TODO add your handling code here:
+        if (this.jCheckBoxGelSample.isSelected())
+        {
+            this.jTextFieldEnzyme1.setEditable(true);
+            this.jTextFieldEnzyme2.setEditable(true);
+        }
+        else {
+            this.jTextFieldEnzyme1.setText(null);
+            this.jTextFieldEnzyme2.setText(null);
+            this.jTextFieldEnzyme1.setEditable(false);
+            this.jTextFieldEnzyme2.setEditable(false);
+
+
+        }
     }//GEN-LAST:event_jCheckBoxGelSampleActionPerformed
 
     private void saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveActionPerformed
@@ -386,6 +710,44 @@ public class ContainerEditFrame extends javax.swing.JFrame {
             pls.changeName(this.sampleName.getText());
             pls.changeQuality(quality);
             pls.changeConcentration(conc);
+
+            //set search tags if this is a gel-sample and/or frozen-stock
+            if (this.jCheckBoxGelSample.isSelected())
+            {
+                pls.addSearchTag("gel-sample");
+                pls.addSearchTag("enzyme1 "+this.jTextFieldEnzyme1.getText());
+                pls.addSearchTag("enzyme2 "+this.jTextFieldEnzyme2.getText());
+            }
+            else
+            {
+                ArrayList<String>tag = pls.getSearchTags();
+                for (int i = 0 ; i < tag.size(); i++)
+                {
+                    String s = tag.get(i);
+                    if (s.startsWith("gel-sample")|| s.startsWith("enzyme1")|| s.startsWith("enzyme2"))
+                        tag.remove(s);
+                }
+
+            }
+            if (this.jCheckBoxisFrozenStock.isSelected())
+            {
+                pls.addSearchTag("frozen-stock");
+            }
+            else
+            {
+                ArrayList<String>tag = pls.getSearchTags();
+                for (int i = 0 ; i < tag.size(); i++)
+                {
+                    String s = tag.get(i);
+                    if (s.startsWith("frozen-stock"))
+                    {
+                        tag.remove(i);
+                        break;
+                    }
+
+                }
+            }
+
             pls.saveDefault();
         }
         String newContainerName = this.containerName.getText();
@@ -412,6 +774,10 @@ public class ContainerEditFrame extends javax.swing.JFrame {
          this.setVisible(false);
     }//GEN-LAST:event_cancelActionPerformed
 
+    private void jCheckBoxisFrozenStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxisFrozenStockActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBoxisFrozenStockActionPerformed
+
     /**
     * @param args the command line arguments
     */
@@ -429,6 +795,7 @@ public class ContainerEditFrame extends javax.swing.JFrame {
     private javax.swing.JTextField concentrationText;
     private javax.swing.JTextField containerName;
     private javax.swing.JCheckBox jCheckBoxGelSample;
+    private javax.swing.JCheckBox jCheckBoxisFrozenStock;
     private javax.swing.JComboBox jComboBoxPlasmid;
     private javax.swing.JComboBox jComboBoxStrain;
     private javax.swing.JLabel jLabel1;

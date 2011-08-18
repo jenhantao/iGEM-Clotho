@@ -139,9 +139,25 @@ public class frame extends JFrame implements ActionListener {
                 Calendar cal = Calendar.getInstance();
                 SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
                 String dateTime= sdf.format(cal.getTime());
-                String filename ="exportdata"+_plate.getName()+"_"+dateTime+".xls";
+                String filename ="exportdata"+"_"+_plate.getName()+"_"+dateTime+".xls";
                 System.out.println("EXPORT is chosen..filename = "+filename);
-                importExport.exportToExcel(filename);
+                JFileChooser chooser = new JFileChooser();
+                chooser.setCurrentDirectory(new java.io.File("."));
+                chooser.setDialogTitle("Choose destination folder");
+                chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                chooser.setAcceptAllFileFilterUsed(false);
+                if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    System.out.println("getCurrentDirectory(): " + chooser.getCurrentDirectory());
+                    System.out.println("getSelectedFile() : " + chooser.getSelectedFile());
+
+                    filename = chooser.getSelectedFile()+"\\"+filename;
+                    importExport.exportToExcel(filename);
+                   } 
+                    else
+                    {
+                    System.out.println("export cancelled by user");
+                    }
+                
                 
             }
         });

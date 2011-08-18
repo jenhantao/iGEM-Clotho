@@ -84,6 +84,61 @@ public class SequenceViewManager implements ClothoTool {
         _sequenceViewArray.get(_currentSequenceViewIndex).getSequenceView().requestFocus();
     }
 
+    @Override
+    public void launch(ObjBase o) {
+        if (!Collector.isConnected()) {
+            JOptionPane.showMessageDialog(null, "Database connection required to launch this tool",
+                    "Not connected", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        Boolean toLaunch = false;
+        NucSeq sequence = null;
+        if (o.getType().equals(ObjType.OLIGO)) {
+            toLaunch = true;
+            sequence = ((Oligo) Collector.get(ObjType.OLIGO, o.getUUID())).getSeq();
+        }
+        if (o.getType().equals(ObjType.VECTOR)) {
+            toLaunch = true;
+            sequence = ((Vector) Collector.get(ObjType.VECTOR, o.getUUID())).getSeq();
+
+        }
+        if (o.getType().equals(ObjType.PART)) {
+            toLaunch = true;
+            sequence = ((Part) Collector.get(ObjType.PART, o.getUUID())).getSeq();
+
+        }
+        if (o.getType().equals(ObjType.PLASMID)) {
+            toLaunch = true;
+            sequence = ((Plasmid) Collector.get(ObjType.PLASMID, o.getUUID())).getSeq();
+
+        }
+        if (o.getType().equals(ObjType.FEATURE)) {
+            toLaunch = true;
+            sequence = ((Feature) Collector.get(ObjType.FEATURE, o.getUUID())).getSeq();
+
+        }
+        if (o.getType().equals(ObjType.NUCSEQ)) {
+            toLaunch = true;
+            sequence = ((NucSeq) Collector.get(ObjType.NUCSEQ, o.getUUID()));
+
+        }
+        if (toLaunch) {
+
+            _sequenceViewArray = new ArrayList<SequenceView>();
+            _sequenceViewArray.add(new SequenceView("SequenceView", "SequenceView", this, _currentSequenceViewIndex));
+
+            _sequenceViewArray.get(_currentSequenceViewIndex).setTitle("Clotho: Sequence View (Address: " + _currentSequenceViewIndex + ") " + o.getName());
+            _sequenceViewArray.get(_currentSequenceViewIndex).setSequence(sequence);
+//            _sequenceViewArray.get(_currentSequenceViewIndex).getSequenceView().setVisible(true);
+//            _sequenceViewArray.get(_currentSequenceViewIndex).getSequenceView().requestFocus();
+            _sequenceViewArray.get(_currentSequenceViewIndex).openTab();
+            _sequenceViewArray.get(_currentSequenceViewIndex).getSequenceView().requestFocus();
+            _sequenceViewArray.get(_currentSequenceViewIndex).getSequenceView().getOutputTextArea().setText("Loaded Clotho " + o.getType() + ": " + o.getName());
+            _currentSequenceViewIndex++;
+
+        }
+    }
+
     public Object getData(String object, String field) throws UnknownKeywordException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -139,61 +194,6 @@ public class SequenceViewManager implements ClothoTool {
 //    private ClothoHelp _help;
     private int _currentSequenceViewIndex;
 //    private HashMap<String, SequenceViewPlugInInterface> _plugIns;
-
-    @Override
-    public void launch(ObjBase o) {
-        if (!Collector.isConnected()) {
-            JOptionPane.showMessageDialog(null, "Database connection required to launch this tool",
-                    "Not connected", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        Boolean toLaunch = false;
-        String sequence = null;
-        if (o.getType().equals(ObjType.OLIGO)) {
-            toLaunch = true;
-            sequence = ((Oligo) Collector.get(ObjType.OLIGO, o.getUUID())).getSeq().toString();
-        }
-        if (o.getType().equals(ObjType.VECTOR)) {
-            toLaunch = true;
-            sequence = ((Vector) Collector.get(ObjType.VECTOR, o.getUUID())).getSeq().toString();
-
-        }
-        if (o.getType().equals(ObjType.PART)) {
-            toLaunch = true;
-            sequence = ((Part) Collector.get(ObjType.PART, o.getUUID())).getSeq().toString();
-
-        }
-        if (o.getType().equals(ObjType.PLASMID)) {
-            toLaunch = true;
-            sequence = ((Plasmid) Collector.get(ObjType.PLASMID, o.getUUID())).getSeq().toString();
-
-        }
-        if (o.getType().equals(ObjType.FEATURE)) {
-            toLaunch = true;
-            sequence = ((Feature) Collector.get(ObjType.FEATURE, o.getUUID())).getSeq().toString();
-
-        }
-        if (o.getType().equals(ObjType.NUCSEQ)) {
-            toLaunch = true;
-            sequence = ((NucSeq) Collector.get(ObjType.NUCSEQ, o.getUUID())).getSeq().toString();
-
-        }
-        if (toLaunch) {
-//            if (_currentSequenceViewIndex<0) {
-//                _currentSequenceViewIndex=0;
-//            }
-            _sequenceViewArray = new ArrayList<SequenceView>();
-            _sequenceViewArray.add(new SequenceView("SequenceView", "SequenceView", this, _currentSequenceViewIndex));
-
-            _sequenceViewArray.get(_currentSequenceViewIndex).setTitle("Clotho: Sequence View (Address: " + _currentSequenceViewIndex + ") " + o.getName());
-            _sequenceViewArray.get(_currentSequenceViewIndex).setSequence(sequence);
-            _sequenceViewArray.get(_currentSequenceViewIndex).getSequenceView().setVisible(true);
-            _sequenceViewArray.get(_currentSequenceViewIndex).getSequenceView().requestFocus();
-            _sequenceViewArray.get(_currentSequenceViewIndex).getSequenceView().getOutputTextArea().setText("Loaded Clotho "+o.getType()+": " + o.getName());
-            _currentSequenceViewIndex++;
-
-        }
-    }
 
     @Override
     public void close() {

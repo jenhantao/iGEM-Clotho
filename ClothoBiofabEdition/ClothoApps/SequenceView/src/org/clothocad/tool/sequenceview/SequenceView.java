@@ -233,7 +233,7 @@ public class SequenceView implements ObjBaseDropTarget {
 
     @Override
     public void handleDropedObject(ObjBase o) {
-        
+
         String seq = "";
         if (o.getType().equals(ObjType.PART)) {
         } else if (o.getType().equals(ObjType.OLIGO)) {
@@ -252,11 +252,11 @@ public class SequenceView implements ObjBaseDropTarget {
         }
         String[] options = {"Insert", "Replace", "Cancel"};
         int option = JOptionPane.showOptionDialog(null, "A Clotho object has been dropped.\nWhat do you want to do with it?", "SequenceView: Drag and Drop", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, "insert");
-        
+
         if (option == 0) {
             JTextPane ta = _sequenceview.get_TextArea();
             String currentText = ta.getText();
-                        ta.setText(currentText.substring(0, ta.getCaretPosition()) + seq + currentText.substring(ta.getCaretPosition()));
+            ta.setText(currentText.substring(0, ta.getCaretPosition()) + seq + currentText.substring(ta.getCaretPosition()));
             _sequenceview.getOutputTextArea().setText("Inserted the sequence of Clotho " + o.getType() + ": " + o.getName());
             sequenceChanged();
         } else if (option == 1) {
@@ -2011,10 +2011,10 @@ public class SequenceView implements ObjBaseDropTarget {
      * @param insertRParen
      */
     public void processCaret(CaretEvent evt,
-            JLabel startText, JLabel startValue, JLabel startIndex,
-            JLabel lengthText, JLabel lengthValue, JLabel lengthIndex, 
-            JLabel endText, JLabel endValue, JLabel endIndex,
-            JLabel insertText, JLabel insertValue, JLabel insertIndex,
+            JLabel startText, JLabel startValue,
+            JLabel lengthText, JLabel lengthValue,
+            JLabel endText, JLabel endValue,
+            JLabel insertText, JLabel insertValue,
             JLabel gcText, JLabel gcValue, JLabel tmText, JLabel tmValue) {
 
 
@@ -2030,23 +2030,19 @@ public class SequenceView implements ObjBaseDropTarget {
         if (mark.equals(dot)) {
             insertText.setVisible(true);
             insertValue.setVisible(true);
-            insertIndex.setVisible(true);
 
 
             startText.setVisible(false);
             startValue.setVisible(false);
-            startIndex.setVisible(false);
-  
+
 
             lengthText.setVisible(false);
             lengthValue.setVisible(false);
-            lengthIndex.setVisible(false);
 
 
             endText.setVisible(false);
             endValue.setVisible(false);
-            endIndex.setVisible(false);
-           
+
 
             gcText.setVisible(false);
             gcValue.setVisible(false);
@@ -2057,10 +2053,8 @@ public class SequenceView implements ObjBaseDropTarget {
             insert_start = dot + 1;
 
             insert_index = (insert_start - 1) % 3;
-            insertIndex.setText("<"+insert_index.toString()+">");
 
-            insertValue.setText(insert_start.toString());
-            //System.out.print("Caret update2 " + dot + " " + mark + " " + insert_index + "\n");    
+            insertValue.setText(insert_start.toString() + "<" + insert_index.toString() + ">");
             endValue.setText("0");
             startValue.setText("0");
             lengthValue.setText("0");
@@ -2095,10 +2089,10 @@ public class SequenceView implements ObjBaseDropTarget {
      * @param insertRParen
      */
     public void processMouseHighlight(MouseEvent evt, JTextPane pane,
-            JLabel startText, JLabel startValue, JLabel startIndex,
-            JLabel lengthText, JLabel lengthValue, JLabel lengthIndex,
-            JLabel endText, JLabel endValue, JLabel endIndex,
-            JLabel insertText, JLabel insertValue, JLabel insertIndex,
+            JLabel startText, JLabel startValue,
+            JLabel lengthText, JLabel lengthValue,
+            JLabel endText, JLabel endValue,
+            JLabel insertText, JLabel insertValue,
             JLabel gcText, JLabel gcValue, JLabel tmText, JLabel tmValue) {
 
         Caret caret = pane.getCaret();
@@ -2115,53 +2109,47 @@ public class SequenceView implements ObjBaseDropTarget {
         if (!dot.equals(mark)) {
             insertText.setVisible(false);
             insertValue.setVisible(false);
-            insertIndex.setVisible(false);
-  
+
             startText.setVisible(true);
             startValue.setVisible(true);
-            startIndex.setVisible(true);
 
             lengthText.setVisible(true);
             lengthValue.setVisible(true);
-            lengthIndex.setVisible(true);
-
 
             endText.setVisible(true);
             endValue.setVisible(true);
-            endIndex.setVisible(true);
-          
 
             gcText.setVisible(true);
             gcValue.setVisible(true);
             tmText.setVisible(true);
             tmValue.setVisible(true);
 
+
+
+
+            String selectedText = _sequenceview.get_TextArea().getSelectedText().toUpperCase();
+
             if (dot.intValue() > mark.intValue()) {
                 sequence_start = mark + 1;
                 sequence_end = dot;
-                endValue.setText(sequence_end.toString());
-                startValue.setText(sequence_start.toString());
+                start_index = (sequence_start - 1) % 3;
+                end_index = (sequence_end - 1) % 3;
+                endValue.setText(sequence_end.toString() + " <" + end_index.toString() + ">");
+                startValue.setText(sequence_start.toString() + " <" + start_index.toString() + ">");
                 len = dot - mark;
             } else {
                 sequence_start = dot + 1;
                 sequence_end = mark;
-                endValue.setText(sequence_end.toString());
-                startValue.setText(sequence_start.toString());
+                start_index = (sequence_start - 1) % 3;
+                end_index = (sequence_end - 1) % 3;
+                endValue.setText(sequence_end.toString() + " <" + end_index.toString() + ">");
+                startValue.setText(sequence_start.toString() + " <" + start_index.toString() + ">");
                 len = mark - dot;
             }
 
             length_index = len % 3;
-            lengthIndex.setText("<"+length_index.toString()+">");
+            lengthValue.setText(len.toString() + " <" + length_index.toString() + ">");
 
-            start_index = (sequence_start - 1) % 3;
-            startIndex.setText("<"+start_index.toString()+">");
-
-            end_index = (sequence_end - 1) % 3;
-            endIndex.setText("<"+end_index.toString()+">");
-
-            lengthValue.setText(len.toString());
-
-            String selectedText = _sequenceview.get_TextArea().getSelectedText().toUpperCase();
             int atCount = 0;
             Double gcCount = 0.0;
             for (int i = 0; i < selectedText.length(); i++) {
@@ -3443,7 +3431,7 @@ public class SequenceView implements ObjBaseDropTarget {
      * Set the main sequence area to the give string
      * @param newSequence
      */
-    public void setSequence(String newSequence) {
+    public void setSequence(NucSeq newSequence) {
         int actionChoice;
         String currentText = _sequenceview.get_TextArea().getText();
         if ((currentText == null) || (currentText.equalsIgnoreCase(""))) { //if currently empty, don't need to ask for replace/append
@@ -3455,7 +3443,7 @@ public class SequenceView implements ObjBaseDropTarget {
             actionChoice = javax.swing.JOptionPane.showOptionDialog(new JFrame(), "Incoming sequence information. What should be done?", "Sequence View Import", javax.swing.JOptionPane.YES_NO_CANCEL_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
         }
         //check for valid characters
-        if (!this.checkValidSequence(newSequence, this.getDegeneracy())) {
+        if (!this.checkValidSequence(newSequence.toString(), this.getDegeneracy())) {
 //            ClothoDialogBox dbox = new ClothoDialogBox("Sequence View Import", "Imported sequence contains non-standard characters. Continue?");
             String[] choices = {"Continue", "Cancel"};
 //            int getChoice = dbox.show_optionDialog(javax.swing.JOptionPane.YES_NO_CANCEL_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, choices, choices[1]);
@@ -3466,15 +3454,15 @@ public class SequenceView implements ObjBaseDropTarget {
         }
 
         if (actionChoice == 0) {
-            _sequenceview.get_TextArea().setText(newSequence);
+            _sequenceview.get_TextArea().setText(newSequence.toString());
         } else if (actionChoice == 1) {
-            _sequenceview.get_TextArea().replaceSelection(newSequence);
+            _sequenceview.get_TextArea().replaceSelection(newSequence.toString());
         } else if (actionChoice == 2) {
             _sequenceview.get_TextArea().setText(_sequenceview.get_TextArea().getText() + newSequence);
         } else if (actionChoice == 3) {
             return;
         }
-        _sequence.changeSeq(newSequence);
+        _sequence=newSequence;
         _sequenceview.setVisible(true);
     }
 

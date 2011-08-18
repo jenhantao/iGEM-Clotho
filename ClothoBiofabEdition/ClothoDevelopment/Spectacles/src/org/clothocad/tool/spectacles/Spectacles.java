@@ -128,7 +128,7 @@ public class Spectacles implements ClothoTool {
     // use a private static method to resolve the image path
     // all path stuff should go here for easy access
     private static String _iconPath = "src/org/clothocad/tool/spectacles/spectacles_icon.png";
-    private static String _imageLocation = "src/org/clothocad/tool/spectacles/partsimages/";
+    private static String _imageLocation = "src/org/clothocad/tool/spectacles/partsimages";
     private static String _headerFilesLocation = "include/";
     private static boolean _runningSolo = true;
 //

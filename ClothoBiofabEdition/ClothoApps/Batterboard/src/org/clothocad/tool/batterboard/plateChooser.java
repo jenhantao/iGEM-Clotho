@@ -35,7 +35,7 @@ import org.clothocore.api.data.ObjLink;
 import org.clothocore.api.data.ObjType;
 import org.clothocore.api.data.Plate;
 import org.clothocore.api.core.Collector;
-
+import javax.swing.*;
 
 /**
  *
@@ -199,8 +199,9 @@ public class plateChooser extends javax.swing.JFrame {
     private void jButtonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSearchActionPerformed
         // TODO add your handling code here:
         searchForm aform = new searchForm();
+        //JFrame aform = new JFrame();
         hub.guis.add(new WeakReference(aform));
-        aform.setVisible(true);
+       // aform.setVisible(true);
     }//GEN-LAST:event_jButtonSearchActionPerformed
 
     /**

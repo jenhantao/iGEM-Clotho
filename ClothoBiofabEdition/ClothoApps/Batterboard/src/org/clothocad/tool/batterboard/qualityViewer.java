@@ -125,6 +125,8 @@ public class qualityViewer extends JPanel implements ObjBaseObserver {
                     wellComponents[i][j]._shape = new Rectangle2D.Double(xpos[i][j], ypos[i][j], wellWidth, wellHeight);
                 } else {
                     wellComponents[i][j]._shape = new Ellipse2D.Double(xpos[i][j], ypos[i][j], diameter, diameter);
+                    System.out.println("xpos["+i+"]["+j+"= "+xpos[i][j]);
+                    System.out.println("ypos["+i+"]["+j+"= "+ypos[i][j]);
                 }
                 final int ii=i;
                 final int jj=j;

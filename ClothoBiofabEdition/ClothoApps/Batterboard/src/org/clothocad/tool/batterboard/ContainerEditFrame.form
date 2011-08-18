@@ -78,10 +78,6 @@
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jCheckBoxGelSample" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jTextFieldEnzyme1" min="-2" pref="119" max="-2" attributes="0"/>
                           <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -116,6 +112,13 @@
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jCheckBoxGelSample" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="66" max="32767" attributes="0"/>
+              <Component id="jCheckBoxisFrozenStock" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="59" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -166,7 +169,10 @@
                   <Component id="jComboBoxStrain" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="jCheckBoxGelSample" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jCheckBoxGelSample" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jCheckBoxisFrozenStock" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jTextFieldEnzyme1" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -400,6 +406,16 @@
           <ResourceString bundle="org/clothocad/tool/batterboard/Bundle.properties" key="ContainerEditFrame.qualityText.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="jCheckBoxisFrozenStock">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/clothocad/tool/batterboard/Bundle.properties" key="ContainerEditFrame.jCheckBoxisFrozenStock.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBoxisFrozenStockActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

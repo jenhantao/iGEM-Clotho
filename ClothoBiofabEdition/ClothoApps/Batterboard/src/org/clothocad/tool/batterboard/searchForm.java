@@ -19,7 +19,12 @@ public class searchForm extends javax.swing.JFrame {
 
     /** Creates new form searchForm */
     public searchForm() {
-        initComponents();
+        System.out.println("Coming to searchForm");
+        setSize(300,500);
+       // initComponents();
+        myInitiateComponents();
+        setVisible(true);
+        System.out.println("out of initialization");
     }
 
     /** This method is called from within the constructor to
@@ -111,6 +116,90 @@ public class searchForm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+
+
+    private void myInitiateComponents()
+    {
+         jLabel1 = new javax.swing.JLabel();
+        jTextFieldPartName = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jTextFieldDesc = new javax.swing.JTextField();
+        jCheckBox1 = new javax.swing.JCheckBox();
+        jLabel3 = new javax.swing.JLabel();
+        jTextFieldEnzyme = new javax.swing.JTextField();
+        searchButton = new javax.swing.JButton();
+       
+       // setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        
+        jLabel1.setText(org.openide.util.NbBundle.getMessage(searchForm.class, "searchForm.jLabel1.text")); // NOI18N
+        
+        jTextFieldPartName.setText(org.openide.util.NbBundle.getMessage(searchForm.class, "searchForm.jTextFieldPartName.text")); // NOI18N
+        jTextFieldPartName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldPartNameActionPerformed(evt);
+            }
+        });
+         
+        jLabel2.setText(org.openide.util.NbBundle.getMessage(searchForm.class, "searchForm.jLabel2.text")); // NOI18N
+
+        jTextFieldDesc.setText(org.openide.util.NbBundle.getMessage(searchForm.class, "searchForm.jTextFieldDesc.text")); // NOI18N
+
+        jCheckBox1.setText(org.openide.util.NbBundle.getMessage(searchForm.class, "searchForm.jCheckBox1.text")); // NOI18N
+
+        jLabel3.setText(org.openide.util.NbBundle.getMessage(searchForm.class, "searchForm.jLabel3.text")); // NOI18N
+
+        jTextFieldEnzyme.setText(org.openide.util.NbBundle.getMessage(searchForm.class, "searchForm.jTextFieldEnzyme.text")); // NOI18N
+
+        searchButton.setText(org.openide.util.NbBundle.getMessage(searchForm.class, "searchForm.searchButton.text")); // NOI18N
+         
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jCheckBox1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jTextFieldPartName)
+                            .addComponent(jTextFieldDesc, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldEnzyme, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                        .addComponent(searchButton)))
+                .addContainerGap())
+        );
+         
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jTextFieldPartName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jTextFieldDesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCheckBox1)
+                    .addComponent(jLabel3)
+                    .addComponent(jTextFieldEnzyme, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchButton))
+                .addContainerGap(11, Short.MAX_VALUE))
+        );
+        
+        pack();
+    }
     private void jTextFieldPartNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldPartNameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldPartNameActionPerformed
