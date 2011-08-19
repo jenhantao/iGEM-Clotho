@@ -5,7 +5,7 @@
 <classname>org-clothocad-tool-helloworld-connect</classname>
 <description>Revised hello world demo</description>
 <displayname>HelloWorld</displayname>
-<uuid>org.clothocad.tool.helloworldr</uuid>
+<uuid>org.clothocad.tool.helloworld</uuid>
 <!--<screenshotpath>org/clothocad/tool/personeditor/screenshot.png</screenshotpath>-->
 <author>Jenhan Tao</author>
 <iconpath>org/clothocad/tool/helloworld/logo.png</iconpath>

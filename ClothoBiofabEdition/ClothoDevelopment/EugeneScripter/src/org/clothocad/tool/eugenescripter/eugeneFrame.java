@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.clothocad.tool.eugenescripter;
 
 import java.awt.Dimension;
@@ -47,366 +46,366 @@ import jsyntaxpane.DefaultSyntaxKit;
 import jsyntaxpane.syntaxkits.*;
 
 public class eugeneFrame extends JFrame {
+    JButton switchViewButton;
+    JButton newFileButton, saveButton, openButton;
+    JButton runScriptButton, clearOutputButton, addTabButton, closeTabButton;
+    JTreeDirectory rootDirectory;
+    JTree tree;
+    JTabbedPane tabbedPane;
+    ViewSwitcher _viewSwitcher;
+    final JFileChooser fc;
 
-	JButton newFileButton, saveButton, openButton;
-	JButton runScriptButton, clearOutputButton, addTabButton, closeTabButton;
-	JTreeDirectory rootDirectory;
-	JTree tree;
-	JTabbedPane tabbedPane;
+    public eugeneFrame() {
+        super();
+        //this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setTitle("Eugene Frame");
+        this.setSize(600, 600);
+        this.setResizable(true);
 
-	final JFileChooser fc;
+        fc = new JFileChooser();
 
-	public eugeneFrame()
-	{
-		super();
-		//this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setTitle("Eugene Frame");
-		this.setSize(600, 600);
-		this.setResizable(true);
+        DefaultSyntaxKit.initKit();
 
-		fc = new JFileChooser();
+        initComponents();
+        _viewSwitcher = new ViewSwitcher(this);
 
-                DefaultSyntaxKit.initKit();
-                
-		initComponents();
+    }
 
-                this.setVisible(true);
-	}
+    public void initComponents() {
+        JPanel pane = new JPanel();
+        this.setContentPane(pane);
+        pane.setLayout(new BorderLayout());
 
-	public void initComponents()
-	{
-		JPanel pane = new JPanel();
-		this.setContentPane(pane);
-                pane.setLayout(new BorderLayout());
+        newFileButton = new JButton("New File");
+        newFileButton.addActionListener(new ActionListener() {
 
-		newFileButton = new JButton("New File");
-		newFileButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e)
-			{
-				// Not sure what to do here...
-			}
-		});
+            public void actionPerformed(ActionEvent e) {
+                // Not sure what to do here...
+            }
+        });
 
-		saveButton = new JButton("Save");
-		saveButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e)
-			{
-				JEditorPane topPane = topPane();
-				if (topPane == null)
-				{
-					JOptionPane.showMessageDialog(eugeneFrame.this, "Please create a new tab before saving");
-					return;
-				}
+        saveButton = new JButton("Save");
+        saveButton.addActionListener(new ActionListener() {
 
-				int returnVal = fc.showSaveDialog(eugeneFrame.this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
+            public void actionPerformed(ActionEvent e) {
+                JEditorPane topPane = topPane();
+                if (topPane == null) {
+                    JOptionPane.showMessageDialog(eugeneFrame.this, "Please create a new tab before saving");
+                    return;
+                }
 
-					File file = fc.getSelectedFile();
-					try {
-						FileWriter fstream = new FileWriter(file);
-						BufferedWriter out = new BufferedWriter(fstream);
-						out.write(topPane.getText());
-						out.close();
-					} catch (Exception exception) { }
-				}
-			}
-		});
+                int returnVal = fc.showSaveDialog(eugeneFrame.this);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
 
-		openButton = new JButton("Open");
-		openButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e)
-			{
-				int returnVal = fc.showOpenDialog(eugeneFrame.this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
+                    File file = fc.getSelectedFile();
+                    try {
+                        FileWriter fstream = new FileWriter(file);
+                        BufferedWriter out = new BufferedWriter(fstream);
+                        out.write(topPane.getText());
+                        out.close();
+                    } catch (Exception exception) {
+                    }
+                }
+            }
+        });
 
-					tabbedPane.addTab(file.getName(), createSplitPane());
-					tabbedPane.setSelectedIndex(tabbedPane.getTabCount()-1);
-					JEditorPane topPane = topPane();
+        openButton = new JButton("Open");
+        openButton.addActionListener(new ActionListener() {
 
-					try {
-						BufferedReader in = new BufferedReader(new FileReader(file));
-						topPane.setText("");
-						String str;
-                                                String newString = "";
-						while ((str = in.readLine()) != null)
-						{
-							//topPane.append(str + "\n");
-                                                        newString += str;
-                                                }
-						in.close();
-                                                topPane.setText(newString);
-					} catch (IOException exception) { }
-				}
-			}
-		});
+            public void actionPerformed(ActionEvent e) {
+                int returnVal = fc.showOpenDialog(eugeneFrame.this);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File file = fc.getSelectedFile();
 
-		runScriptButton = new JButton("Run Script");
-		runScriptButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e)
-			{
-                            if (tabbedPane.getTabCount() != 0) {
-                                    try {
-                                        eugeneProcess.runEugene(topPane().getText(), bottomPane());
-                                    } catch (IOException ex)
-                                    {
-                                        Logger.getLogger(eugeneFrame.class.getName()).log(Level.SEVERE, null, ex);
-                                    }
-                            }
-			}
-		});
+                    tabbedPane.addTab(file.getName(), createSplitPane());
+                    tabbedPane.setSelectedIndex(tabbedPane.getTabCount() - 1);
+                    JEditorPane topPane = topPane();
 
-		clearOutputButton = new JButton("Clear Output");
-		clearOutputButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e)
-			{
-				JEditorPane bottomPane = bottomPane();
-				if (bottomPane != null)
-					bottomPane.setText("");
-			}
-		});
+                    try {
+                        BufferedReader in = new BufferedReader(new FileReader(file));
+                        topPane.setText("");
+                        String str;
+                        String newString = "";
+                        while ((str = in.readLine()) != null) {
+                            //topPane.append(str + "\n");
+                            newString += str;
+                        }
+                        in.close();
+                        topPane.setText(newString);
+                    } catch (IOException exception) {
+                    }
+                }
+            }
+        });
 
-		addTabButton = new JButton("Add Tab");
-		addTabButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e)
-			{
-				String tabName = JOptionPane.showInputDialog("Please enter a tab name");
-		        tabbedPane.addTab(tabName, createSplitPane());
-			}
-		});
+        runScriptButton = new JButton("Run Script");
+        runScriptButton.addActionListener(new ActionListener() {
 
-		closeTabButton = new JButton("Close Tab");
-		closeTabButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e)
-			{
-				if (tabbedPane.getTabCount() != 0)
-		    		tabbedPane.removeTabAt(tabbedPane.getSelectedIndex());
-			}
-		});
+            public void actionPerformed(ActionEvent e) {
+                if (tabbedPane.getTabCount() != 0) {
+                    try {
+                        eugeneProcess.runEugene(topPane().getText(), bottomPane());
+                    } catch (IOException ex) {
+                        Logger.getLogger(eugeneFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        });
 
-		JToolBar buttonBar = new JToolBar();
-		//buttonBar.setPreferredSize(new Dimension(600, 25));
-		buttonBar.setFloatable(false);
-		buttonBar.add(newFileButton);
-		buttonBar.add(saveButton);
-		buttonBar.add(openButton);
-		buttonBar.add(runScriptButton);
-		buttonBar.add(clearOutputButton);
-		buttonBar.add(addTabButton);
-		buttonBar.add(closeTabButton);
-		pane.add(buttonBar, BorderLayout.PAGE_START);
+        clearOutputButton = new JButton("Clear Output");
+        clearOutputButton.addActionListener(new ActionListener() {
 
-		rootDirectory = new JTreeDirectory(System.getProperty("user.home"), System.getProperty("user.home"));
-		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(rootDirectory);
-		tree = new JTree(rootNode);
-		listAllFiles(new File(rootDirectory.getPath()), rootNode, true);
+            public void actionPerformed(ActionEvent e) {
+                JEditorPane bottomPane = bottomPane();
+                if (bottomPane != null) {
+                    bottomPane.setText("");
+                }
+            }
+        });
 
-		tree.addTreeSelectionListener(new TreeSelectionListener()
-		{
-			public void valueChanged(TreeSelectionEvent e)
-			{
-				DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.getPath().getLastPathComponent();
-				String path = ((JTreeDirectory)node.getUserObject()).getPath();
-				File directory = new File(path);
+        addTabButton = new JButton("Add Tab");
+        addTabButton.addActionListener(new ActionListener() {
 
-				if (directory.isDirectory())
-					listAllFiles(directory, node, true);
-			}
-		});
-		tree.addTreeExpansionListener(new TreeExpansionListener()
-		{
-			public void treeCollapsed(TreeExpansionEvent e) {
-				DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.getPath().getLastPathComponent();
-			}
+            public void actionPerformed(ActionEvent e) {
+                String tabName = JOptionPane.showInputDialog("Please enter a tab name");
+                tabbedPane.addTab(tabName, createSplitPane());
+            }
+        });
 
-			public void treeExpanded(TreeExpansionEvent e) {
-				DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.getPath().getLastPathComponent();
-				String path = ((JTreeDirectory)node.getUserObject()).getPath();
-				File directory = new File(path);
+        closeTabButton = new JButton("Close Tab");
+        closeTabButton.addActionListener(new ActionListener() {
 
-				if (directory.isDirectory())
-					listAllFiles(directory, node, true);
-			}
-		});
-		tree.addMouseListener(new MouseListener()
-		{
-			public void mouseClicked(MouseEvent e) {}
-			public void mouseEntered(MouseEvent e) {}
-			public void mouseExited(MouseEvent e) {}
-			public void mousePressed(MouseEvent e) {}
-			public void mouseReleased(MouseEvent e) {
-				if (e.getClickCount() == 2)
-				{
-					// open that file
+            public void actionPerformed(ActionEvent e) {
+                if (tabbedPane.getTabCount() != 0) {
+                    tabbedPane.removeTabAt(tabbedPane.getSelectedIndex());
+                }
+            }
+        });
+        switchViewButton = new JButton("Switch View");
+        switchViewButton.addActionListener(new ActionListener() {
 
-					TreePath path = tree.getPathForLocation(e.getX(), e.getY());
+            public void actionPerformed(ActionEvent e) {
+                _viewSwitcher.switchViews();
+            }
+        });
+        JToolBar buttonBar = new JToolBar();
+        //buttonBar.setPreferredSize(new Dimension(600, 25));
+        buttonBar.setFloatable(false);
+        buttonBar.add(newFileButton);
+        buttonBar.add(saveButton);
+        buttonBar.add(openButton);
+        buttonBar.add(runScriptButton);
+        buttonBar.add(clearOutputButton);
+        buttonBar.add(addTabButton);
+        buttonBar.add(closeTabButton);
+        buttonBar.add(switchViewButton);
+        pane.add(buttonBar, BorderLayout.PAGE_START);
 
-					if (path == null)
-						return;
+        rootDirectory = new JTreeDirectory(System.getProperty("user.home"), System.getProperty("user.home"));
+        DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(rootDirectory);
+        tree = new JTree(rootNode);
+        listAllFiles(new File(rootDirectory.getPath()), rootNode, true);
 
-					DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+        tree.addTreeSelectionListener(new TreeSelectionListener() {
 
-					try {
-						File file = new File(((JTreeDirectory)node.getUserObject()).getPath());
+            public void valueChanged(TreeSelectionEvent e) {
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.getPath().getLastPathComponent();
+                String path = ((JTreeDirectory) node.getUserObject()).getPath();
+                File directory = new File(path);
 
-						if (!file.isFile())
-						{
-							return;
-						}
+                if (directory.isDirectory()) {
+                    listAllFiles(directory, node, true);
+                }
+            }
+        });
+        tree.addTreeExpansionListener(new TreeExpansionListener() {
 
-						tabbedPane.addTab(file.getName(), createSplitPane());
-						tabbedPane.setSelectedIndex(tabbedPane.getTabCount()-1);
-						JEditorPane topPane = topPane();
+            public void treeCollapsed(TreeExpansionEvent e) {
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.getPath().getLastPathComponent();
+            }
 
-						BufferedReader in = new BufferedReader(new FileReader(file));
-						topPane.setText("");
-						String str;
-                                                String newString = "";
-						while ((str = in.readLine()) != null)
-						{
-							//topPane.append(str + "\n");
-                                                        newString += str;
-                                                }
-						in.close();
-                                                topPane.setText(newString);
-					} catch (IOException exception) { }
-				}
-			}
-		});
+            public void treeExpanded(TreeExpansionEvent e) {
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.getPath().getLastPathComponent();
+                String path = ((JTreeDirectory) node.getUserObject()).getPath();
+                File directory = new File(path);
 
-		tabbedPane = new JTabbedPane();
-		tabbedPane.addTab("Tab1", createSplitPane());
-		//tabbedPane.setPreferredSize(new Dimension(350, 525));
+                if (directory.isDirectory()) {
+                    listAllFiles(directory, node, true);
+                }
+            }
+        });
+        tree.addMouseListener(new MouseListener() {
 
-		JSplitPane horizontalSplitPane = new JSplitPane();
-		JScrollPane treeScrollPane = new JScrollPane(tree);
-		//treeScrollPane.setPreferredSize(new Dimension(225, 525));
-		
-                horizontalSplitPane.setLeftComponent(treeScrollPane);
-                horizontalSplitPane.setRightComponent(tabbedPane);
+            public void mouseClicked(MouseEvent e) {
+            }
 
-		pane.add(horizontalSplitPane, BorderLayout.CENTER);
-	}
+            public void mouseEntered(MouseEvent e) {
+            }
 
-	private JSplitPane splitPane()
-	{
-		return (JSplitPane) tabbedPane.getSelectedComponent();
-	}
+            public void mouseExited(MouseEvent e) {
+            }
 
-	private JEditorPane topPane()
-	{
-		JSplitPane splitPane = splitPane();
-		JEditorPane topPane = null;
-		if (splitPane != null)
-		{
-			JScrollPane scroll = (JScrollPane) splitPane.getTopComponent();
-			topPane = (JEditorPane) scroll.getViewport().getComponent(0);
-		}
-		return topPane;
-	}
+            public void mousePressed(MouseEvent e) {
+            }
 
-	private JEditorPane bottomPane()
-	{
-		JSplitPane splitPane = splitPane();
-		JEditorPane bottomPane = null;
-		if (splitPane != null)
-		{
-			JScrollPane scroll = (JScrollPane) splitPane.getBottomComponent();
-			bottomPane = (JEditorPane) scroll.getViewport().getComponent(0);
-		}
-		return bottomPane;
-	}
+            public void mouseReleased(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    // open that file
 
-	private JSplitPane createSplitPane()
-	{
-            JSplitPane splitPane = new JSplitPane();
+                    TreePath path = tree.getPathForLocation(e.getX(), e.getY());
 
-            JEditorPane topPane = new JEditorPane();
-            JEditorPane bottomPane = new JEditorPane();
-            bottomPane.setEditable(false);
+                    if (path == null) {
+                        return;
+                    }
 
-            JScrollPane topScroll = new JScrollPane();
-            JScrollPane bottomScroll = new JScrollPane();
+                    DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
 
-            topScroll.setViewportView(topPane);
-            bottomScroll.setViewportView(bottomPane);
+                    try {
+                        File file = new File(((JTreeDirectory) node.getUserObject()).getPath());
 
-            DefaultSyntaxKit.registerContentType("text/eugene", EugeneSyntaxKit.class.getName());
-            topPane.setContentType("text/eugene");
+                        if (!file.isFile()) {
+                            return;
+                        }
 
-            splitPane.setDividerLocation(250);
-            splitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+                        tabbedPane.addTab(file.getName(), createSplitPane());
+                        tabbedPane.setSelectedIndex(tabbedPane.getTabCount() - 1);
+                        JEditorPane topPane = topPane();
 
-            splitPane.setTopComponent(topScroll);
-            splitPane.setBottomComponent(bottomScroll);
+                        BufferedReader in = new BufferedReader(new FileReader(file));
+                        topPane.setText("");
+                        String str;
+                        String newString = "";
+                        while ((str = in.readLine()) != null) {
+                            //topPane.append(str + "\n");
+                            newString += str;
+                        }
+                        in.close();
+                        topPane.setText(newString);
+                    } catch (IOException exception) {
+                    }
+                }
+            }
+        });
 
-            return splitPane;
-	}
+        tabbedPane = new JTabbedPane();
+        tabbedPane.addTab("Tab1", createSplitPane());
+        //tabbedPane.setPreferredSize(new Dimension(350, 525));
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		java.awt.EventQueue.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				new eugeneFrame().setVisible(true);
-			}
-		});
-	}
+        JSplitPane horizontalSplitPane = new JSplitPane();
+        JScrollPane treeScrollPane = new JScrollPane(tree);
+        //treeScrollPane.setPreferredSize(new Dimension(225, 525));
 
-	public void listAllFiles(File directory, DefaultMutableTreeNode parent, Boolean recursive) {
+        horizontalSplitPane.setLeftComponent(treeScrollPane);
+        horizontalSplitPane.setRightComponent(tabbedPane);
 
-		parent.removeAllChildren();
+        pane.add(horizontalSplitPane, BorderLayout.CENTER);
+    }
 
-		File[] children = directory.listFiles();
+    private JSplitPane splitPane() {
+        return (JSplitPane) tabbedPane.getSelectedComponent();
+    }
 
-        if (children == null)
-        {
+    private JEditorPane topPane() {
+        JSplitPane splitPane = splitPane();
+        JEditorPane topPane = null;
+        if (splitPane != null) {
+            JScrollPane scroll = (JScrollPane) splitPane.getTopComponent();
+            topPane = (JEditorPane) scroll.getViewport().getComponent(0);
+        }
+        return topPane;
+    }
+
+    private JEditorPane bottomPane() {
+        JSplitPane splitPane = splitPane();
+        JEditorPane bottomPane = null;
+        if (splitPane != null) {
+            JScrollPane scroll = (JScrollPane) splitPane.getBottomComponent();
+            bottomPane = (JEditorPane) scroll.getViewport().getComponent(0);
+        }
+        return bottomPane;
+    }
+
+    private JSplitPane createSplitPane() {
+        JSplitPane splitPane = new JSplitPane();
+
+        JEditorPane topPane = new JEditorPane();
+        JEditorPane bottomPane = new JEditorPane();
+        bottomPane.setEditable(false);
+
+        JScrollPane topScroll = new JScrollPane();
+        JScrollPane bottomScroll = new JScrollPane();
+
+        topScroll.setViewportView(topPane);
+        bottomScroll.setViewportView(bottomPane);
+
+        DefaultSyntaxKit.registerContentType("text/eugene", EugeneSyntaxKit.class.getName());
+        topPane.setContentType("text/eugene");
+
+        splitPane.setDividerLocation(250);
+        splitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
+        splitPane.setTopComponent(topScroll);
+        splitPane.setBottomComponent(bottomScroll);
+
+        return splitPane;
+    }
+
+    /**
+     * @param args
+     */
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            public void run() {
+                new eugeneFrame().setVisible(true);
+            }
+        });
+    }
+
+    public void listAllFiles(File directory, DefaultMutableTreeNode parent, Boolean recursive) {
+
+        parent.removeAllChildren();
+
+        File[] children = directory.listFiles();
+
+        if (children == null) {
             return;
         }
 
-        for (int i=0; i<children.length; i++)
-        {
+        for (int i = 0; i < children.length; i++) {
             JTreeDirectory nodeDirectory = new JTreeDirectory(directory.getPath() + File.separator + children[i].getName(),
                     children[i].getName());
             DefaultMutableTreeNode node = new DefaultMutableTreeNode(nodeDirectory);
 
             parent.add(node);
 
-            if (recursive)
-            {
-            	listAllFiles(children[i], node, false);
+            if (recursive) {
+                listAllFiles(children[i], node, false);
             }
         }
     }
 }
 
-class JTreeDirectory
-{
+class JTreeDirectory {
+
     private String name;
     private String path;
 
-    public JTreeDirectory(String path, String name)
-    {
+    public JTreeDirectory(String path, String name) {
         this.name = name;
         this.path = path;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public String getPath()
-    {
+    public String getPath() {
         return path;
     }
 
-    public String toString()
-    {
+    public String toString() {
         return name;
     }
 }
