@@ -17,16 +17,6 @@
             </file>
         </folder>
     </folder>
-    <folder name="Windows2">
-        <folder name="Components">
-            <file name="SequenceViewTopComponent.settings" url="SequenceViewTopComponentSettings.xml"/>
-        </folder>
-        <folder name="Modes">
-            <folder name="editor">
-                <file name="SequenceViewTopComponent.wstcref" url="SequenceViewTopComponentWstcref.xml"/>
-            </folder>
-        </folder>
-    </folder>
     <folder name="plugins">
         <folder name="tools">
             <file name="org-clothocad-tool-sequenceview-SequenceViewManager.instance">

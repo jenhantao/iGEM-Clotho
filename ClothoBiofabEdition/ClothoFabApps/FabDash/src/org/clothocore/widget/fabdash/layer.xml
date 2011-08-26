@@ -3,7 +3,7 @@
 <filesystem>
     <attr name="Menu\GoTo\position" intvalue="300"/>
 <!--    <attr name="Menu\Help\position" intvalue="500"/>-->
-    <folder name="Actions">
+    <folder name="Actions"> <!--all actions must be regiestered here-->
         <folder name="Window">
             <file name="org-clothocore-widget-fabdash-InventoryAction.instance">
                 <attr name="component" methodvalue="org.clothocore.widget.fabdash.InventoryTopComponent.findInstance"/>
@@ -12,7 +12,7 @@
             </file>
             <file name="org-clothocore-widget-fabdash-PopulateTools.instance"/>
             <file name="org-clothocore-widget-fabdash-FileMenuPopulator.instance"/>
-
+            <file name="org-clothocore-widget-fabdash-HelpMenuPopulator.instance"/>
         </folder>
     </folder>
     <folder name="Menu">
@@ -20,6 +20,10 @@
         <file name="GoTo_hidden"/>
         <folder name="File">
             <attr name="position" intvalue="100"/>
+            <file name="org-clothocore-widget-fabdash-FileMenuPopulator.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/org-clothocore-widget-fabdash-FileMenuPopulator.instance"/>
+                <attr name="position" intvalue="0"/>
+            </file>
         </folder>
         <folder name="Apps">
             <attr name="position" intvalue="200"/>
@@ -30,8 +34,8 @@
         </folder>
         <folder name="Help">
             <attr name="position" intvalue="500"/>
-            <file name="org-clothocore-widget-fabdash-FileMenuPopulator.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/org-clothocore-widget-fabdash-FileMenuPopulator.instance"/>
+            <file name="org-clothocore-widget-fabdash-HelpMenuPopulator.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/org-clothocore-widget-fabdash-HelpMenuPopulator.instance"/>
                 <attr name="position" intvalue="0"/>
             </file>
         </folder>
