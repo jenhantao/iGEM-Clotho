@@ -393,10 +393,10 @@ public final class InventoryTopComponent extends TopComponent {
         connectionPanel.setMinimumSize(new java.awt.Dimension(150, 100));
         connectionPanel.setPreferredSize(new java.awt.Dimension(150, 100));
 
-        jLabel1.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Ubuntu", 0, 12));
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.jLabel1.text")); // NOI18N
 
-        currentUserLabel.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
+        currentUserLabel.setFont(new java.awt.Font("Ubuntu", 0, 12));
         org.openide.awt.Mnemonics.setLocalizedText(currentUserLabel, org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.currentUserLabel.text")); // NOI18N
         currentUserLabel.setToolTipText(org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.currentUserLabel.toolTipText")); // NOI18N
         currentUserLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -413,7 +413,7 @@ public final class InventoryTopComponent extends TopComponent {
             }
         });
 
-        statusLabel.setFont(new java.awt.Font("Ubuntu", 0, 10)); // NOI18N
+        statusLabel.setFont(new java.awt.Font("Ubuntu", 0, 10));
         org.openide.awt.Mnemonics.setLocalizedText(statusLabel, org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.statusLabel.text")); // NOI18N
         statusLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -423,7 +423,7 @@ public final class InventoryTopComponent extends TopComponent {
         jPanel1.setMinimumSize(new java.awt.Dimension(250, 50));
         jPanel1.setPreferredSize(new java.awt.Dimension(250, 50));
 
-        localRadioButton.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
+        localRadioButton.setFont(new java.awt.Font("Ubuntu", 0, 12));
         org.openide.awt.Mnemonics.setLocalizedText(localRadioButton, org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.localRadioButton.text")); // NOI18N
         localRadioButton.setToolTipText(org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.localRadioButton.toolTipText")); // NOI18N
         localRadioButton.addActionListener(new java.awt.event.ActionListener() {
@@ -432,7 +432,7 @@ public final class InventoryTopComponent extends TopComponent {
             }
         });
 
-        configurableRadioButton.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
+        configurableRadioButton.setFont(new java.awt.Font("Ubuntu", 0, 12));
         org.openide.awt.Mnemonics.setLocalizedText(configurableRadioButton, org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.configurableRadioButton.text")); // NOI18N
         configurableRadioButton.setToolTipText(org.openide.util.NbBundle.getMessage(InventoryTopComponent.class, "InventoryTopComponent.configurableRadioButton.toolTipText")); // NOI18N
         configurableRadioButton.addActionListener(new java.awt.event.ActionListener() {

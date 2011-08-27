@@ -123,19 +123,17 @@ public class SequenceViewManager implements ClothoTool {
 
         }
         if (toLaunch) {
-
-            _sequenceViewArray = new ArrayList<SequenceView>();
+            if (_sequenceViewArray == null) {
+                _sequenceViewArray = new ArrayList<SequenceView>();
+            }
             _sequenceViewArray.add(new SequenceView("SequenceView", "SequenceView", this, _currentSequenceViewIndex));
-
+            _currentSequenceViewIndex = _sequenceViewArray.size() - 1;
             _sequenceViewArray.get(_currentSequenceViewIndex).setTitle("Clotho: Sequence View (Address: " + _currentSequenceViewIndex + ") " + o.getName());
             _sequenceViewArray.get(_currentSequenceViewIndex).setSequence(sequence);
-//            _sequenceViewArray.get(_currentSequenceViewIndex).getSequenceView().setVisible(true);
-//            _sequenceViewArray.get(_currentSequenceViewIndex).getSequenceView().requestFocus();
+            _sequenceViewArray.get(_currentSequenceViewIndex).run();
             _sequenceViewArray.get(_currentSequenceViewIndex).openTab();
             _sequenceViewArray.get(_currentSequenceViewIndex).getSequenceView().requestFocus();
             _sequenceViewArray.get(_currentSequenceViewIndex).getSequenceView().getOutputTextArea().setText("Loaded Clotho " + o.getType() + ": " + o.getName());
-            _currentSequenceViewIndex++;
-
         }
     }
 

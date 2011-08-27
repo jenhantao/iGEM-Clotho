@@ -206,12 +206,18 @@ public class SequenceView implements ObjBaseDropTarget {
 
                 @Override
                 public void run() {
-                    _tcView = new TopComponent();
+                    _tcView = new TopComponent() {
+                        @Override
+                        public boolean canClose() {
+                            updateWindowMenus();
+                            return super.canClose();
+                        }
+                    };
                     _tcView.setLayout(new BorderLayout());
                     JScrollPane sp = new JScrollPane(guiContentPane);
                     _tcView.add(menu, BorderLayout.NORTH);
                     _tcView.add(sp, BorderLayout.CENTER);
-                    _tcView.setName("Sequence View");
+                    _tcView.setName(_sequenceview.getTitle());
                     _tcView.open();
                     _tcView.requestActive();
 
@@ -1871,12 +1877,18 @@ public class SequenceView implements ObjBaseDropTarget {
 
             @Override
             public void run() {
-                _tcView = new TopComponent();
+                _tcView = new TopComponent() {
+                        @Override
+                        public boolean canClose() {
+                            updateWindowMenus();
+                            return super.canClose();
+                        }
+                    };
                 _tcView.setLayout(new BorderLayout());
                 JScrollPane sp = new JScrollPane(guiContentPane);
                 _tcView.add(menu, BorderLayout.NORTH);
                 _tcView.add(sp, BorderLayout.CENTER);
-                _tcView.setName("Sequence View");
+                _tcView.setName(_sequenceview.getTitle());
                 _tcView.open();
                 _tcView.requestActive();
 
@@ -3132,7 +3144,8 @@ public class SequenceView implements ObjBaseDropTarget {
     }
 
     public void run() {
-        setTitle("Clotho: Sequence View (Address: " + _myIndex + ") New Sequence");
+//        setTitle("Clotho: Sequence View (Address: " + _myIndex + ") New Sequence");
+        
         configureBasePairBoth(_sequenceview.getColLabel());
         updateWindowMenus();
     }
@@ -3744,6 +3757,7 @@ public class SequenceView implements ObjBaseDropTarget {
             windows.add(seq.getSequenceView().getTitle());
         }
         for (int i = 0; i < _manager.getSequenceViewArray().size(); i++) {
+            
             SequenceView seq = _manager.getSpecificSV(i);
             SequenceViewGUI seqView = seq.getSequenceView();
             JMenuItem switchItem = seqView.getWindowMenu().getItem(0); //don't want to clear this item which allows view switching
