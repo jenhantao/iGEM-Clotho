@@ -10,6 +10,11 @@
                 <attr name="displayName" bundlevalue="org.clothocore.widget.fabdash.Bundle#CTL_InventoryAction"/>
                 <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
             </file>
+            <file name="org-clothocore-widget-fabdash-InventoryTabsTopComponent.instance">
+                <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
+                <attr name="preferredID" stringvalue="LogInTopComponent"/>
+            </file>
+            <file name="org-clothocore-widget-fabdash-LogInTopComponent.instance_hidden"/>
             <file name="org-clothocore-widget-fabdash-PopulateTools.instance"/>
             <file name="org-clothocore-widget-fabdash-FileMenuPopulator.instance"/>
             <file name="org-clothocore-widget-fabdash-HelpMenuPopulator.instance"/>

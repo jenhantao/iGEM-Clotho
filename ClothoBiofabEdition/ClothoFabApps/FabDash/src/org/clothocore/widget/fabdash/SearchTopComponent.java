@@ -42,13 +42,15 @@ public final class SearchTopComponent extends TopComponent {
 
         searchBar1 = new org.clothocore.widget.fabdash.browser.SearchBar();
 
+        setDisplayName(org.openide.util.NbBundle.getMessage(SearchTopComponent.class, "SearchTopComponent.displayName")); // NOI18N
+
         searchBar1.setMinimumSize(new java.awt.Dimension(150, 100));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(searchBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(searchBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
