@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import org.clothocore.api.core.Collector;
 import org.clothocore.api.data.ObjLink;
 import org.clothocore.api.data.ObjType;
+import org.clothocore.api.data.Sample.SampleType;
 
 /**
  *
@@ -27,18 +28,65 @@ public class MakeObjectFrame extends javax.swing.JFrame {
     }
 
     public MakeObjectFrame(ObjType o) {
-        
+
         initComponents();
-        this.setTitle("Create new Clotho "+o);
+        this.setTitle("Create new Clotho " + o);
         collectionComboBox.removeAllItems();
         ArrayList<ObjLink> allLinksOf = Collector.getAllLinksOf(ObjType.COLLECTION);
         for (ObjLink oj : allLinksOf) {
             collectionComboBox.addItem(oj.name);
         }
-        saveType=o;
+        saveType = o;
         if (saveType.equals(ObjType.PART)) {
-            
+            swapPanel.remove(volumeLabel);
+            swapPanel.remove(volumeField);
+            swapPanel.remove(cdsCheckBox);
+            formatComboBox.removeAllItems();
+            ArrayList<ObjLink> formatLinks = Collector.getAllLinksOf(ObjType.FORMAT);
+            for (ObjLink ol : formatLinks) {
+                formatComboBox.addItem(ol.name);
+            }
+        } else if (saveType.equals(ObjType.OLIGO)) {
+            swapPanel.remove(volumeLabel);
+            swapPanel.remove(volumeField);
+            swapPanel.remove(cdsCheckBox);
+            swapPanel.remove(formatLabel);
+            swapPanel.remove(formatComboBox);
+        } else if (saveType.equals(ObjType.VECTOR)) {
+            swapPanel.remove(volumeLabel);
+            swapPanel.remove(volumeField);
+            swapPanel.remove(cdsCheckBox);
+            formatComboBox.removeAllItems();
+            ArrayList<ObjLink> formatLinks = Collector.getAllLinksOf(ObjType.FORMAT);
+            for (ObjLink ol : formatLinks) {
+                formatComboBox.addItem(ol.name);
+            }
+
+        } else if (saveType.equals(ObjType.FEATURE)) {
+            swapPanel.remove(volumeLabel);
+            swapPanel.remove(volumeField);
+
+            swapPanel.remove(formatLabel);
+            swapPanel.remove(formatComboBox);
+        } else if (saveType.equals(ObjType.SAMPLE)) {
+            swapPanel.remove(cdsCheckBox);
+            swapPanel.remove(sequenceLabel);
+            swapPanel.remove(jScrollPane2);
+            formatComboBox.removeAllItems();
+            for (SampleType st : SampleType.values()) {
+                formatComboBox.addItem(st.toString());
+            }
+            formatLabel.setText("Type");
+        } else if (saveType.equals(ObjType.COLLECTION)) {
+            swapPanel.remove(volumeLabel);
+            swapPanel.remove(volumeField);
+            swapPanel.remove(cdsCheckBox);
+            swapPanel.remove(sequenceLabel);
+            swapPanel.remove(jScrollPane2);
+            swapPanel.remove(formatLabel);
+            swapPanel.remove(formatComboBox);
         }
+
     }
 
     /** This method is called from within the constructor to
@@ -57,6 +105,14 @@ public class MakeObjectFrame extends javax.swing.JFrame {
         saveButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         swapPanel = new javax.swing.JPanel();
+        sequenceLabel = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        formatComboBox = new javax.swing.JComboBox();
+        formatLabel = new javax.swing.JLabel();
+        volumeLabel = new javax.swing.JLabel();
+        volumeField = new javax.swing.JTextField();
+        cdsCheckBox = new javax.swing.JCheckBox();
         jLabel3 = new javax.swing.JLabel();
         collectionComboBox = new javax.swing.JComboBox();
         statusLabel = new javax.swing.JLabel();
@@ -91,7 +147,63 @@ public class MakeObjectFrame extends javax.swing.JFrame {
         });
 
         swapPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        swapPanel.setLayout(new javax.swing.BoxLayout(swapPanel, javax.swing.BoxLayout.LINE_AXIS));
+
+        sequenceLabel.setText(org.openide.util.NbBundle.getMessage(MakeObjectFrame.class, "MakeObjectFrame.sequenceLabel.text")); // NOI18N
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setLineWrap(true);
+        jTextArea1.setRows(5);
+        jScrollPane2.setViewportView(jTextArea1);
+
+        formatComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        formatLabel.setText(org.openide.util.NbBundle.getMessage(MakeObjectFrame.class, "MakeObjectFrame.formatLabel.text")); // NOI18N
+
+        volumeLabel.setText(org.openide.util.NbBundle.getMessage(MakeObjectFrame.class, "MakeObjectFrame.volumeLabel.text")); // NOI18N
+
+        volumeField.setText(org.openide.util.NbBundle.getMessage(MakeObjectFrame.class, "MakeObjectFrame.volumeField.text")); // NOI18N
+
+        cdsCheckBox.setText(org.openide.util.NbBundle.getMessage(MakeObjectFrame.class, "MakeObjectFrame.cdsCheckBox.text")); // NOI18N
+
+        javax.swing.GroupLayout swapPanelLayout = new javax.swing.GroupLayout(swapPanel);
+        swapPanel.setLayout(swapPanelLayout);
+        swapPanelLayout.setHorizontalGroup(
+            swapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(swapPanelLayout.createSequentialGroup()
+                .addGroup(swapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cdsCheckBox)
+                    .addGroup(swapPanelLayout.createSequentialGroup()
+                        .addGroup(swapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(sequenceLabel)
+                            .addComponent(formatLabel)
+                            .addComponent(volumeLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(swapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(volumeField, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
+                            .addComponent(formatComboBox, 0, 188, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE))))
+                .addContainerGap())
+        );
+
+        swapPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {formatLabel, sequenceLabel, volumeLabel});
+
+        swapPanelLayout.setVerticalGroup(
+            swapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(swapPanelLayout.createSequentialGroup()
+                .addGroup(swapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(sequenceLabel)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(6, 6, 6)
+                .addGroup(swapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(formatLabel)
+                    .addComponent(formatComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(swapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(volumeLabel)
+                    .addComponent(volumeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(cdsCheckBox))
+        );
 
         jLabel3.setText(org.openide.util.NbBundle.getMessage(MakeObjectFrame.class, "MakeObjectFrame.jLabel3.text")); // NOI18N
 
@@ -111,23 +223,24 @@ public class MakeObjectFrame extends javax.swing.JFrame {
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
+            .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(swapPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, backgroundPanelLayout.createSequentialGroup()
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)
+                    .addGroup(backgroundPanelLayout.createSequentialGroup()
                         .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, backgroundPanelLayout.createSequentialGroup()
-                        .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField1)
-                            .addComponent(collectionComboBox, 0, 186, Short.MAX_VALUE)))
-                    .addComponent(statusLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE))
+                    .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(swapPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, backgroundPanelLayout.createSequentialGroup()
+                            .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel3)
+                                .addComponent(jLabel1))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jTextField1)
+                                .addComponent(collectionComboBox, 0, 186, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
 
@@ -145,7 +258,7 @@ public class MakeObjectFrame extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(collectionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(swapPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
+                .addComponent(swapPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -161,7 +274,7 @@ public class MakeObjectFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -176,7 +289,6 @@ private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 }//GEN-LAST:event_cancelButtonActionPerformed
 
 private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-
 }//GEN-LAST:event_saveButtonActionPerformed
 
     /**
@@ -218,13 +330,22 @@ private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JCheckBox cdsCheckBox;
     private javax.swing.JComboBox collectionComboBox;
+    private javax.swing.JComboBox formatComboBox;
+    private javax.swing.JLabel formatLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JButton saveButton;
+    private javax.swing.JLabel sequenceLabel;
     private javax.swing.JLabel statusLabel;
     private javax.swing.JPanel swapPanel;
+    private javax.swing.JTextField volumeField;
+    private javax.swing.JLabel volumeLabel;
     // End of variables declaration//GEN-END:variables
 }

@@ -68,22 +68,6 @@ public class FileMenuPopulator extends AbstractAction implements Presenter.Menu 
         });
         m.add(vectorItem);
 
-        JMenuItem plasmidItem = new JMenuItem("Plasmid");
-        plasmidItem.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!Collector.isConnected()) {
-                    StatusDisplayer.getDefault().setStatusText("Connect before creating a new Plasmid");
-                    return;
-                }
-                MakeObjectFrame mof = new MakeObjectFrame(ObjType.PLASMID);
-                mof.pack();
-                mof.setVisible(true);
-            }
-        });
-        m.add(plasmidItem);
-
         JMenuItem featureItem = new JMenuItem("Feature");
         featureItem.addActionListener(new ActionListener() {
 
