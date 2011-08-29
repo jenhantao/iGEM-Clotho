@@ -874,7 +874,7 @@ public abstract class ObjBase implements Serializable {
     private transient HashSet<Thread> _saveHold;
     private transient ArrayList<undoLine> undoList = new ArrayList<undoLine>();
     private transient ArrayList<undoLine> redoList = new ArrayList<undoLine>();
-    protected ObjBaseDatum _datum;
+    public ObjBaseDatum _datum;
     protected String _uuid;
     protected boolean _isTransient = false;  //If transient is true Clotho will ignore the object during saves
     protected boolean _inDatabase = false;

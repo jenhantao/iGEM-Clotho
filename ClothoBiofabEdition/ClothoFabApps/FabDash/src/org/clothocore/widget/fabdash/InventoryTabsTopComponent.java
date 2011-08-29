@@ -23,6 +23,7 @@ import org.openide.windows.TopComponent;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.awt.StatusDisplayer;
 
 /**
  * Top component which displays something.
@@ -41,8 +42,8 @@ public final class InventoryTabsTopComponent extends TopComponent {
 
     public InventoryTabsTopComponent() {
         initComponents();
-        _connected=false;
-        
+        _connected = false;
+
         partsTable.addMouseListener(new MouseAdapter() {
 
             @Override
@@ -100,8 +101,8 @@ public final class InventoryTabsTopComponent extends TopComponent {
         oligosTable.setTransferHandler(new InventoryTransferHandler());
         oligosTable.setDragEnabled(true);
 
-        
-        
+
+
         setName(NbBundle.getMessage(InventoryTabsTopComponent.class, "CTL_LogInTopComponent"));
         setToolTipText(NbBundle.getMessage(InventoryTabsTopComponent.class, "HINT_LogInTopComponent"));
 
@@ -315,19 +316,19 @@ public final class InventoryTabsTopComponent extends TopComponent {
             .addComponent(inventoryPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
+
     @Override
-protected void componentShowing() {
-    if (!_connected) {
-                fetchInventoryInformation();
-        _connected=true;
-        
-    }
+    protected void componentShowing() {
+        if (!_connected) {
+            fetchInventoryInformation();
+            _connected = true;
+
+        }
         super.componentShowing();
-}
-    
-    
+    }
+
 private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
-        fetchInventoryInformation();
+    fetchInventoryInformation();
 }//GEN-LAST:event_refreshButtonActionPerformed
 
     private void fetchInventoryInformation() {
@@ -338,6 +339,8 @@ private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             @Override
             protected Object doInBackground() throws Exception {
                 if (!Collector.isConnected()) {
+                    StatusDisplayer.getDefault().setStatusText("Need to connect before displaying Inventory");
+
                     return null;
                 }
                 try {
@@ -496,9 +499,6 @@ private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
 
     }
-
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel inventoryPanel;
     protected javax.swing.JTabbedPane inventoryTabbedPane;
@@ -512,6 +512,7 @@ private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JScrollPane vectorsScrollPane;
     protected javax.swing.JTable vectorsTable;
     // End of variables declaration//GEN-END:variables
+
     @Override
     public void componentOpened() {
         // TODO add custom code on component opening
@@ -533,8 +534,6 @@ private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         String version = p.getProperty("version");
         // TODO read your settings according to their version
     }
-    
-    
-        private ObjBasePopup _obp;
-        private boolean _connected;
+    private ObjBasePopup _obp;
+    private boolean _connected;
 }

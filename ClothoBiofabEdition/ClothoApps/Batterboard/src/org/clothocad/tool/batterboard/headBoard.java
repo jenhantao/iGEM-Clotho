@@ -283,6 +283,10 @@ public class headBoard extends javax.swing.JPanel implements ObjBaseObserver {
                     _frame.plateLoadingThread.join();
                 } catch (InterruptedException ex) {
                 }
+                catch (Exception e)
+                {
+                    e.getMessage();
+                }
 
                 titleField.setText(_plate.getName());
             }

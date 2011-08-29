@@ -459,7 +459,7 @@ public class ObjBasePopup {
                         final JMenuItem menuitem21 = new JMenuItem( "Plasmid" );
                         addSubField(pooper, "Plasmid", ps.getPlasmid());
                         break;
-                    case CELL_SAMPLE:
+                    case STRAIN_SAMPLE:
                         //add Strain
                         break;
                     case OLIGO_SAMPLE:

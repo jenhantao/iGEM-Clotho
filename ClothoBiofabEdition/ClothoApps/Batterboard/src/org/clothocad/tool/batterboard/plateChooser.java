@@ -29,6 +29,7 @@
 
 package org.clothocad.tool.batterboard;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import org.clothocore.api.data.ObjLink;
@@ -36,6 +37,7 @@ import org.clothocore.api.data.ObjType;
 import org.clothocore.api.data.Plate;
 import org.clothocore.api.core.Collector;
 import javax.swing.*;
+import org.clothocore.api.data.PlateType;
 
 /**
  *
@@ -50,6 +52,7 @@ public class plateChooser extends javax.swing.JFrame {
         allplatesUUIDs = plateHash.toArray();
         initComponents();
         setVisible(true);
+        this.jButtonConfigDBActionPerformed(null);
     }
 
     /** This method is called from within the constructor to
@@ -69,6 +72,7 @@ public class plateChooser extends javax.swing.JFrame {
         newRack = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jButtonSearch = new javax.swing.JButton();
+        jButtonConfigDB = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -111,6 +115,13 @@ public class plateChooser extends javax.swing.JFrame {
             }
         });
 
+        jButtonConfigDB.setText("config DB");
+        jButtonConfigDB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonConfigDBActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -120,24 +131,26 @@ public class plateChooser extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(barcodeField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
+                            .addComponent(barcodeField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(submitButton)
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(availablePlates, 0, 333, Short.MAX_VALUE)
+                        .addComponent(availablePlates, 0, 337, Short.MAX_VALUE)
                         .addGap(167, 167, 167))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
-                        .addContainerGap(409, Short.MAX_VALUE))
+                        .addContainerGap(413, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(newPlateButton)
                         .addGap(32, 32, 32)
                         .addComponent(newRack)
                         .addGap(35, 35, 35)
                         .addComponent(jButtonSearch)
-                        .addGap(144, 144, 144))))
+                        .addGap(32, 32, 32)
+                        .addComponent(jButtonConfigDB)
+                        .addGap(39, 39, 39))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -156,7 +169,8 @@ public class plateChooser extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(newPlateButton)
                     .addComponent(newRack)
-                    .addComponent(jButtonSearch))
+                    .addComponent(jButtonSearch)
+                    .addComponent(jButtonConfigDB))
                 .addContainerGap(30, Short.MAX_VALUE))
         );
 
@@ -204,6 +218,55 @@ public class plateChooser extends javax.swing.JFrame {
        // aform.setVisible(true);
     }//GEN-LAST:event_jButtonSearchActionPerformed
 
+    private void jButtonConfigDBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfigDBActionPerformed
+        // TODO add your handling code here:
+
+      PlateType pcr_96 =  PlateType.retrieveByName("PCR_96");
+      PlateType rack = PlateType.retrieveByName("RACK_9X9");
+
+      if (pcr_96 ==null)
+      {
+          this.chooseFile(DbScript.picTypes.PCR_96);
+      }
+
+      if (rack ==null)
+      {
+          this.chooseFile(DbScript.picTypes.RACK_99);
+      }
+
+      if ( pcr_96!=null && rack !=null)
+      {
+          DbScript.setupExistingRack(rack);
+
+          JOptionPane.showMessageDialog(this, "your DB is already configured with required PlateTypes");
+          return;
+      }
+
+    else
+      {
+          JOptionPane.showConfirmDialog(this, "your DB is now configured with required plate types");
+      }
+        
+
+    }//GEN-LAST:event_jButtonConfigDBActionPerformed
+
+
+    private void chooseFile(DbScript.picTypes p)
+    {
+         JFileChooser fileChooser = new JFileChooser();
+         String title = (p==DbScript.picTypes.PCR_96)? "Choose Pic for PCR 96" : "Choose Pic for Rack";
+         fileChooser.setDialogTitle(title);
+        int returnVal =fileChooser.showOpenDialog(this);
+                if (returnVal==JFileChooser.APPROVE_OPTION)
+                {
+                    File file =fileChooser.getSelectedFile();
+                    //set search tag saying this sample has associated characterization data
+                    DbScript.setupDB(file, p);
+                    System.out.println("path = "+file.toString()+" \ndata file = "+file.getName());
+                }
+                else
+                    System.out.println("pic file canceled by user");
+    }
     /**
     * @param args the command line arguments
     */
@@ -222,6 +285,7 @@ public class plateChooser extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox availablePlates;
     private javax.swing.JTextField barcodeField;
+    private javax.swing.JButton jButtonConfigDB;
     private javax.swing.JButton jButtonSearch;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

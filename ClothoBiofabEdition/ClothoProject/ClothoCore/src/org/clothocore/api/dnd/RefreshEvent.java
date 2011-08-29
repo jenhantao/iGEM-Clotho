@@ -275,8 +275,17 @@ public class RefreshEvent extends EventObject {
         /**
          * A family was added or removed from a Feature
          */
-        FAMILY_TO_FEATURE, QUALITY_CHANGED, OLIGO_CHANGED,
+        FAMILY_TO_FEATURE,
 
+        /**
+         * The quality of a sample was changed
+         */
+        QUALITY_CHANGED,
+
+        /**
+         * The oligo of an OligoSample was changed
+         */
+        OLIGO_CHANGED
     }
 
     private Condition _condition = Condition.UNKNOWN;

@@ -3,10 +3,11 @@ package org.clothocore.widget.fabdash;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.AbstractAction;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import org.clothocore.api.core.Collector;
+import org.clothocore.api.data.ObjType;
+import org.openide.awt.StatusDisplayer;
 import org.openide.util.actions.Presenter;
 
 /**
@@ -24,7 +25,13 @@ public class FileMenuPopulator extends AbstractAction implements Presenter.Menu 
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("I added a part!");
+                if (!Collector.isConnected()) {
+                    StatusDisplayer.getDefault().setStatusText("Connect before creating a new Part");
+                    return;
+                }
+                MakeObjectFrame mof = new MakeObjectFrame(ObjType.PART);
+                mof.pack();
+                mof.setVisible(true);
             }
         });
         m.add(partsItem);
@@ -34,7 +41,13 @@ public class FileMenuPopulator extends AbstractAction implements Presenter.Menu 
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("I added a oligo!");
+                if (!Collector.isConnected()) {
+                    StatusDisplayer.getDefault().setStatusText("Connect before creating a new Oligo");
+                    return;
+                }
+                MakeObjectFrame mof = new MakeObjectFrame(ObjType.OLIGO);
+                mof.pack();
+                mof.setVisible(true);
             }
         });
         m.add(oligoItem);
@@ -44,7 +57,13 @@ public class FileMenuPopulator extends AbstractAction implements Presenter.Menu 
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("I added a vector!");
+                if (!Collector.isConnected()) {
+                    StatusDisplayer.getDefault().setStatusText("Connect before creating a new Vector");
+                    return;
+                }
+                MakeObjectFrame mof = new MakeObjectFrame(ObjType.VECTOR);
+                mof.pack();
+                mof.setVisible(true);
             }
         });
         m.add(vectorItem);
@@ -54,7 +73,13 @@ public class FileMenuPopulator extends AbstractAction implements Presenter.Menu 
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("I added a plasmid!");
+                if (!Collector.isConnected()) {
+                    StatusDisplayer.getDefault().setStatusText("Connect before creating a new Plasmid");
+                    return;
+                }
+                MakeObjectFrame mof = new MakeObjectFrame(ObjType.PLASMID);
+                mof.pack();
+                mof.setVisible(true);
             }
         });
         m.add(plasmidItem);
@@ -64,7 +89,13 @@ public class FileMenuPopulator extends AbstractAction implements Presenter.Menu 
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("I added a feature!");
+                if (!Collector.isConnected()) {
+                    StatusDisplayer.getDefault().setStatusText("Connect before creating a new Feature");
+                    return;
+                }
+                MakeObjectFrame mof = new MakeObjectFrame(ObjType.FEATURE);
+                mof.pack();
+                mof.setVisible(true);
             }
         });
         m.add(featureItem);
@@ -74,7 +105,13 @@ public class FileMenuPopulator extends AbstractAction implements Presenter.Menu 
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("I added a sample!");
+                if (!Collector.isConnected()) {
+                    StatusDisplayer.getDefault().setStatusText("Connect before creating a new Sample");
+                    return;
+                }
+                MakeObjectFrame mof = new MakeObjectFrame(ObjType.SAMPLE);
+                mof.pack();
+                mof.setVisible(true);
             }
         });
         m.add(sampleItem);
@@ -84,7 +121,13 @@ public class FileMenuPopulator extends AbstractAction implements Presenter.Menu 
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("I added a collection!");
+                if (!Collector.isConnected()) {
+                    StatusDisplayer.getDefault().setStatusText("Connect before creating a new Collection");
+                    return;
+                }
+                MakeObjectFrame mof = new MakeObjectFrame(ObjType.COLLECTION);
+                mof.pack();
+                mof.setVisible(true);
             }
         });
         m.add(collectionItem);

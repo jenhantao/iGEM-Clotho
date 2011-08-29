@@ -15,8 +15,11 @@ package org.clothocad.tool.batterboard;
  *
  * @author anna
  */
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import org.clothocore.api.data.*;
 import org.clothocore.api.core.Collector;
@@ -36,6 +39,8 @@ public class ContainerEditFrame extends javax.swing.JFrame {
             this.jTextFieldEnzyme1.setEditable(false);
             this.jTextFieldEnzyme2.setEditable(false);
         }
+
+        this.jCheckBoxCharData.setEnabled(false);
     }
     public ContainerEditFrame() {
         //initComponents();
@@ -153,6 +158,8 @@ public class ContainerEditFrame extends javax.swing.JFrame {
         jLabel13 = new javax.swing.JLabel();
         qualityText = new javax.swing.JTextField();
         jCheckBoxisFrozenStock = new javax.swing.JCheckBox();
+        jButtonCharData = new javax.swing.JButton();
+        jCheckBoxCharData = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -243,6 +250,20 @@ public class ContainerEditFrame extends javax.swing.JFrame {
             }
         });
 
+        jButtonCharData.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.jButtonCharData.text")); // NOI18N
+        jButtonCharData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCharDataActionPerformed(evt);
+            }
+        });
+
+        jCheckBoxCharData.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.jCheckBoxCharData.text")); // NOI18N
+        jCheckBoxCharData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxCharDataActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -307,7 +328,9 @@ public class ContainerEditFrame extends javax.swing.JFrame {
                         .addGap(30, 30, 30)
                         .addComponent(save)
                         .addGap(18, 18, 18)
-                        .addComponent(cancel))
+                        .addComponent(cancel)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonCharData))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -315,7 +338,9 @@ public class ContainerEditFrame extends javax.swing.JFrame {
                                 .addComponent(jLabel7)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(sampleName))
-                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING))))
+                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGap(18, 18, 18)
+                        .addComponent(jCheckBoxCharData)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
@@ -342,7 +367,8 @@ public class ContainerEditFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(sampleName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(sampleName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jCheckBoxCharData))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
@@ -378,7 +404,8 @@ public class ContainerEditFrame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(save)
-                    .addComponent(cancel))
+                    .addComponent(cancel)
+                    .addComponent(jButtonCharData))
                 .addContainerGap())
         );
 
@@ -387,7 +414,7 @@ public class ContainerEditFrame extends javax.swing.JFrame {
 
     private void myInitiate()
     {
-         jLabel1 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         containerName = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -415,6 +442,8 @@ public class ContainerEditFrame extends javax.swing.JFrame {
         jLabel13 = new javax.swing.JLabel();
         qualityText = new javax.swing.JTextField();
         jCheckBoxisFrozenStock = new javax.swing.JCheckBox();
+        jButtonCharData = new javax.swing.JButton();
+        jCheckBoxCharData = new javax.swing.JCheckBox();
 
        // setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -505,6 +534,20 @@ public class ContainerEditFrame extends javax.swing.JFrame {
             }
         });
 
+        jButtonCharData.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.jButtonCharData.text")); // NOI18N
+        jButtonCharData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCharDataActionPerformed(evt);
+            }
+        });
+
+        jCheckBoxCharData.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.jCheckBoxCharData.text")); // NOI18N
+        jCheckBoxCharData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxCharDataActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -569,7 +612,9 @@ public class ContainerEditFrame extends javax.swing.JFrame {
                         .addGap(30, 30, 30)
                         .addComponent(save)
                         .addGap(18, 18, 18)
-                        .addComponent(cancel))
+                        .addComponent(cancel)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonCharData))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -577,7 +622,9 @@ public class ContainerEditFrame extends javax.swing.JFrame {
                                 .addComponent(jLabel7)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(sampleName))
-                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING))))
+                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGap(18, 18, 18)
+                        .addComponent(jCheckBoxCharData)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
@@ -604,7 +651,8 @@ public class ContainerEditFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(sampleName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(sampleName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jCheckBoxCharData))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
@@ -640,7 +688,8 @@ public class ContainerEditFrame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(save)
-                    .addComponent(cancel))
+                    .addComponent(cancel)
+                    .addComponent(jButtonCharData))
                 .addContainerGap())
         );
 
@@ -748,6 +797,16 @@ public class ContainerEditFrame extends javax.swing.JFrame {
                 }
             }
 
+            //next check if user entered characterization data
+            //if so, put xml file in database as an attachment
+            // and update search tag
+            if (this.jCheckBoxCharData.isSelected())
+            {
+                ArrayList<String>tag = pls.getSearchTags();
+                tag.add("characterization-data");
+
+            }
+
             pls.saveDefault();
         }
         String newContainerName = this.containerName.getText();
@@ -778,6 +837,32 @@ public class ContainerEditFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBoxisFrozenStockActionPerformed
 
+    private void jCheckBoxCharDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxCharDataActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBoxCharDataActionPerformed
+
+    private void jButtonCharDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCharDataActionPerformed
+        // TODO add your handling code here:
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Choose Characterization File");
+        int returnVal =fileChooser.showOpenDialog(this);
+                if (returnVal==JFileChooser.APPROVE_OPTION)
+                {
+                    File file =fileChooser.getSelectedFile();
+                    CharDataXMLGenerator generator = new CharDataXMLGenerator(file);
+                    xmlDataFile =  generator.generateXML();
+                    //set search tag saying this sample has associated characterization data
+                    if (xmlDataFile !=null)
+                    {
+                        this.jCheckBoxCharData.setSelected(true);
+
+                    }
+                    System.out.println("path = "+file.toString()+" \ndata file = "+file.getName());
+                }
+                else
+                    System.out.println("Import file canceled by user");
+    }//GEN-LAST:event_jButtonCharDataActionPerformed
+
     /**
     * @param args the command line arguments
     */
@@ -794,6 +879,8 @@ public class ContainerEditFrame extends javax.swing.JFrame {
     private javax.swing.JButton cancel;
     private javax.swing.JTextField concentrationText;
     private javax.swing.JTextField containerName;
+    private javax.swing.JButton jButtonCharData;
+    private javax.swing.JCheckBox jCheckBoxCharData;
     private javax.swing.JCheckBox jCheckBoxGelSample;
     private javax.swing.JCheckBox jCheckBoxisFrozenStock;
     private javax.swing.JComboBox jComboBoxPlasmid;
@@ -823,6 +910,7 @@ public class ContainerEditFrame extends javax.swing.JFrame {
     //my private variables
     private Plate myPlate;
     private Container selectedContainer;
+    private File xmlDataFile;
     private static ArrayList<ObjLink> plasmidList = Collector.getAllLinksOf(ObjType.PLASMID);
     private static ArrayList<ObjLink> strainList = Collector.getAllLinksOf(ObjType.STRAIN);
 }

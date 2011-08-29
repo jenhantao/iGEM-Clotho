@@ -369,7 +369,7 @@ public class PlateType extends ObjBase {
     /*-----------------
     variables
     -----------------*/
-    private PlateTypeDatum _pTypeDatum;
+    public PlateTypeDatum _pTypeDatum;
 
 
     public static class PlateTypeDatum extends ObjBaseDatum {

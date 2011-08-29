@@ -27,7 +27,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="barcodeField" alignment="0" pref="399" max="32767" attributes="1"/>
+                          <Component id="barcodeField" alignment="0" pref="403" max="32767" attributes="1"/>
                           <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -35,12 +35,12 @@
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="availablePlates" pref="333" max="32767" attributes="1"/>
+                      <Component id="availablePlates" pref="337" max="32767" attributes="1"/>
                       <EmptySpace min="-2" pref="167" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="409" max="32767" attributes="0"/>
+                      <EmptySpace pref="413" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="newPlateButton" min="-2" max="-2" attributes="0"/>
@@ -48,7 +48,9 @@
                       <Component id="newRack" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
                       <Component id="jButtonSearch" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="144" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
+                      <Component id="jButtonConfigDB" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -73,6 +75,7 @@
                   <Component id="newPlateButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="newRack" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jButtonSearch" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButtonConfigDB" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="30" max="32767" attributes="0"/>
           </Group>
@@ -135,6 +138,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonSearchActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="jButtonConfigDB">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="config DB"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonConfigDBActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

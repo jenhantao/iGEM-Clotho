@@ -94,6 +94,7 @@ import org.openide.windows.TopComponent;
 import org.clothocad.tool.primerdesigner.DesignFrame;
 import org.clothocore.api.data.ObjType;
 import org.clothocore.api.data.Oligo;
+import org.clothocore.api.data.Part;
 import org.clothocore.api.data.Plasmid;
 import org.clothocore.api.data.Vector;
 
@@ -207,6 +208,7 @@ public class SequenceView implements ObjBaseDropTarget {
                 @Override
                 public void run() {
                     _tcView = new TopComponent() {
+
                         @Override
                         public boolean canClose() {
                             updateWindowMenus();
@@ -242,6 +244,7 @@ public class SequenceView implements ObjBaseDropTarget {
 
         String seq = "";
         if (o.getType().equals(ObjType.PART)) {
+            seq = ((Part) o).getSeq().toString();
         } else if (o.getType().equals(ObjType.OLIGO)) {
             seq = ((Oligo) o).getSeq().toString();
         } else if (o.getType().equals(ObjType.FEATURE)) {
@@ -1878,12 +1881,13 @@ public class SequenceView implements ObjBaseDropTarget {
             @Override
             public void run() {
                 _tcView = new TopComponent() {
-                        @Override
-                        public boolean canClose() {
-                            updateWindowMenus();
-                            return super.canClose();
-                        }
-                    };
+
+                    @Override
+                    public boolean canClose() {
+                        updateWindowMenus();
+                        return super.canClose();
+                    }
+                };
                 _tcView.setLayout(new BorderLayout());
                 JScrollPane sp = new JScrollPane(guiContentPane);
                 _tcView.add(menu, BorderLayout.NORTH);
@@ -3145,7 +3149,7 @@ public class SequenceView implements ObjBaseDropTarget {
 
     public void run() {
 //        setTitle("Clotho: Sequence View (Address: " + _myIndex + ") New Sequence");
-        
+
         configureBasePairBoth(_sequenceview.getColLabel());
         updateWindowMenus();
     }
@@ -3475,7 +3479,7 @@ public class SequenceView implements ObjBaseDropTarget {
         } else if (actionChoice == 3) {
             return;
         }
-        _sequence=newSequence;
+        _sequence = newSequence;
         _sequenceview.setVisible(true);
     }
 
@@ -3757,7 +3761,7 @@ public class SequenceView implements ObjBaseDropTarget {
             windows.add(seq.getSequenceView().getTitle());
         }
         for (int i = 0; i < _manager.getSequenceViewArray().size(); i++) {
-            
+
             SequenceView seq = _manager.getSpecificSV(i);
             SequenceViewGUI seqView = seq.getSequenceView();
             JMenuItem switchItem = seqView.getWindowMenu().getItem(0); //don't want to clear this item which allows view switching
