@@ -12,9 +12,13 @@ package org.clothocore.widget.fabdash;
 
 import java.util.ArrayList;
 import org.clothocore.api.core.Collector;
+import org.clothocore.api.data.Collection;
+import org.clothocore.api.data.Format;
 import org.clothocore.api.data.ObjLink;
 import org.clothocore.api.data.ObjType;
+import org.clothocore.api.data.Part;
 import org.clothocore.api.data.Sample.SampleType;
+import org.openide.awt.StatusDisplayer;
 
 /**
  *
@@ -30,7 +34,7 @@ public class MakeObjectFrame extends javax.swing.JFrame {
     public MakeObjectFrame(ObjType o) {
 
         initComponents();
-        this.setTitle("Create new Clotho " + o);
+        this.setTitle("Create new " + o);
         collectionComboBox.removeAllItems();
         ArrayList<ObjLink> allLinksOf = Collector.getAllLinksOf(ObjType.COLLECTION);
         for (ObjLink oj : allLinksOf) {
@@ -101,13 +105,13 @@ public class MakeObjectFrame extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         backgroundPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        nameField = new javax.swing.JTextField();
         saveButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         swapPanel = new javax.swing.JPanel();
         sequenceLabel = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        seqTextArea = new javax.swing.JTextArea();
         formatComboBox = new javax.swing.JComboBox();
         formatLabel = new javax.swing.JLabel();
         volumeLabel = new javax.swing.JLabel();
@@ -126,8 +130,8 @@ public class MakeObjectFrame extends javax.swing.JFrame {
 
         jLabel1.setText(org.openide.util.NbBundle.getMessage(MakeObjectFrame.class, "MakeObjectFrame.jLabel1.text")); // NOI18N
 
-        jTextField1.setText(org.openide.util.NbBundle.getMessage(MakeObjectFrame.class, "MakeObjectFrame.jTextField1.text")); // NOI18N
-        jTextField1.setToolTipText(org.openide.util.NbBundle.getMessage(MakeObjectFrame.class, "MakeObjectFrame.jTextField1.toolTipText")); // NOI18N
+        nameField.setText(org.openide.util.NbBundle.getMessage(MakeObjectFrame.class, "MakeObjectFrame.nameField.text")); // NOI18N
+        nameField.setToolTipText(org.openide.util.NbBundle.getMessage(MakeObjectFrame.class, "MakeObjectFrame.nameField.toolTipText")); // NOI18N
 
         saveButton.setText(org.openide.util.NbBundle.getMessage(MakeObjectFrame.class, "MakeObjectFrame.saveButton.text")); // NOI18N
         saveButton.setMaximumSize(new java.awt.Dimension(65, 23));
@@ -150,10 +154,10 @@ public class MakeObjectFrame extends javax.swing.JFrame {
 
         sequenceLabel.setText(org.openide.util.NbBundle.getMessage(MakeObjectFrame.class, "MakeObjectFrame.sequenceLabel.text")); // NOI18N
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setLineWrap(true);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        seqTextArea.setColumns(20);
+        seqTextArea.setLineWrap(true);
+        seqTextArea.setRows(5);
+        jScrollPane2.setViewportView(seqTextArea);
 
         formatComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -239,7 +243,7 @@ public class MakeObjectFrame extends javax.swing.JFrame {
                                 .addComponent(jLabel1))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jTextField1)
+                                .addComponent(nameField)
                                 .addComponent(collectionComboBox, 0, 186, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
@@ -252,7 +256,7 @@ public class MakeObjectFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel3)
@@ -289,6 +293,45 @@ private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 }//GEN-LAST:event_cancelButtonActionPerformed
 
 private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+    if (saveType.equals(ObjType.PART)) {
+        String name = nameField.getText();
+        if (name == null) {
+            StatusDisplayer.getDefault().setStatusText("Error: can't create new part because name is invalid");
+        }
+        Collection collection = Collection.retrieveByName((String) collectionComboBox.getSelectedItem());
+        if (collection == null) {
+            StatusDisplayer.getDefault().setStatusText("Error: select a collection to save new part in");
+        }
+        String sequence = seqTextArea.getText();
+        if (sequence == null) {
+            StatusDisplayer.getDefault().setStatusText("Error: can't create new part because sequence invalid");
+        }
+        Format format = Format.retrieveByName((String) formatComboBox.getSelectedItem());
+        if (format == null) {
+            StatusDisplayer.getDefault().setStatusText("Error: can't create new part because format is invalid");
+
+        }
+        try {
+            Part apart = Part.generateBasic(name, "", sequence, format, Collector.getCurrentUser());
+            StatusDisplayer.getDefault().setStatusText("Created new part: " + apart.getName() + ". Saving...");
+            collection.addObject(apart);
+            apart.saveDefault();
+            collection.saveDefault();
+            StatusDisplayer.getDefault().setStatusText("Successfully saved: " + apart.getName());
+            this.dispose();
+
+        } catch (Exception e) {
+            StatusDisplayer.getDefault().setStatusText("Error saving part, please check entered fields");
+
+        }
+    } else if (saveType.equals(ObjType.OLIGO)) {
+    } else if (saveType.equals(ObjType.VECTOR)) {
+    } else if (saveType.equals(ObjType.FEATURE)) {
+    } else if (saveType.equals(ObjType.COLLECTION)) {
+    } else if (saveType.equals(ObjType.SAMPLE)) {
+    }
+
+
 }//GEN-LAST:event_saveButtonActionPerformed
 
     /**
@@ -337,11 +380,10 @@ private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField nameField;
     private javax.swing.JButton saveButton;
+    private javax.swing.JTextArea seqTextArea;
     private javax.swing.JLabel sequenceLabel;
     private javax.swing.JLabel statusLabel;
     private javax.swing.JPanel swapPanel;
