@@ -76,14 +76,14 @@ public class MakeObjectFrame extends javax.swing.JFrame {
 
             swapPanel.remove(formatLabel);
             swapPanel.remove(formatComboBox);
-        } else if (saveType.equals(ObjType.SAMPLE)) {
-            swapPanel.remove(cdsCheckBox);
-            swapPanel.remove(sequenceLabel);
-            swapPanel.remove(jScrollPane2);
-            formatComboBox.removeAllItems();
-            for (SampleType st : SampleType.values()) {
-                formatComboBox.addItem(st.toString());
-            }
+//        } else if (saveType.equals(ObjType.SAMPLE)) {
+//            swapPanel.remove(cdsCheckBox);
+//            swapPanel.remove(sequenceLabel);
+//            swapPanel.remove(jScrollPane2);
+//            formatComboBox.removeAllItems();
+//            for (SampleType st : SampleType.values()) {
+//                formatComboBox.addItem(st.toString());
+//            }
             formatLabel.setText("Type");
         } else if (saveType.equals(ObjType.COLLECTION)) {
             swapPanel.remove(volumeLabel);

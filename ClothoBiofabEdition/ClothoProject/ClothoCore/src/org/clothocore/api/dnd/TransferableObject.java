@@ -70,10 +70,10 @@ public class TransferableObject implements Transferable {
     ///////////////////////////////////////////////////////////////////
     ////                         protected methods                    ////
 
-    protected static DataFlavor objBaseFlavor =
+    public static DataFlavor objBaseFlavor =
         new DataFlavor(ObjBase.class, "A clotho ObjBase Object");
 
-    protected static DataFlavor[] supportedFlavors = {
+    public static DataFlavor[] supportedFlavors = {
         objBaseFlavor
     };
 

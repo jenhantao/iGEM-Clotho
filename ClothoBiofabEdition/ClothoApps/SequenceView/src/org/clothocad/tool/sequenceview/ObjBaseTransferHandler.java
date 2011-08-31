@@ -9,6 +9,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import javax.swing.TransferHandler;
 import org.clothocore.api.data.ObjBase;
+import org.clothocore.api.dnd.TransferableObject;
 import org.openide.util.Exceptions;
 
 /**

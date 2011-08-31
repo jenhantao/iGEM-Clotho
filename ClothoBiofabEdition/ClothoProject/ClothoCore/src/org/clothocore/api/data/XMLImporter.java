@@ -190,7 +190,7 @@ public class XMLImporter {
                 switch(st) {
                     case PLASMID_SAMPLE:
                         return PlasmidSample.importFromHashMap(uuid, objHash);
-                    case STRAIN_SAMPLE:
+                    case CELL_SAMPLE:
                         return null;
                     case OLIGO_SAMPLE:
                         return null;

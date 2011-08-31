@@ -182,6 +182,7 @@ public class Attachment extends ObjBase {
             
             // Use the portable name henceforth.
             File portableFile = new File(tmp);
+            
             FileOutputStream fos = new FileOutputStream( portableFile );
             fos.write( bytes );
             fos.close();
