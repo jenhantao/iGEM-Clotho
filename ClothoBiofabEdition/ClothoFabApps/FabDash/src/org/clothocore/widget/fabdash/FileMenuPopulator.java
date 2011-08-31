@@ -84,21 +84,21 @@ public class FileMenuPopulator extends AbstractAction implements Presenter.Menu 
         });
         m.add(featureItem);
 
-        JMenuItem sampleItem = new JMenuItem("Sample");
-        sampleItem.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!Collector.isConnected()) {
-                    StatusDisplayer.getDefault().setStatusText("Connect before creating a new Sample");
-                    return;
-                }
-                MakeObjectFrame mof = new MakeObjectFrame(ObjType.SAMPLE);
-                mof.pack();
-                mof.setVisible(true);
-            }
-        });
-        m.add(sampleItem);
+//        JMenuItem sampleItem = new JMenuItem("Sample");
+//        sampleItem.addActionListener(new ActionListener() {
+//
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                if (!Collector.isConnected()) {
+//                    StatusDisplayer.getDefault().setStatusText("Connect before creating a new Sample");
+//                    return;
+//                }
+//                MakeObjectFrame mof = new MakeObjectFrame(ObjType.SAMPLE);
+//                mof.pack();
+//                mof.setVisible(true);
+//            }
+//        });
+//        m.add(sampleItem);
 
         JMenuItem collectionItem = new JMenuItem("Collection");
         collectionItem.addActionListener(new ActionListener() {

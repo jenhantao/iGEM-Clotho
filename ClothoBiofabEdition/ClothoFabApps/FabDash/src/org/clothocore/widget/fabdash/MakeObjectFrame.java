@@ -13,11 +13,15 @@ package org.clothocore.widget.fabdash;
 import java.util.ArrayList;
 import org.clothocore.api.core.Collector;
 import org.clothocore.api.data.Collection;
+import org.clothocore.api.data.Feature;
 import org.clothocore.api.data.Format;
 import org.clothocore.api.data.ObjLink;
 import org.clothocore.api.data.ObjType;
+import org.clothocore.api.data.Oligo;
 import org.clothocore.api.data.Part;
+import org.clothocore.api.data.Sample;
 import org.clothocore.api.data.Sample.SampleType;
+import org.clothocore.api.data.Vector;
 import org.openide.awt.StatusDisplayer;
 
 /**
@@ -297,19 +301,22 @@ private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         String name = nameField.getText();
         if (name == null) {
             StatusDisplayer.getDefault().setStatusText("Error: can't create new part because name is invalid");
+            return;
         }
         Collection collection = Collection.retrieveByName((String) collectionComboBox.getSelectedItem());
         if (collection == null) {
             StatusDisplayer.getDefault().setStatusText("Error: select a collection to save new part in");
+            return;
         }
         String sequence = seqTextArea.getText();
-        if (sequence == null) {
+        if (sequence == null || !sequence.matches("[agtcAGTC\\s]*")) {
             StatusDisplayer.getDefault().setStatusText("Error: can't create new part because sequence invalid");
+            return;
         }
         Format format = Format.retrieveByName((String) formatComboBox.getSelectedItem());
         if (format == null) {
             StatusDisplayer.getDefault().setStatusText("Error: can't create new part because format is invalid");
-
+            return;
         }
         try {
             Part apart = Part.generateBasic(name, "", sequence, format, Collector.getCurrentUser());
@@ -322,13 +329,173 @@ private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
         } catch (Exception e) {
             StatusDisplayer.getDefault().setStatusText("Error saving part, please check entered fields");
+            return;
 
         }
     } else if (saveType.equals(ObjType.OLIGO)) {
+        String name = nameField.getText();
+        if (name == null) {
+            StatusDisplayer.getDefault().setStatusText("Error: can't create new oligo because name is invalid");
+            return;
+        }
+        Collection collection = Collection.retrieveByName((String) collectionComboBox.getSelectedItem());
+        if (collection == null) {
+            StatusDisplayer.getDefault().setStatusText("Error: select a collection to save new oligo in");
+            return;
+        }
+        String sequence = seqTextArea.getText();
+        if (sequence == null || !sequence.matches("[agtcAGTC\\s]*")) {
+            StatusDisplayer.getDefault().setStatusText("Error: can't create new oligo because sequence invalid");
+            return;
+        }
+        try {
+            Oligo aol = new Oligo(name, "", Collector.getCurrentUser(), sequence);
+            StatusDisplayer.getDefault().setStatusText("Created new oligo: " + aol.getName() + ". Saving...");
+            collection.addObject(aol);
+            aol.saveDefault();
+            collection.saveDefault();
+            StatusDisplayer.getDefault().setStatusText("Successfully saved: " + aol.getName());
+            this.dispose();
+
+        } catch (Exception e) {
+            StatusDisplayer.getDefault().setStatusText("Error saving part, please check entered fields");
+            return;
+        }
     } else if (saveType.equals(ObjType.VECTOR)) {
+        String name = nameField.getText();
+        if (name == null) {
+            StatusDisplayer.getDefault().setStatusText("Error: can't create new vector because name is invalid");
+            return;
+        }
+        Collection collection = Collection.retrieveByName((String) collectionComboBox.getSelectedItem());
+        if (collection == null) {
+            StatusDisplayer.getDefault().setStatusText("Error: select a collection to save new vector in");
+            return;
+        }
+        String sequence = seqTextArea.getText();
+        if (sequence == null || !sequence.matches("[agtcAGTC\\s]*")) {
+            StatusDisplayer.getDefault().setStatusText("Error: can't create new vector because sequence invalid");
+            return;
+        }
+        Format format = Format.retrieveByName((String) formatComboBox.getSelectedItem());
+        if (format == null) {
+            StatusDisplayer.getDefault().setStatusText("Error: can't create new vector because format is invalid");
+            return;
+        }
+        try {
+            Vector avec = Vector.generateVector(name, "", sequence, format, Collector.getCurrentUser());
+            StatusDisplayer.getDefault().setStatusText("Created new vector: " + avec.getName() + ". Saving...");
+            collection.addObject(avec);
+            avec.saveDefault();
+            collection.saveDefault();
+            StatusDisplayer.getDefault().setStatusText("Successfully saved: " + avec.getName());
+            this.dispose();
+
+        } catch (Exception e) {
+            StatusDisplayer.getDefault().setStatusText("Error saving vector, please check entered fields");
+            return;
+        }
     } else if (saveType.equals(ObjType.FEATURE)) {
+        String name = nameField.getText();
+        if (name == null) {
+            StatusDisplayer.getDefault().setStatusText("Error: can't create new feature because name is invalid");
+            return;
+        }
+        Collection collection = Collection.retrieveByName((String) collectionComboBox.getSelectedItem());
+        if (collection == null) {
+            StatusDisplayer.getDefault().setStatusText("Error: select a collection to save new feature in");
+            return;
+        }
+        String sequence = seqTextArea.getText();
+        if (sequence == null || !sequence.matches("[agtcAGTC\\s]*")) {
+            StatusDisplayer.getDefault().setStatusText("Error: can't create new feature because sequence invalid");
+            return;
+        }
+        boolean iscds = cdsCheckBox.isSelected();
+        try {
+            Feature afea = Feature.generateFeature(name, sequence, Collector.getCurrentUser(), iscds);
+            StatusDisplayer.getDefault().setStatusText("Created new feature: " + afea.getName() + ". Saving...");
+            collection.addObject(afea);
+            afea.saveDefault();
+            collection.saveDefault();
+            StatusDisplayer.getDefault().setStatusText("Successfully saved: " + afea.getName());
+            this.dispose();
+
+        } catch (Exception e) {
+            StatusDisplayer.getDefault().setStatusText("Error saving feature, please check entered fields");
+            return;
+        }
     } else if (saveType.equals(ObjType.COLLECTION)) {
-    } else if (saveType.equals(ObjType.SAMPLE)) {
+        String name = nameField.getText();
+        if (name == null) {
+            StatusDisplayer.getDefault().setStatusText("Error: can't create new collection because name is invalid");
+            return;
+        }
+        Collection collection = Collection.retrieveByName((String) collectionComboBox.getSelectedItem());
+        if (collection == null) {
+            StatusDisplayer.getDefault().setStatusText("Error: select a collection to save new collection in");
+            return;
+        }
+
+        try {
+            Collection acol = new Collection(name, "", Collector.getCurrentUser());
+            StatusDisplayer.getDefault().setStatusText("Created new collection: " + acol.getName() + ". Saving...");
+            collection.addObject(acol);
+            acol.saveDefault();
+            collection.saveDefault();
+            StatusDisplayer.getDefault().setStatusText("Successfully saved: " + acol.getName());
+            this.dispose();
+
+        } catch (Exception e) {
+            StatusDisplayer.getDefault().setStatusText("Error saving collection, please check entered fields");
+            return;
+        }
+//    } else if (saveType.equals(ObjType.SAMPLE)) {
+//        String name = nameField.getText();
+//        if (name == null) {
+//            StatusDisplayer.getDefault().setStatusText("Error: can't create new sample because name is invalid");
+//            return;
+//        }
+//        Collection collection = Collection.retrieveByName((String) collectionComboBox.getSelectedItem());
+//        if (collection == null) {
+//            StatusDisplayer.getDefault().setStatusText("Error: select a collection to save new sample in");
+//            return;
+//        }
+//        Double volume;
+//        try {
+//            volume = Double.parseDouble(volumeField.getText());
+//        } catch (Exception ex) {
+//            StatusDisplayer.getDefault().setStatusText("Error: input a proper double value for volume");
+//            return;
+//        }
+//        SampleType sampletype = (SampleType) formatComboBox.getSelectedItem();
+//        if (sampletype == null) {
+//            StatusDisplayer.getDefault().setStatusText("Error: select a sample type");
+//            return;
+//        }
+//        try {
+//            if (sampletype.equals(SampleType.CELL_SAMPLE)) {
+//                
+//            } else if (sampletype.equals(SampleType.OLIGO_SAMPLE)) {
+//                
+//            } else if (sampletype.equals(SampleType.PLASMID_SAMPLE)) {
+//                
+//            } else if (sampletype.equals(SampleType.STRAIN_SAMPLE)) {
+//                
+//            }
+//            
+//Sample asamp = new Sample(name, volume, Collector.getCurrentUser(), sampletype );
+//            StatusDisplayer.getDefault().setStatusText("Created new feature: " + asamp.getName() + ". Saving...");
+//            collection.addObject(asamp);
+//            asamp.saveDefault();
+//            collection.saveDefault();
+//            StatusDisplayer.getDefault().setStatusText("Successfully saved: " + asamp.getName());
+//            this.dispose();
+//
+//        } catch (Exception e) {
+//            StatusDisplayer.getDefault().setStatusText("Error saving sample, please check entered fields");
+//
+//        }
     }
 
 
