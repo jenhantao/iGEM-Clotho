@@ -863,7 +863,9 @@ public abstract class ObjBase implements Serializable {
         _pullTime = new Date();
         return true;
     }
-
+        public void setDatumChangeStatus(boolean changed) {
+            _datum._isChanged=changed;
+        }
     /**-----------------
     variables
     -----------------*/
@@ -874,7 +876,7 @@ public abstract class ObjBase implements Serializable {
     private transient HashSet<Thread> _saveHold;
     private transient ArrayList<undoLine> undoList = new ArrayList<undoLine>();
     private transient ArrayList<undoLine> redoList = new ArrayList<undoLine>();
-    public ObjBaseDatum _datum;
+    protected ObjBaseDatum _datum;
     protected String _uuid;
     protected boolean _isTransient = false;  //If transient is true Clotho will ignore the object during saves
     protected boolean _inDatabase = false;
@@ -888,11 +890,12 @@ public abstract class ObjBase implements Serializable {
         public String uuid = "";
         public Date lastModified;        //The last time the object was stored to the database
         public Date dateCreated;         //datecreated DateCreated     Date it was created
-
+        
         public ArrayList<String> searchTags = new ArrayList<String>();
         public boolean _isChanged = true;
 
         public abstract ObjType getType();
         public boolean revertRequested = false;
+
     }
 }
