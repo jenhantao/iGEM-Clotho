@@ -53,7 +53,7 @@ public class ConfigureRackFrame extends javax.swing.JFrame {
         jButtonMakeRack = new javax.swing.JButton();
         jButtonCancel = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setName("New Rack"); // NOI18N
 
         jTextRackName.setText(org.openide.util.NbBundle.getMessage(ConfigureRackFrame.class, "ConfigureRackFrame.jTextRackName.text")); // NOI18N
@@ -126,7 +126,7 @@ public class ConfigureRackFrame extends javax.swing.JFrame {
                                         .addGap(32, 32, 32)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel4)
-                                            .addComponent(jComboBoxShelf, 0, 67, Short.MAX_VALUE)))))))
+                                            .addComponent(jComboBoxShelf, 0, 91, Short.MAX_VALUE)))))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(39, 39, 39)
                         .addComponent(jButtonMakeRack)

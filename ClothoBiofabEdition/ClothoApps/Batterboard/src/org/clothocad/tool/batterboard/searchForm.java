@@ -45,7 +45,7 @@ public class searchForm extends javax.swing.JFrame {
         jTextFieldEnzyme = new javax.swing.JTextField();
         searchButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setText(org.openide.util.NbBundle.getMessage(searchForm.class, "searchForm.jLabel1.text")); // NOI18N
 
@@ -110,7 +110,7 @@ public class searchForm extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(jTextFieldEnzyme, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(searchButton))
-                .addContainerGap(11, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();

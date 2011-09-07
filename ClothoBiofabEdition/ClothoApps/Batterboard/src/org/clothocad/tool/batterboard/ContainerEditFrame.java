@@ -161,7 +161,7 @@ public class ContainerEditFrame extends javax.swing.JFrame {
         jButtonCharData = new javax.swing.JButton();
         jCheckBoxCharData = new javax.swing.JCheckBox();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18));
         jLabel1.setText(org.openide.util.NbBundle.getMessage(ContainerEditFrame.class, "ContainerEditFrame.jLabel1.text")); // NOI18N
@@ -291,7 +291,7 @@ public class ContainerEditFrame extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(jLabel11)
                         .addGap(18, 18, 18)
-                        .addComponent(volumeText, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
+                        .addComponent(volumeText, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
                         .addGap(16, 16, 16)
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
