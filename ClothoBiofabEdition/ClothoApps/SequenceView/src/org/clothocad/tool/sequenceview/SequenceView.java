@@ -195,6 +195,7 @@ public class SequenceView implements ObjBaseDropTarget {
             _sequenceview.setContentPane((Container) components[1]);
             _sequenceview.setJMenuBar((JMenuBar) components[0]);
             _sequenceview.pack();
+            _sequenceview.setTitle(_tcView.getDisplayName());
             _sequenceview.setVisible(true);
             _isTC = false;
 //FIXME fix top component persistence
@@ -3772,7 +3773,7 @@ public class SequenceView implements ObjBaseDropTarget {
             seqView.getWindowMenu().add(switchItem);
             for (int j = 0; j < windows.size(); j++) {
                 String name = windows.get(j);
-                seqView.getWindowMenu().add(new javax.swing.JMenuItem(name.substring(32, name.length())));
+                seqView.getWindowMenu().add(new javax.swing.JMenuItem(name.substring(name.indexOf(")")+1, name.length())));
                 seqView.getWindowMenu().getItem(j).addActionListener(new java.awt.event.ActionListener() {
 
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
