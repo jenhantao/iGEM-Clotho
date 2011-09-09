@@ -195,7 +195,7 @@ public class SequenceView implements ObjBaseDropTarget {
             _sequenceview.setContentPane((Container) components[1]);
             _sequenceview.setJMenuBar((JMenuBar) components[0]);
             _sequenceview.pack();
-            _sequenceview.setTitle(_tcView.getDisplayName());
+            _sequenceview.setTitle(_tcView.getName());
             _sequenceview.setVisible(true);
             _isTC = false;
 //FIXME fix top component persistence
@@ -490,7 +490,7 @@ public class SequenceView implements ObjBaseDropTarget {
         }
 
         Integer col = new Integer(_logicalCol);
-        columnLabel.setText(col.toString());
+        columnLabel.setText("Columns: "+col.toString());
 
         configureBasePairRow();
     }
@@ -3484,7 +3484,6 @@ public class SequenceView implements ObjBaseDropTarget {
             return;
         }
         _sequence = newSequence;
-        _sequenceview.setVisible(true);
     }
 
     /**
