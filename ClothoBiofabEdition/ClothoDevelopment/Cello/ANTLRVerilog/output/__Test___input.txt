@@ -1,0 +1,19 @@
+module NOR2341(
+	 A,
+     B,
+     C,
+     D,
+     O
+    );
+
+	input [2:0] A;
+	input B;
+	input C;
+	input D;
+	output O;
+	
+	
+	assign O = ~(~(m | B) | ~(C | D));
+
+endmodule
+
