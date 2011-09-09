@@ -119,7 +119,10 @@ public class SequenceView implements ObjBaseDropTarget {
         _REOn = false;
         _featuresOn = false;
         _sequenceview = new SequenceViewGUI(this);
-        _sequence = new NucSeq(((SequenceViewGUI)_sequenceview).get_TextArea().getText());
+        _sequenceArea = _sequenceview.get_TextArea();
+
+        _sequence = new NucSeq(_sequenceArea.getText());
+        _sequence.setTransient();
         new SwingWorker() {
 
             @Override
@@ -132,9 +135,9 @@ public class SequenceView implements ObjBaseDropTarget {
         magicHighlight = false;
         _sequenceviewtools = new SequenceViewSearchTools(this);
         _duplicates = new HashSet();
-        ((SequenceViewGUI)_sequenceview).get_TextArea().setCaretPosition(0);
-        int charwidth = ((SequenceViewGUI)_sequenceview).get_TextArea().getFontMetrics(((SequenceViewGUI)_sequenceview).get_TextArea().getFont()).charWidth('A');
-        int width_offset = ((SequenceViewGUI)_sequenceview).get_TextArea().getWidth();
+        _sequenceArea.setCaretPosition(0);
+        int charwidth = _sequenceArea.getFontMetrics(_sequenceArea.getFont()).charWidth('A');
+        int width_offset = _sequenceArea.getWidth();
         _logicalCol = width_offset / charwidth;
         _logicalLineCnt = 1;
         _selectedHit = -1;
@@ -165,9 +168,8 @@ public class SequenceView implements ObjBaseDropTarget {
         _undo = new UndoManager();
         undoAction = new UndoAction();
         redoAction = new RedoAction();
-        Document doc = ((SequenceViewGUI)_sequenceview).get_TextArea().getDocument();
+        Document doc = _sequenceArea.getDocument();
         doc.addUndoableEditListener(new SequenceUndoableEditListener());
-
 
 
         JTextComponent.KeyBinding[] newBindings = {
@@ -182,8 +184,8 @@ public class SequenceView implements ObjBaseDropTarget {
             DefaultEditorKit.writableAction)
         };
 
-        Keymap k = ((SequenceViewGUI)_sequenceview).get_TextArea().getKeymap();
-        JTextComponent.loadKeymap(k, newBindings, ((SequenceViewGUI)_sequenceview).get_TextArea().getActions());
+        Keymap k = _sequenceArea.getKeymap();
+        JTextComponent.loadKeymap(k, newBindings, _sequenceArea.getActions());
 
 
     }
@@ -191,7 +193,7 @@ public class SequenceView implements ObjBaseDropTarget {
     public void switchView() {
         if (_isTC) {
             Component[] components = _tcView.getComponents();
-            _sequenceview= new SequenceViewGUI(this);
+            _sequenceview = new SequenceViewGUI(this);
             _sequenceview.setContentPane((Container) components[1]);
             _sequenceview.setJMenuBar((JMenuBar) components[0]);
             _sequenceview.pack();
@@ -266,15 +268,15 @@ public class SequenceView implements ObjBaseDropTarget {
         int option = JOptionPane.showOptionDialog(null, "A Clotho object has been dropped.\nWhat do you want to do with it?", "SequenceView: Drag and Drop", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, "insert");
 
         if (option == 0) {
-            JTextPane ta = ((SequenceViewGUI)_sequenceview).get_TextArea();
+            JTextPane ta = _sequenceArea;
             String currentText = ta.getText();
             ta.setText(currentText.substring(0, ta.getCaretPosition()) + seq + currentText.substring(ta.getCaretPosition()));
-            ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText("Inserted the sequence of Clotho " + o.getType() + ": " + o.getName());
+            ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText("Inserted the sequence of Clotho " + o.getType() + ": " + o.getName());
             sequenceChanged();
         } else if (option == 1) {
-            JTextPane ta = ((SequenceViewGUI)_sequenceview).get_TextArea();
+            JTextPane ta = _sequenceArea;
             ta.setText(seq);
-            ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText("Loaded Clotho " + o.getType() + ": " + o.getName());
+            ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText("Loaded Clotho " + o.getType() + ": " + o.getName());
             sequenceChanged();
         }
 
@@ -367,7 +369,7 @@ public class SequenceView implements ObjBaseDropTarget {
      *                being sent to lower case
      */
     public void changeCase(boolean toUpper) {
-        String s = ((SequenceViewGUI)_sequenceview).get_TextArea().getSelectedText();
+        String s = _sequenceArea.getSelectedText();
         if (s != null) {
             if (toUpper) {
                 s = s.toUpperCase();
@@ -386,9 +388,9 @@ public class SequenceView implements ObjBaseDropTarget {
      * they haven't, calculates them.
      */
     public void checkORFs() {
-        if (!(_ORFsCalculated) && ((SequenceViewGUI)_sequenceview).get_TextArea().getText() != null) {
+        if (!(_ORFsCalculated) && _sequenceArea.getText() != null) {
 //comment            _ORFs = (HashMap) _sequenceUtils.findORFs(_sequenceview.get_TextArea().getText(), _circular, _allowDegeneracy, true, _multipleStartCodons, _dnaType);
-            NucSeq ns = new NucSeq(((SequenceViewGUI)_sequenceview).get_TextArea().getText());
+            NucSeq ns = new NucSeq(_sequenceArea.getText());
             try {
                 _ORFs = ns.findORFs(true, _multipleStartCodons);
             } catch (Exception e) {
@@ -399,7 +401,7 @@ public class SequenceView implements ObjBaseDropTarget {
 
         }
         if (_ORFs.size() == 0) {
-            ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText("No ORFs in this sequence");
+            ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText("No ORFs in this sequence");
         }
     }
 
@@ -411,7 +413,7 @@ public class SequenceView implements ObjBaseDropTarget {
         if (!(_revORFsCalculated)) {
             _revORFs = new HashMap<Integer, Integer>();
             HashMap<Integer, Integer> temp = new HashMap<Integer, Integer>();
-            String seq = ((SequenceViewGUI)_sequenceview).get_TextArea().getText();
+            String seq = _sequenceArea.getText();
             NucSeq ns = new NucSeq(new NucSeq(seq).revComp());
             temp = ns.findORFs(true, _multipleStartCodons);
             for (Integer i : temp.keySet()) {
@@ -420,7 +422,7 @@ public class SequenceView implements ObjBaseDropTarget {
             _revORFsCalculated = true;
         }
         if (_revORFs.size() == 0) {
-            ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText("No ORFs in this sequence");
+            ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText("No ORFs in this sequence");
         }
     }
 
@@ -428,18 +430,18 @@ public class SequenceView implements ObjBaseDropTarget {
      * Clears the sequence view
      */
     public void clearOutputWindow() {
-        ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText("");
+        ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText("");
     }
 
     public void configureBasePairRow() {
-        int len_offset = ((SequenceViewGUI)_sequenceview).get_TextArea().getDocument().getLength();
+        int len_offset = _sequenceArea.getDocument().getLength();
         Rectangle r = new Rectangle();
-        int lineHeight = ((SequenceViewGUI)_sequenceview).get_TextArea().getFontMetrics(((SequenceViewGUI)_sequenceview).get_TextArea().getFont()).getHeight();
+        int lineHeight = _sequenceArea.getFontMetrics(_sequenceArea.getFont()).getHeight();
         try {
             if (len_offset > 0) {
                 len_offset--;
             }
-            r = ((SequenceViewGUI)_sequenceview).get_TextArea().modelToView(len_offset);//-1 fixes indexing error when inserting a new character
+            r = _sequenceArea.modelToView(len_offset);//-1 fixes indexing error when inserting a new character
         } catch (BadLocationException ex) {
             ex.printStackTrace();
         }
@@ -457,7 +459,7 @@ public class SequenceView implements ObjBaseDropTarget {
             //System.out.print(rowValues + "\n");
             indices = indices + rowValues + "\n";
         }
-        ((SequenceViewGUI)_sequenceview).setIndexTextArea(indices);
+        ((SequenceViewGUI) _sequenceview).setIndexTextArea(indices);
 
     }
 
@@ -466,10 +468,10 @@ public class SequenceView implements ObjBaseDropTarget {
         //int width_offset = _sequenceview.getSeqScroll().getWidth();
         //small adjustment to make it match with the way letters wrap around the
         //textpane
-        int width_offset = ((SequenceViewGUI)_sequenceview).getSeqScroll().getWidth() + 4;
+        int width_offset = ((SequenceViewGUI) _sequenceview).getSeqScroll().getWidth() + 4;
 
         //requires fixed width characters
-        int charwidth = ((SequenceViewGUI)_sequenceview).get_TextArea().getFontMetrics(((SequenceViewGUI)_sequenceview).get_TextArea().getFont()).charWidth('A');
+        int charwidth = _sequenceArea.getFontMetrics(_sequenceArea.getFont()).charWidth('A');
 
         //double d = new Double(width_offset) / new Double(charwidth);
         _logicalCol = width_offset / charwidth;
@@ -477,7 +479,7 @@ public class SequenceView implements ObjBaseDropTarget {
         //small adjustment to make it true to the viewer
         // Checks to see if the visible height is smaller than the total height
         // of the TextArea, to take the appearance of the scroll bar into account
-        if (((SequenceViewGUI)_sequenceview).get_TextArea().getHeight() > ((SequenceViewGUI)_sequenceview).get_TextArea().getVisibleRect().getHeight()) {
+        if (_sequenceArea.getHeight() > _sequenceArea.getVisibleRect().getHeight()) {
             _logicalCol = _logicalCol - 4;
         } else {
             _logicalCol = _logicalCol - 2;
@@ -490,7 +492,7 @@ public class SequenceView implements ObjBaseDropTarget {
         }
 
         Integer col = new Integer(_logicalCol);
-        columnLabel.setText("Columns: "+col.toString());
+        columnLabel.setText("Columns: " + col.toString());
 
         configureBasePairRow();
     }
@@ -506,7 +508,7 @@ public class SequenceView implements ObjBaseDropTarget {
         int end;
         if ((forward && _ORFs.get(start) != null) || (!(forward) && _revORFs.get(start) != null)) {
             String name;
-            String seq = ((SequenceViewGUI)_sequenceview).get_TextArea().getText();
+            String seq = _sequenceArea.getText();
             int len = seq.length();
             if (forward) {
                 end = _ORFs.get(start);
@@ -595,7 +597,7 @@ public class SequenceView implements ObjBaseDropTarget {
                  */
             }
 
-            _h = ((SequenceViewGUI)_sequenceview).get_TextArea().getHighlighter();
+            _h = _sequenceArea.getHighlighter();
             javax.swing.text.Highlighter.Highlight[] highlights = _h.getHighlights();
             for (int i = 0; i < highlights.length; i++) {
                 javax.swing.text.Highlighter.Highlight u = highlights[i];
@@ -656,7 +658,7 @@ public class SequenceView implements ObjBaseDropTarget {
      * Opens the SequenceViewPartPackager window
      */
     public void createPart() {
-        new SequenceViewPartExport(this, ((SequenceViewGUI)_sequenceview).get_TextArea());
+        new SequenceViewPartExport(this, _sequenceArea);
     }
 
     /**
@@ -675,9 +677,9 @@ public class SequenceView implements ObjBaseDropTarget {
         String sequence = "";
 
         if (_sequenceviewtools.wholeSeqSel()) {
-            sequence = ((SequenceViewGUI)_sequenceview).get_TextArea().getText();
+            sequence = _sequenceArea.getText();
         } else if (_sequenceviewtools.highlightSeqSel()) {
-            sequence = ((SequenceViewGUI)_sequenceview).get_TextArea().getSelectedText();
+            sequence = _sequenceArea.getSelectedText();
         } else if (_sequenceviewtools.intervalSeqSel()) {
             int beginIndex, endIndex;
             try {
@@ -697,11 +699,11 @@ public class SequenceView implements ObjBaseDropTarget {
             }
             //Integer beginIndex = new Integer (svpe.getBeginIndex());
             //Integer endIndex =  new Integer (svpe.getEndIndex());
-            if ((endIndex <= beginIndex) || endIndex < 0 || beginIndex < 0 || endIndex > ((SequenceViewGUI)_sequenceview).get_TextArea().getText().length() || beginIndex > ((SequenceViewGUI)_sequenceview).get_TextArea().getText().length()) {
+            if ((endIndex <= beginIndex) || endIndex < 0 || beginIndex < 0 || endIndex > _sequenceArea.getText().length() || beginIndex > _sequenceArea.getText().length()) {
                 ClothoDialogBox db = new ClothoDialogBox("Clotho: Sequence Export", "Sequence interval is incorrect!\nCheck the ordering, length, and make sure it is positive.");
                 db.show_Dialog(javax.swing.JOptionPane.ERROR_MESSAGE);
             } else {
-                sequence = ((SequenceViewGUI)_sequenceview).get_TextArea().getText().substring(beginIndex, endIndex);
+                sequence = _sequenceArea.getText().substring(beginIndex, endIndex);
             }
         } else {
             ClothoDialogBox db = new ClothoDialogBox("Clotho: Sequence Export", "Select what aspect of the sequence should be exported!");
@@ -771,11 +773,11 @@ public class SequenceView implements ObjBaseDropTarget {
      */
     public void findNextORF() {
         _painter = new ORFPainter(ORFColor);
-        JTextComponent textArea = ((SequenceViewGUI)_sequenceview).get_TextArea();
+        JTextComponent textArea = _sequenceArea;
         _h = textArea.getHighlighter();
         HashMap<Integer, Integer> hm;
         checkORFs();
-        ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText("Finding orf");
+        ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText("Finding orf");
         hm = _ORFs;
 //        if (textArea.getText().length()>10) {
 //            try {
@@ -829,7 +831,7 @@ public class SequenceView implements ObjBaseDropTarget {
                             if (lastORFHighlightTag != null) {
                                 _h.removeHighlight(lastORFHighlightTag);
                             }
-                            ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText("Found circular orf");
+                            ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText("Found circular orf");
                             _h.addHighlight(currentORFStart, seq.length(), _painter);
                             _h.addHighlight(0, Math.min(seq.toLowerCase().indexOf("tag"), Math.min(seq.toLowerCase().indexOf("taa"), seq.toLowerCase().indexOf("tga"))) + 3, _painter);
                             currentORFStart = startPositions.get(0); //reset start to first ORF start to allow looping
@@ -848,7 +850,7 @@ public class SequenceView implements ObjBaseDropTarget {
                                 }
                             }
                             this.removeORFHighlights();
-                            ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText("Found last orf");
+                            ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText("Found last orf");
                             lastORFHighlightTag = _h.addHighlight(currentORFStart, hm.get(currentORFStart), _painter);
                             textArea.setCaretPosition(currentORFStart);
                             currentORFStart++;
@@ -867,7 +869,7 @@ public class SequenceView implements ObjBaseDropTarget {
                             }
                         }
                         this.removeORFHighlights();
-                        ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText("Found orf");
+                        ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText("Found orf");
                         lastORFHighlightTag = _h.addHighlight(currentORFStart, hm.get(currentORFStart), _painter);
                         textArea.setCaretPosition(currentORFStart);
                         currentORFStart++;
@@ -887,9 +889,9 @@ public class SequenceView implements ObjBaseDropTarget {
      * Finds the previous Open Reading Frame in the SequenceView
      */
     public void findPrevORF() {
-        ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText("Finding orf");
+        ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText("Finding orf");
         _painter = new ORFPainter(ORFColor);
-        JTextComponent textArea = ((SequenceViewGUI)_sequenceview).get_TextArea();
+        JTextComponent textArea = _sequenceArea;
         if (textArea.getCaretPosition() == 0) {
             textArea.setCaretPosition(textArea.getText().length());
         }
@@ -935,7 +937,7 @@ public class SequenceView implements ObjBaseDropTarget {
 
                             this.removeORFHighlights();
                             String seq = textArea.getText();
-                            ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText("Fournd circular orf");
+                            ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText("Fournd circular orf");
                             _h.addHighlight(startPositions.get(startPositions.size() - 1), seq.length(), _painter);
                             _h.addHighlight(0, Math.min(seq.toLowerCase().indexOf("tag"), Math.min(seq.toLowerCase().indexOf("taa"), seq.toLowerCase().indexOf("tga"))) + 3, _painter);
                             currentORFStart = startPositions.get(startPositions.size() - 1); //reset start to first ORF start to allow looping
@@ -956,7 +958,7 @@ public class SequenceView implements ObjBaseDropTarget {
                             }
 
                             this.removeORFHighlights();
-                            ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText("Found last orf");
+                            ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText("Found last orf");
                             lastORFHighlightTag = _h.addHighlight(currentORFStart, hm.get(currentORFStart), _painter);
                             textArea.setCaretPosition(currentORFStart);
                             currentORFStart--; //reset start to first ORF start to allow looping
@@ -975,7 +977,7 @@ public class SequenceView implements ObjBaseDropTarget {
                             }
                         }
                         this.removeORFHighlights();
-                        ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText("Found orf");
+                        ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText("Found orf");
                         lastORFHighlightTag = _h.addHighlight(currentORFStart, hm.get(currentORFStart), _painter);
                         textArea.setCaretPosition(currentORFStart);
                         currentORFStart--;
@@ -995,10 +997,10 @@ public class SequenceView implements ObjBaseDropTarget {
      * Finds the next Open Reading Frame in the reverse of the SequenceView
      */
     public void findNextRevORF() {
-        ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText("Finding reverse orf");
+        ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText("Finding reverse orf");
 
         _painter = new ORFPainter(ORFColor);
-        JTextComponent textArea = ((SequenceViewGUI)_sequenceview).get_TextArea();
+        JTextComponent textArea = _sequenceArea;
         _h = textArea.getHighlighter();
         HashMap<Integer, Integer> hm;
         checkRevORFs();
@@ -1042,7 +1044,7 @@ public class SequenceView implements ObjBaseDropTarget {
 
                             this.removeORFHighlights();
                             String seq = textArea.getText();
-                            ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText("Found circular reverse orf");
+                            ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText("Found circular reverse orf");
                             _h.addHighlight(currentORFStart, seq.length(), _painter);
                             _h.addHighlight(0, Math.min(seq.toLowerCase().indexOf("cta"), Math.min(seq.toLowerCase().indexOf("tta"), seq.toLowerCase().indexOf("tca"))) + 3, _painter);
                             currentORFStart = endPositions.get(0); //reset start to first ORF start to allow looping
@@ -1063,7 +1065,7 @@ public class SequenceView implements ObjBaseDropTarget {
                             }
 
                             this.removeORFHighlights();
-                            ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText("Found last reverse orf");
+                            ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText("Found last reverse orf");
                             lastORFHighlightTag = _h.addHighlight(hm.get(currentORFStart), currentORFStart, _painter);
                             textArea.setCaretPosition(hm.get(currentORFStart));
                             currentORFStart++;
@@ -1083,7 +1085,7 @@ public class SequenceView implements ObjBaseDropTarget {
                         }
 
                         this.removeORFHighlights();
-                        ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText("Found reverse orf");
+                        ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText("Found reverse orf");
                         lastORFHighlightTag = _h.addHighlight(hm.get(currentORFStart), currentORFStart, _painter);
                         textArea.setCaretPosition(hm.get(currentORFStart));
                         currentORFStart++;
@@ -1104,9 +1106,9 @@ public class SequenceView implements ObjBaseDropTarget {
      * Finds the previous Open Reading Frame in the reverse of the SequenceView
      */
     public void findPrevRevORF() {
-        ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText("Finding reverse orf");
+        ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText("Finding reverse orf");
         _painter = new ORFPainter(ORFColor);
-        JTextComponent textArea = ((SequenceViewGUI)_sequenceview).get_TextArea();
+        JTextComponent textArea = _sequenceArea;
         if (textArea.getCaretPosition() == 0) {
             textArea.setCaretPosition(textArea.getText().length());
         }
@@ -1154,7 +1156,7 @@ public class SequenceView implements ObjBaseDropTarget {
                             String seq = textArea.getText();
                             _h.addHighlight(endPositions.get(endPositions.size() - 1), seq.length(), _painter);
                             _h.addHighlight(0, Math.min(seq.toLowerCase().indexOf("cta"), Math.min(seq.toLowerCase().indexOf("tta"), seq.toLowerCase().indexOf("tca"))) + 3, _painter);
-                            ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText("Found circular reverse orf");
+                            ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText("Found circular reverse orf");
                             currentORFStart = endPositions.get(endPositions.size() - 1); //reset start to first ORF start to allow looping
                             textArea.setCaretPosition(hm.get(currentORFStart));
                             currentORFStart--;
@@ -1174,7 +1176,7 @@ public class SequenceView implements ObjBaseDropTarget {
 
                             this.removeORFHighlights();
                             lastORFHighlightTag = _h.addHighlight(hm.get(currentORFStart), currentORFStart, _painter);
-                            ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText("Found last reverse orf");
+                            ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText("Found last reverse orf");
                             textArea.setCaretPosition(hm.get(currentORFStart));
                             currentORFStart--; //reset start to first ORF start to allow looping
                             for (Highlight h : shuffledHighlights) {
@@ -1193,7 +1195,7 @@ public class SequenceView implements ObjBaseDropTarget {
                         }
 
                         this.removeORFHighlights();
-                        ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText("Found reverse orf");
+                        ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText("Found reverse orf");
                         lastORFHighlightTag = _h.addHighlight(hm.get(currentORFStart), currentORFStart, _painter);
                         textArea.setCaretPosition(hm.get(currentORFStart));
                         currentORFStart--;
@@ -1329,7 +1331,7 @@ public class SequenceView implements ObjBaseDropTarget {
      * @return _sequenceview
      */
     public SequenceViewGUI getSequenceView() {
-        return ((SequenceViewGUI)_sequenceview);
+        return ((SequenceViewGUI) _sequenceview);
     }
 
     /**
@@ -1356,7 +1358,7 @@ public class SequenceView implements ObjBaseDropTarget {
      * Adds the highlights for user selected areas.
      */
     public void highlightUserSelected() {
-        JTextPane textArea = ((SequenceViewGUI)_sequenceview).get_TextArea();
+        JTextPane textArea = _sequenceArea;
         _h = textArea.getHighlighter();
         int start = textArea.getSelectionStart();
         int end = textArea.getSelectionEnd();
@@ -1419,7 +1421,7 @@ public class SequenceView implements ObjBaseDropTarget {
                 // Reads in a FASTA format file
                 if (line.startsWith(">")) {
                     setTitle("Clotho: Sequence View (Address: " + _myIndex + ") " + toLoad.getName());
-                    ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText(toLoad.getName() + " loaded");
+                    ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText(toLoad.getName() + " loaded");
                     line = line.substring(1, line.length());
                     line = inFile.readLine();
                     while (line != null) {
@@ -1430,10 +1432,10 @@ public class SequenceView implements ObjBaseDropTarget {
 //                    refreshHighlightData(3);
                     sequenceChanged();
 
-                    ((SequenceViewGUI)_sequenceview).get_TextArea().setText(toSeqView);
-                    ((SequenceViewGUI)_sequenceview).get_TextArea().setCaretPosition(0);
+                    _sequenceArea.setText(toSeqView);
+                    _sequenceArea.setCaretPosition(0);
                     _saved = true;
-                    _sequence = new NucSeq(((SequenceViewGUI)_sequenceview).get_TextArea().getText());
+                    _sequence = new NucSeq(_sequenceArea.getText());
                     new SwingWorker() {
 
                         @Override
@@ -1451,7 +1453,7 @@ public class SequenceView implements ObjBaseDropTarget {
                     String area = "";
                     String toComments = "";
                     setTitle("Clotho: Sequence View (Address: " + _myIndex + ") " + toLoad.getName());
-                    ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText(toLoad.getName() + " loaded");
+                    ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText(toLoad.getName() + " loaded");
                     while (line != null) {
                         if (line.startsWith("   ")) {
                             if (area.equals("COMMENT")) {
@@ -1499,12 +1501,12 @@ public class SequenceView implements ObjBaseDropTarget {
 //                    refreshHighlightData(3);
                     sequenceChanged();
 
-                    ((SequenceViewGUI)_sequenceview).get_TextArea().setText(toSeqView);
-                    ((SequenceViewGUI)_sequenceview).get_TextArea().setCaretPosition(0);
-                    ((SequenceViewGUI)_sequenceview).getCommentTextArea().setText(toComments);
-                    ((SequenceViewGUI)_sequenceview).getCommentTextArea().setCaretPosition(0);
+                    _sequenceArea.setText(toSeqView);
+                    _sequenceArea.setCaretPosition(0);
+                    ((SequenceViewGUI) _sequenceview).getCommentTextArea().setText(toComments);
+                    ((SequenceViewGUI) _sequenceview).getCommentTextArea().setCaretPosition(0);
                     _saved = true;
-                    _sequence = new NucSeq(((SequenceViewGUI)_sequenceview).get_TextArea().getText());
+                    _sequence = new NucSeq(_sequenceArea.getText());
                     new SwingWorker() {
 
                         @Override
@@ -1527,7 +1529,7 @@ public class SequenceView implements ObjBaseDropTarget {
                     String[] yesNoOpt = {"Yes", "No"};
                     if (javax.swing.JOptionPane.showOptionDialog(new JFrame(), "This does not appear to be a Genbank or FASTA formated file.\n Do you want to proceed?", "Clotho: Sequnce View", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, null, yesNoOpt, yesNoOpt[1]) == javax.swing.JOptionPane.YES_OPTION) {
                         setTitle("Clotho: Sequence View (Address: " + _myIndex + ") " + toLoad.getName());
-                        ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText(toLoad.getName() + " loaded");
+                        ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText(toLoad.getName() + " loaded");
 
                         while (line != null) {
                             toSeqView = toSeqView + line.trim();
@@ -1537,8 +1539,8 @@ public class SequenceView implements ObjBaseDropTarget {
 //                        refreshHighlightData(3);
                         sequenceChanged();
 
-                        ((SequenceViewGUI)_sequenceview).get_TextArea().setText(toSeqView);
-                        ((SequenceViewGUI)_sequenceview).get_TextArea().setCaretPosition(0);
+                        _sequenceArea.setText(toSeqView);
+                        _sequenceArea.setCaretPosition(0);
                         _saved = true;
                         updateWindowMenus();
 
@@ -1749,18 +1751,18 @@ public class SequenceView implements ObjBaseDropTarget {
     public void moveOrigin() {
         if (_circular) {
             int newOrigin;
-            String sequence = ((SequenceViewGUI)_sequenceview).get_TextArea().getText();
-            if (((SequenceViewGUI)_sequenceview).get_TextArea().getSelectedText() != null) {
-                newOrigin = ((SequenceViewGUI)_sequenceview).get_TextArea().getSelectionStart();
+            String sequence = _sequenceArea.getText();
+            if (_sequenceArea.getSelectedText() != null) {
+                newOrigin = _sequenceArea.getSelectionStart();
             } else {
-                newOrigin = ((SequenceViewGUI)_sequenceview).get_TextArea().getCaretPosition();
+                newOrigin = _sequenceArea.getCaretPosition();
             }
 
             sequence = sequence.substring(newOrigin, sequence.length()) + sequence.substring(0, newOrigin);
             Boolean refresh = _annotationsOn;
             this.removeFeatureEnzymeHighlights();
             this.removeUserSelectedHighlights();
-            ((SequenceViewGUI)_sequenceview).get_TextArea().setText(sequence);
+            _sequenceArea.setText(sequence);
             if (refresh) {
                 this.highlightFeatures();
             }
@@ -1772,23 +1774,23 @@ public class SequenceView implements ObjBaseDropTarget {
     }
 
     public void moveSequenceScrollPane() {
-        JScrollPane is = ((SequenceViewGUI)_sequenceview).getIndexScroll();
-        JScrollPane ss = ((SequenceViewGUI)_sequenceview).getSeqScroll();
+        JScrollPane is = ((SequenceViewGUI) _sequenceview).getIndexScroll();
+        JScrollPane ss = ((SequenceViewGUI) _sequenceview).getSeqScroll();
 
         //ss.getVerticalScrollBar().setValue(is.getVerticalScrollBar().getValue());
         is.getVerticalScrollBar().setValue(ss.getVerticalScrollBar().getValue());
     }
 
     public void moveIndexScrollPane() {
-        JScrollPane is = ((SequenceViewGUI)_sequenceview).getIndexScroll();
-        JScrollPane ss = ((SequenceViewGUI)_sequenceview).getSeqScroll();
+        JScrollPane is = ((SequenceViewGUI) _sequenceview).getIndexScroll();
+        JScrollPane ss = ((SequenceViewGUI) _sequenceview).getSeqScroll();
 
         is.getVerticalScrollBar().setValue(ss.getVerticalScrollBar().getValue());
     }
 
     public void moveScrollPane() {
-        JScrollPane is = ((SequenceViewGUI)_sequenceview).getIndexScroll();
-        JScrollPane ss = ((SequenceViewGUI)_sequenceview).getSeqScroll();
+        JScrollPane is = ((SequenceViewGUI) _sequenceview).getIndexScroll();
+        JScrollPane ss = ((SequenceViewGUI) _sequenceview).getSeqScroll();
         ss.getVerticalScrollBar().setValue(is.getVerticalScrollBar().getValue());
         is.getVerticalScrollBar().setValue(ss.getVerticalScrollBar().getValue());
     }
@@ -2147,7 +2149,7 @@ public class SequenceView implements ObjBaseDropTarget {
 
 
 
-            String selectedText = ((SequenceViewGUI)_sequenceview).get_TextArea().getSelectedText().toUpperCase();
+            String selectedText = _sequenceArea.getSelectedText().toUpperCase();
 
             if (dot.intValue() > mark.intValue()) {
                 sequence_start = mark + 1;
@@ -2454,7 +2456,7 @@ public class SequenceView implements ObjBaseDropTarget {
     void processSearchToolAction(ActionEvent evt, String s) {
 
 
-        String selectedText = ((SequenceViewGUI)_sequenceview).get_TextArea().getSelectedText();
+        String selectedText = _sequenceArea.getSelectedText();
 
 
         //SET ClothoOperationEnum here for each case....
@@ -2478,7 +2480,7 @@ public class SequenceView implements ObjBaseDropTarget {
 
             //if the sequence contains degeneracies or the sequenceview contains 
             //  degeneracies then turn findText into a regular expression
-            if (((SequenceViewGUI)_sequenceview).get_TextArea().getText().matches("[a-zA-Z]*?[BDHKMNRSVWY][a-zA-Z]*?")
+            if (_sequenceArea.getText().matches("[a-zA-Z]*?[BDHKMNRSVWY][a-zA-Z]*?")
                     || findFieldText.matches("[a-zA-Z]*?[BDHKMNRSVWY][a-zA-Z]*?")) {
                 findFieldText = grab_RegExp(findFieldText);
             }
@@ -2488,7 +2490,7 @@ public class SequenceView implements ObjBaseDropTarget {
             // changed. For later.
             //uncommented
             _searcher = new ClothoSearchUtil(findFieldText,
-                    ((SequenceViewGUI)_sequenceview).get_TextArea().getText(), _caseSensitiveOption);
+                    _sequenceArea.getText(), _caseSensitiveOption);
             _search = _searcher.getSearch();
             _hitCount = _searcher.getHitCount();
 
@@ -2497,7 +2499,7 @@ public class SequenceView implements ObjBaseDropTarget {
 //                        + "Tools Message", "No hits!");
 //                toolsDialog.show_Dialog(javax.swing.JOptionPane.INFORMATION_MESSAGE);
                 javax.swing.JOptionPane.showMessageDialog(new JFrame(), "No hits!", "Sequence View: Tools Message", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                ((SequenceViewGUI)_sequenceview).get_TextArea().setCaretPosition(0);
+                _sequenceArea.setCaretPosition(0);
                 _selectedHit = 0;
                 return;
             }
@@ -2506,7 +2508,7 @@ public class SequenceView implements ObjBaseDropTarget {
             if (_selectedHit > _hitCount - 1) {
                 _selectedHit = 0;
             }
-            selectHit(((SequenceViewGUI)_sequenceview).get_TextArea());
+            selectHit(_sequenceArea);
         } else if (s.equalsIgnoreCase("findPrevButton")) {
             String findFieldText = _findField.getText();
             //If rev-comp checked, send rev-comp of ReplaceFindField to 
@@ -2527,7 +2529,7 @@ public class SequenceView implements ObjBaseDropTarget {
 
             //if the sequence contains degeneracies or the sequenceview contains 
             //  degeneracies then turn findText into a regular expression
-            if (((SequenceViewGUI)_sequenceview).get_TextArea().getText().matches("[a-zA-Z]*?[BDHKMNRSVWY][a-zA-Z]*?")
+            if (_sequenceArea.getText().matches("[a-zA-Z]*?[BDHKMNRSVWY][a-zA-Z]*?")
                     || findFieldText.matches("[a-zA-Z]*?[BDHKMNRSVWY][a-zA-Z]*?")) {
                 findFieldText = grab_RegExp(findFieldText);
             }
@@ -2537,7 +2539,7 @@ public class SequenceView implements ObjBaseDropTarget {
             // changed. For later.
             //uncommented
             _searcher = new ClothoSearchUtil(findFieldText,
-                    ((SequenceViewGUI)_sequenceview).get_TextArea().getText(), _caseSensitiveOption);
+                    _sequenceArea.getText(), _caseSensitiveOption);
             _search = _searcher.getSearch();
             _hitCount = _searcher.getHitCount();
 
@@ -2546,7 +2548,7 @@ public class SequenceView implements ObjBaseDropTarget {
 //                        + "Tools Message", "No hits!");
 //                toolsDialog.show_Dialog(javax.swing.JOptionPane.INFORMATION_MESSAGE);
                 javax.swing.JOptionPane.showMessageDialog(new JFrame(), "No hits!", "Sequence View: Tools Message", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                ((SequenceViewGUI)_sequenceview).get_TextArea().setCaretPosition(0);
+                _sequenceArea.setCaretPosition(0);
                 _selectedHit = 0;
                 return;
             }
@@ -2555,7 +2557,7 @@ public class SequenceView implements ObjBaseDropTarget {
             if (_selectedHit < 0) {
                 _selectedHit = _hitCount - 1;
             }
-            selectHit(((SequenceViewGUI)_sequenceview).get_TextArea());
+            selectHit(_sequenceArea);
         } else if (s.equalsIgnoreCase("Go")) {
             //The following block tests if both fields are integers.
             try {
@@ -2569,7 +2571,7 @@ public class SequenceView implements ObjBaseDropTarget {
                 return;
             }
             //The following block tests for out-of-bounds errors.
-            if (((SequenceViewGUI)_sequenceview).get_TextArea().getText().length() < Integer.parseInt(_goField.getText()) | Integer.parseInt(_goField.getText()) < 0) {
+            if (_sequenceArea.getText().length() < Integer.parseInt(_goField.getText()) | Integer.parseInt(_goField.getText()) < 0) {
 //                ClothoDialogBox toolsDialog = new ClothoDialogBox("SequenceView "
 //                        + "Tools Error", "A number greater than sequence length "
 //                        + "or a negative\nnumber was entered into Go field.");
@@ -2580,7 +2582,7 @@ public class SequenceView implements ObjBaseDropTarget {
                 return;
             }
             _sequenceview.toFront();
-            ((SequenceViewGUI)_sequenceview).get_TextArea().setCaretPosition(Integer.parseInt(
+            _sequenceArea.setCaretPosition(Integer.parseInt(
                     _goField.getText()));
         } else if (s.equalsIgnoreCase("Select")) {
             //The following block tests if both fields are integers.
@@ -2598,12 +2600,12 @@ public class SequenceView implements ObjBaseDropTarget {
             if ( //any of the fields are out of bounds:
                     Integer.parseInt(_selectFromField.getText()) < 0
                     | Integer.parseInt(_selectFromField.getText())
-                    > ((SequenceViewGUI)_sequenceview).get_TextArea().getText().length()
+                    > _sequenceArea.getText().length()
                     | Integer.parseInt(_selectFromField.getText())
                     > Integer.parseInt(_selectToField.getText())
                     | Integer.parseInt(_selectToField.getText()) < 0
                     | Integer.parseInt(_selectToField.getText())
-                    > ((SequenceViewGUI)_sequenceview).get_TextArea().getText().length()) {
+                    > _sequenceArea.getText().length()) {
 //                ClothoDialogBox toolsDialog = new ClothoDialogBox("SequenceView "
 //                        + "Tools Error", "Cannot select because one of the "
 //                        + "following happened:\n"
@@ -2618,12 +2620,12 @@ public class SequenceView implements ObjBaseDropTarget {
                         + "3. From Field is greater than To Field.", "Sequence View Tools Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            ((SequenceViewGUI)_sequenceview).get_TextArea().grabFocus();
-            ((SequenceViewGUI)_sequenceview).get_TextArea().select(Integer.parseInt(_selectFromField.getText()), Integer.parseInt(_selectToField.getText()));
+            _sequenceArea.grabFocus();
+            _sequenceArea.select(Integer.parseInt(_selectFromField.getText()), Integer.parseInt(_selectToField.getText()));
             _sequenceviewtools.toFront();
         } else if (s.equalsIgnoreCase("SelectAll")) {
-            ((SequenceViewGUI)_sequenceview).get_TextArea().grabFocus();
-            ((SequenceViewGUI)_sequenceview).get_TextArea().selectAll();
+            _sequenceArea.grabFocus();
+            _sequenceArea.selectAll();
             _sequenceviewtools.toFront();
         } else if (s.equalsIgnoreCase("replaceNextButton")) {
             String replaceFindFieldText = _replaceFindField.getText();
@@ -2646,7 +2648,7 @@ public class SequenceView implements ObjBaseDropTarget {
 
             //if the sequence contains degeneracies or the sequenceview contains 
             //  degeneracies then turn findText into a regular expression
-            if (((SequenceViewGUI)_sequenceview).get_TextArea().getText().matches("[a-zA-Z]*?[BDHKMNRSVWY][a-zA-Z]*?")
+            if (_sequenceArea.getText().matches("[a-zA-Z]*?[BDHKMNRSVWY][a-zA-Z]*?")
                     || replaceFindFieldText.matches("[a-zA-Z]*?[BDHKMNRSVWY][a-zA-Z]*?")) {
                 replaceFindFieldText = grab_RegExp(replaceFindFieldText);
             }
@@ -2656,7 +2658,7 @@ public class SequenceView implements ObjBaseDropTarget {
             // changed. For later.
             //uncommented
             _searcher = new ClothoSearchUtil(replaceFindFieldText,
-                    ((SequenceViewGUI)_sequenceview).get_TextArea().getText(), _caseSensitiveOption);
+                    _sequenceArea.getText(), _caseSensitiveOption);
             _search = _searcher.getSearch();
             _hitCount = _searcher.getHitCount();
 
@@ -2664,7 +2666,7 @@ public class SequenceView implements ObjBaseDropTarget {
             if (_selectedHit > _hitCount - 1) {
                 _selectedHit = 0;
             }
-            selectHit(((SequenceViewGUI)_sequenceview).get_TextArea());
+            selectHit(_sequenceArea);
         } else if (s.equalsIgnoreCase("replacePrevButton")) {
             String replaceFindFieldText = _replaceFindField.getText();
             //If rev-comp checked, send rev-comp of ReplaceFindField to 
@@ -2686,7 +2688,7 @@ public class SequenceView implements ObjBaseDropTarget {
 
             //if the sequence contains degeneracies or the sequenceview contains 
             //  degeneracies then turn findText into a regular expression
-            if (((SequenceViewGUI)_sequenceview).get_TextArea().getText().matches("[a-zA-Z]*?[BDHKMNRSVWY][a-zA-Z]*?")
+            if (_sequenceArea.getText().matches("[a-zA-Z]*?[BDHKMNRSVWY][a-zA-Z]*?")
                     || replaceFindFieldText.matches("[a-zA-Z]*?[BDHKMNRSVWY][a-zA-Z]*?")) {
                 replaceFindFieldText = grab_RegExp(replaceFindFieldText);
             }
@@ -2696,7 +2698,7 @@ public class SequenceView implements ObjBaseDropTarget {
             // changed. For later.
             //uncommented
             _searcher = new ClothoSearchUtil(replaceFindFieldText,
-                    ((SequenceViewGUI)_sequenceview).get_TextArea().getText(), _caseSensitiveOption);
+                    _sequenceArea.getText(), _caseSensitiveOption);
             _search = _searcher.getSearch();
             _hitCount = _searcher.getHitCount();
             if (_hitCount < 1) {
@@ -2711,7 +2713,7 @@ public class SequenceView implements ObjBaseDropTarget {
             if (_selectedHit < 0) {
                 _selectedHit = _hitCount - 1;
             }
-            selectHit(((SequenceViewGUI)_sequenceview).get_TextArea());
+            selectHit(_sequenceArea);
         } else if (s.equalsIgnoreCase("replaceButton")) {
             String replaceFindFieldText = _sequenceviewtools.get_ReplaceFindField().getText();
 
@@ -2733,7 +2735,7 @@ public class SequenceView implements ObjBaseDropTarget {
 
             //if the sequence contains degeneracies or the sequenceview contains 
             //  degeneracies then turn findText into a regular expression
-            if (((SequenceViewGUI)_sequenceview).get_TextArea().getText().matches("[a-zA-Z]*?[BDHKMNRSVWY][a-zA-Z]*?")
+            if (_sequenceArea.getText().matches("[a-zA-Z]*?[BDHKMNRSVWY][a-zA-Z]*?")
                     || replaceFindFieldText.matches("[a-zA-Z]*?[BDHKMNRSVWY][a-zA-Z]*?")) {
                 replaceFindFieldText = grab_RegExp(replaceFindFieldText);
             }
@@ -2741,7 +2743,7 @@ public class SequenceView implements ObjBaseDropTarget {
             //run a new search, saved in _searcher
             //uncommented
             _searcher = new ClothoSearchUtil(replaceFindFieldText,
-                    ((SequenceViewGUI)_sequenceview).get_TextArea().getText(), _caseSensitiveOption);
+                    _sequenceArea.getText(), _caseSensitiveOption);
 
             //the _search & _hitcount is kept for later calls to this function, if not go into these special cases
             //however this is dangerous because after the replacement the indexes inside _search must be changed
@@ -2755,7 +2757,7 @@ public class SequenceView implements ObjBaseDropTarget {
                 //uncomment
                 _hitCount = _searcher.getHitCount();
                 _selectedHit = 0;
-                selectHit(((SequenceViewGUI)_sequenceview).get_TextArea());
+                selectHit(_sequenceArea);
                 _sequenceviewtools.store_ToolsFields();
                 return;
             }
@@ -2772,7 +2774,7 @@ public class SequenceView implements ObjBaseDropTarget {
                 //uncomment
                 _hitCount = _searcher.getHitCount();
                 _selectedHit = 0;
-                selectHit(((SequenceViewGUI)_sequenceview).get_TextArea());
+                selectHit(_sequenceArea);
                 _sequenceviewtools.store_ToolsFields();
                 return;
             }
@@ -2785,7 +2787,7 @@ public class SequenceView implements ObjBaseDropTarget {
 
 
                 _search = null;
-                ((SequenceViewGUI)_sequenceview).get_TextArea().setCaretPosition(0);
+                _sequenceArea.setCaretPosition(0);
                 return;
             }
 
@@ -2810,9 +2812,9 @@ public class SequenceView implements ObjBaseDropTarget {
                 replaceFieldText = _revCompSequence;
             }
             //"select" on the text area, the old text segment, with the position from the _search at index _selectedHit++
-            selectHit(((SequenceViewGUI)_sequenceview).get_TextArea());
+            selectHit(_sequenceArea);
             //replace the pre selected text with the new text,
-            ((SequenceViewGUI)_sequenceview).get_TextArea().replaceSelection(replaceFieldText);
+            _sequenceArea.replaceSelection(replaceFieldText);
             //move the all the position up because of the change in length
             //seems that only search one time & use this for further replace
             int _slack = _sequenceviewtools.get_ReplaceField().getText().length()
@@ -2828,7 +2830,7 @@ public class SequenceView implements ObjBaseDropTarget {
             if (_selectedHit > _hitCount - 1) {
                 return;
             }
-            selectHit(((SequenceViewGUI)_sequenceview).get_TextArea());
+            selectHit(_sequenceArea);
         } else if (s.equalsIgnoreCase("replaceAllButton")) {
             String replaceFindFieldText = _sequenceviewtools.get_ReplaceFindField().getText();
             //If rev-comp checked, send rev-comp of ReplaceFindField to 
@@ -2850,7 +2852,7 @@ public class SequenceView implements ObjBaseDropTarget {
             }
             //uncommented
             _searcher = new ClothoSearchUtil(replaceFindFieldText,
-                    ((SequenceViewGUI)_sequenceview).get_TextArea().getText(),
+                    _sequenceArea.getText(),
                     _caseSensitiveOption);
             _search = _searcher.getSearch();
             _hitCount = _searcher.getHitCount();
@@ -2862,9 +2864,9 @@ public class SequenceView implements ObjBaseDropTarget {
                     - _sequenceviewtools.get_ReplaceFindField().getText().length();
 
             for (int i = 0; i < _hitCount; i++) {
-                selectHit(((SequenceViewGUI)_sequenceview).get_TextArea());
+                selectHit(_sequenceArea);
                 _replaceField = _sequenceviewtools.get_ReplaceField();
-                ((SequenceViewGUI)_sequenceview).get_TextArea().replaceSelection(_replaceField.getText());
+                _sequenceArea.replaceSelection(_replaceField.getText());
                 for (int j = _selectedHit + 1; j < _search[0].length; j++) {
                     _search[0][j] += _slack;
                     _search[1][j] += _slack;
@@ -2875,14 +2877,14 @@ public class SequenceView implements ObjBaseDropTarget {
         } else if (s.equalsIgnoreCase("Reverse Complement")) {
             if (selectedText != null) {
                 String _revCompS = revComp_String(selectedText);
-                ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText(_revCompS);
+                ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText(_revCompS);
             } else {
                 this.askHighlight("Reverse Complement");
             }
         } else if (s.equalsIgnoreCase("Complement")) {
             if (selectedText != null) {
                 String _revCompS = revComp_String(selectedText);
-                ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText(_revCompS);
+                ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText(_revCompS);
             } else {
                 this.askHighlight("Complement");
             }
@@ -2909,7 +2911,7 @@ public class SequenceView implements ObjBaseDropTarget {
                 //comment sequenceUtils.translateSeq(selectedText, _threeLetterCode);
                 //(trans);
                 NucSeq ns = new NucSeq(selectedText);
-                ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText(ns.translate(0));
+                ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText(ns.translate(0));
             } else {
                 this.askHighlight("Translation");
             }
@@ -2921,7 +2923,7 @@ public class SequenceView implements ObjBaseDropTarget {
                 //reverseTranslate(trans);
                 NucSeq ns = new NucSeq(selectedText);
                 ns = new NucSeq(ns.revComp());
-                ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText(ns.translate(0));
+                ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText(ns.translate(0));
             } else {
                 this.askHighlight("Reverse Translation");
             }
@@ -3013,7 +3015,7 @@ public class SequenceView implements ObjBaseDropTarget {
         _annotationsOn = false;
         _REOn = false;
         _featuresOn = false;
-        _h = ((SequenceViewGUI)_sequenceview).get_TextArea().getHighlighter();
+        _h = _sequenceArea.getHighlighter();
         javax.swing.text.Highlighter.Highlight[] highlights = _h.getHighlights();
         for (int i = 0; i < highlights.length; i++) {
             javax.swing.text.Highlighter.Highlight h = highlights[i];
@@ -3063,16 +3065,16 @@ public class SequenceView implements ObjBaseDropTarget {
         Boolean refresh = _annotationsOn;
         this.removeFeatureEnzymeHighlights();
         this.removeUserSelectedHighlights();
-        String text = ((SequenceViewGUI)_sequenceview).get_TextArea().getText();
-        int start = ((SequenceViewGUI)_sequenceview).get_TextArea().getSelectionStart();
-        int end = ((SequenceViewGUI)_sequenceview).get_TextArea().getSelectionEnd();
+        String text = _sequenceArea.getText();
+        int start = _sequenceArea.getSelectionStart();
+        int end = _sequenceArea.getSelectionEnd();
         text = text.substring(0, start) + replacement + text.substring(end, text.length());
-        ((SequenceViewGUI)_sequenceview).get_TextArea().setText(text);
+        _sequenceArea.setText(text);
         if (refresh) {
             this.highlightFeatures();
         }
-        ((SequenceViewGUI)_sequenceview).get_TextArea().setSelectionStart(start);
-        ((SequenceViewGUI)_sequenceview).get_TextArea().setSelectionEnd(end);
+        _sequenceArea.setSelectionStart(start);
+        _sequenceArea.setSelectionEnd(end);
         //_sequenceview.get_TextArea().setCaretPosition(end);
     }
 
@@ -3105,14 +3107,14 @@ public class SequenceView implements ObjBaseDropTarget {
         transWindow.getText().setLineWrap(false);
         // Finds the corresponding sequence in the sequenceview and
         // reverse complements it
-        String sequence = ((SequenceViewGUI)_sequenceview).get_TextArea().getSelectedText();
+        String sequence = _sequenceArea.getSelectedText();
         if (sequence == null) {
             start = 1;
-            end = ((SequenceViewGUI)_sequenceview).get_TextArea().getText().length();
-            sequence = ((SequenceViewGUI)_sequenceview).get_TextArea().getText();
+            end = _sequenceArea.getText().length();
+            sequence = _sequenceArea.getText();
         } else {
-            start = ((SequenceViewGUI)_sequenceview).get_TextArea().getSelectionStart() + 1;
-            end = ((SequenceViewGUI)_sequenceview).get_TextArea().getSelectionEnd();
+            start = _sequenceArea.getSelectionStart() + 1;
+            end = _sequenceArea.getSelectionEnd();
         }
         transWindow.setTitle(start + " - " + end);
 
@@ -3145,7 +3147,7 @@ public class SequenceView implements ObjBaseDropTarget {
         transWindow.setVisible(true);
 
         // Old method printed sequence to output text area
-        ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText(revTrans);
+        ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText(revTrans);
 
         //this.get_hub().get_core().send_to_stdout_connection(revTrans + "\n", ClothoDataUseEnum.stringSeqViewData);
 
@@ -3154,7 +3156,7 @@ public class SequenceView implements ObjBaseDropTarget {
     public void run() {
 //        setTitle("Clotho: Sequence View (Address: " + _myIndex + ") New Sequence");
 
-        configureBasePairBoth(((SequenceViewGUI)_sequenceview).getColLabel());
+        configureBasePairBoth(((SequenceViewGUI) _sequenceview).getColLabel());
         updateWindowMenus();
     }
 
@@ -3180,7 +3182,7 @@ public class SequenceView implements ObjBaseDropTarget {
     public void saveSequence() {
         ArrayList<String> extensions;
         String toFile = "";
-        String sequence = ((SequenceViewGUI)_sequenceview).get_TextArea().getText();
+        String sequence = _sequenceArea.getText();
         int charsPerLine;
         int length = sequence.length();
 
@@ -3274,7 +3276,7 @@ public class SequenceView implements ObjBaseDropTarget {
                 // COMMENT Lines
                 toFile = toFile + "COMMENT     ";
                 // Gets comments from comment box and parses them for storage
-                ArrayList<String> comments = new ArrayList(Arrays.asList(((SequenceViewGUI)_sequenceview).getCommentTextArea().getText().split(" |\\n")));
+                ArrayList<String> comments = new ArrayList(Arrays.asList(((SequenceViewGUI) _sequenceview).getCommentTextArea().getText().split(" |\\n")));
                 int charsLeft;
                 int charsPerCommentLine = 67;
                 String word;
@@ -3367,9 +3369,9 @@ public class SequenceView implements ObjBaseDropTarget {
         _revORFsCalculated = false;
         _saved = false;
 
-        updateSequenceCount(((SequenceViewGUI)_sequenceview).getSeqCountLabel());
-        configureBasePairBoth(((SequenceViewGUI)_sequenceview).getColLabel());
-        _sequence.changeSeq(((SequenceViewGUI)_sequenceview).get_TextArea().getText());
+        updateSequenceCount(((SequenceViewGUI) _sequenceview).getSeqCountLabel());
+        configureBasePairBoth(((SequenceViewGUI) _sequenceview).getColLabel());
+        _sequence.changeSeq(_sequenceArea.getText());
     }
 
     /**
@@ -3440,7 +3442,7 @@ public class SequenceView implements ObjBaseDropTarget {
         //Search in text area from the BEGINNING, not from previous position
 //uncommented
         _searcher = new ClothoSearchUtil(replaceFindFieldText,
-                ((SequenceViewGUI)_sequenceview).get_TextArea().getText(),
+                _sequenceArea.getText(),
                 _caseSensitiveOption);
         _search = _searcher.getSearch();
         _hitCount = _searcher.getHitCount();
@@ -3454,7 +3456,7 @@ public class SequenceView implements ObjBaseDropTarget {
      */
     public void setSequence(NucSeq newSequence) {
         int actionChoice;
-        String currentText = ((SequenceViewGUI)_sequenceview).get_TextArea().getText();
+        String currentText = _sequenceArea.getText();
         if ((currentText == null) || (currentText.equalsIgnoreCase(""))) { //if currently empty, don't need to ask for replace/append
             actionChoice = 0; //Replace All
         } else {
@@ -3475,11 +3477,11 @@ public class SequenceView implements ObjBaseDropTarget {
         }
 
         if (actionChoice == 0) {
-            ((SequenceViewGUI)_sequenceview).get_TextArea().setText(newSequence.toString());
+            _sequenceArea.setText(newSequence.toString());
         } else if (actionChoice == 1) {
-            ((SequenceViewGUI)_sequenceview).get_TextArea().replaceSelection(newSequence.toString());
+            _sequenceArea.replaceSelection(newSequence.toString());
         } else if (actionChoice == 2) {
-            ((SequenceViewGUI)_sequenceview).get_TextArea().setText(((SequenceViewGUI)_sequenceview).get_TextArea().getText() + newSequence);
+            _sequenceArea.setText(_sequenceArea.getText() + newSequence);
         } else if (actionChoice == 3) {
             return;
         }
@@ -3552,14 +3554,14 @@ public class SequenceView implements ObjBaseDropTarget {
         transWindow.getText().setEditable(false);
         transWindow.getText().setLineWrap(false);
         // Finds the corresponding sequence in the sequenceview
-        String sequence = ((SequenceViewGUI)_sequenceview).get_TextArea().getSelectedText();
+        String sequence = _sequenceArea.getSelectedText();
         if (sequence == null) {
-            sequence = ((SequenceViewGUI)_sequenceview).get_TextArea().getText();
+            sequence = _sequenceArea.getText();
             start = 1;
-            end = ((SequenceViewGUI)_sequenceview).get_TextArea().getText().length();
+            end = _sequenceArea.getText().length();
         } else {
-            start = ((SequenceViewGUI)_sequenceview).get_TextArea().getSelectionStart() + 1;
-            end = ((SequenceViewGUI)_sequenceview).get_TextArea().getSelectionEnd();
+            start = _sequenceArea.getSelectionStart() + 1;
+            end = _sequenceArea.getSelectionEnd();
         }
         transWindow.setTitle("Translation: " + start + " - " + end);
 
@@ -3585,7 +3587,7 @@ public class SequenceView implements ObjBaseDropTarget {
         transWindow.setVisible(true);
 
         // Old method printed sequence to output text area
-        ((SequenceViewGUI)_sequenceview).getOutputTextArea().setText(trans);
+        ((SequenceViewGUI) _sequenceview).getOutputTextArea().setText(trans);
         //this.get_hub().get_core().send_to_stdout_connection(trans + "\n", ClothoDataUseEnum.stringSeqViewData);
     }
 
@@ -3637,7 +3639,7 @@ public class SequenceView implements ObjBaseDropTarget {
      * Function to update the state of the circular variable
      */
     public void update_circular() {
-        JCheckBox cb = ((SequenceViewGUI)_sequenceview).getCircularBox();
+        JCheckBox cb = ((SequenceViewGUI) _sequenceview).getCircularBox();
         if (cb.isSelected()) {
             _circular = true;
             _sequence = new NucSeq(_sequence.getSeq(), false, true);
@@ -3693,7 +3695,7 @@ public class SequenceView implements ObjBaseDropTarget {
         } else {
             _locked = false;
         }
-        ((SequenceViewGUI)_sequenceview).get_TextArea().setEditable(!(_locked));
+        _sequenceArea.setEditable(!(_locked));
     }
 
     /**
@@ -3750,7 +3752,7 @@ public class SequenceView implements ObjBaseDropTarget {
      * @param sequenceValue
      */
     public void updateSequenceCount(JLabel sequenceValue) {
-        Integer len = new Integer(((SequenceViewGUI)_sequenceview).get_TextArea().getText().length());
+        Integer len = new Integer(_sequenceArea.getText().length());
         sequenceValue.setText(len.toString());
     }
 
@@ -3772,7 +3774,7 @@ public class SequenceView implements ObjBaseDropTarget {
             seqView.getWindowMenu().add(switchItem);
             for (int j = 0; j < windows.size(); j++) {
                 String name = windows.get(j);
-                seqView.getWindowMenu().add(new javax.swing.JMenuItem(name.substring(name.indexOf(")")+1, name.length())));
+                seqView.getWindowMenu().add(new javax.swing.JMenuItem(name.substring(name.indexOf(")") + 1, name.length())));
                 seqView.getWindowMenu().getItem(j).addActionListener(new java.awt.event.ActionListener() {
 
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -3813,7 +3815,7 @@ public class SequenceView implements ObjBaseDropTarget {
             try {
                 if (t != null && t.isDataFlavorSupported(java.awt.datatransfer.DataFlavor.stringFlavor)) {
                     newSeq = (String) t.getTransferData(java.awt.datatransfer.DataFlavor.stringFlavor);
-                    ((SequenceViewGUI)_sequenceview).get_TextArea().replaceSelection(newSeq);
+                    _sequenceArea.replaceSelection(newSeq);
                 }
             } catch (java.awt.datatransfer.UnsupportedFlavorException e) {
             } catch (java.io.IOException e) {
@@ -3829,12 +3831,12 @@ public class SequenceView implements ObjBaseDropTarget {
         }
         //copying action occurs here
         if ((evt.getKeyCode() == KeyEvent.VK_C) && (evt.getModifiersEx() == KeyEvent.CTRL_DOWN_MASK)) {
-            StringSelection ss = new StringSelection(((SequenceViewGUI)_sequenceview).get_TextArea().getSelectedText());
+            StringSelection ss = new StringSelection(_sequenceArea.getSelectedText());
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
         }
         //cutting action occurs here
         if ((evt.getKeyCode() == KeyEvent.VK_X) && (evt.getModifiersEx() == KeyEvent.CTRL_DOWN_MASK)) {
-            JTextPane jtp = ((SequenceViewGUI)_sequenceview).get_TextArea();
+            JTextPane jtp = _sequenceArea;
             StringSelection ss = new StringSelection(jtp.getSelectedText());
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
             jtp.replaceSelection("");
@@ -3916,7 +3918,7 @@ public class SequenceView implements ObjBaseDropTarget {
     }
 
     public void writeToOutput(String s) {
-        ((SequenceViewGUI)_sequenceview).getOutputTextArea().append(s);
+        ((SequenceViewGUI) _sequenceview).getOutputTextArea().append(s);
     }
 
     ///////////////////////////////////////////////////////////////////
@@ -3951,7 +3953,7 @@ public class SequenceView implements ObjBaseDropTarget {
 
     public String revCompFunctions(String Func, String SelectText) {
         if (Func.equals("CUT")) {
-            String text = ((SequenceViewGUI)_sequenceview).get_TextArea().getSelectedText();
+            String text = _sequenceArea.getSelectedText();
             text = revComp_String(text);
             StringSelection ss = new StringSelection(text);
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
@@ -3959,7 +3961,7 @@ public class SequenceView implements ObjBaseDropTarget {
 
         }
         if (Func.equalsIgnoreCase("COPY")) {
-            String text = ((SequenceViewGUI)_sequenceview).get_TextArea().getSelectedText();
+            String text = _sequenceArea.getSelectedText();
             text = revComp_String(text);
             StringSelection ss = new StringSelection(text);
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
@@ -4009,7 +4011,7 @@ public class SequenceView implements ObjBaseDropTarget {
         _annotations = _sequence.getAnnotations();
         _annotationsOn = true;
         _REOn = true;
-        _h = ((SequenceViewGUI)_sequenceview).get_TextArea().getHighlighter();
+        _h = _sequenceArea.getHighlighter();
 
         for (Annotation an : _annotations) {
             if (an.getFeature().getSearchTags().contains("restriction enzyme")) {
@@ -4044,7 +4046,7 @@ public class SequenceView implements ObjBaseDropTarget {
 //        this.removeUserSelectedHighlights();
         _annotationsOn = true;
         _featuresOn = true;
-        _h = ((SequenceViewGUI)_sequenceview).get_TextArea().getHighlighter();
+        _h = _sequenceArea.getHighlighter();
 
         for (Annotation an : _annotations) {
             if (!an.getFeature().getSearchTags().contains("restriction enzyme")) {
@@ -4089,7 +4091,7 @@ public class SequenceView implements ObjBaseDropTarget {
 
     public void changeUserSelectColor(Color c) {
         userSelectColor = c;
-        ((SequenceViewGUI)_sequenceview).get_TextArea().setSelectionColor(userSelectColor);
+        _sequenceArea.setSelectionColor(userSelectColor);
     }
 
     public Color getUserHighlightColor() {
@@ -4161,6 +4163,7 @@ public class SequenceView implements ObjBaseDropTarget {
     private int _selectedHit;
     private int _seqViewNumber;
     private javax.swing.text.Highlighter _h;
+    private JTextPane _sequenceArea;
     private JTextField _findField;
     private JTextField _goField;
     private JTextField _selectFromField;
@@ -4185,7 +4188,6 @@ public class SequenceView implements ObjBaseDropTarget {
     private UndoManager _undo;
     private UndoAction undoAction;
     private RedoAction redoAction;
-    private ArrayList<Feature> allFeatures;
     private Color userSelectColor;
     private Color ORFColor;
     private Color userHighlightColor;
