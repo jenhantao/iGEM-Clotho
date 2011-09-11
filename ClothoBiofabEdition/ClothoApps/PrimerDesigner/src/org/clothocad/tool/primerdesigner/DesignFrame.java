@@ -3,10 +3,7 @@ package org.clothocad.tool.primerdesigner;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
-import javax.swing.JFrame;
 import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
 import javax.swing.text.Highlighter;
@@ -14,7 +11,6 @@ import org.clothocore.api.core.Collector;
 import org.clothocore.api.data.ObjLink;
 import org.clothocore.api.data.ObjType;
 import org.openide.util.Exceptions;
-import org.openide.windows.TopComponent;
 
 /*
  * To change this template, choose Tools | Templates
@@ -49,9 +45,15 @@ public class DesignFrame extends javax.swing.JFrame {
         insertComboBox2.removeAllItems();
         insertComboBox1.addItem("none");
         insertComboBox2.addItem("none");
+        insertComboBox3.removeAllItems();
+        insertComboBox4.removeAllItems();
+        insertComboBox3.addItem("none");
+        insertComboBox4.addItem("none");
         for (ObjLink ol : featureList) {
             insertComboBox1.addItem(ol.name);
             insertComboBox2.addItem(ol.name);
+            insertComboBox3.addItem(ol.name);
+            insertComboBox4.addItem(ol.name);
         }
         insertComboBox1.setSize(50, 28);
         insertComboBox2.setSize(50, 28);
@@ -73,9 +75,6 @@ public class DesignFrame extends javax.swing.JFrame {
         insertComboBox1 = new javax.swing.JComboBox();
         spacerTextField1 = new javax.swing.JTextField();
         spacerTextField2 = new javax.swing.JTextField();
-        backgroundPanel = new javax.swing.JPanel();
-        sequenceTextField = new javax.swing.JTextField();
-        navigatorPanel = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -89,6 +88,16 @@ public class DesignFrame extends javax.swing.JFrame {
         lengthTextField = new javax.swing.JTextField();
         statusLabel = new javax.swing.JLabel();
         reCheckButton = new javax.swing.JButton();
+        spacerTextField4 = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        insertComboBox4 = new javax.swing.JComboBox();
+        jLabel9 = new javax.swing.JLabel();
+        insertComboBox3 = new javax.swing.JComboBox();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        spacerTextField3 = new javax.swing.JTextField();
+        sequenceTextField = new javax.swing.JTextField();
+        navigatorPanel = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         loadSequenceMenuItem = new javax.swing.JMenuItem();
@@ -136,104 +145,24 @@ public class DesignFrame extends javax.swing.JFrame {
             }
         });
         spacerTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                spacerTextField1KeyTyped(evt);
-            }
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 spacerTextField1KeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                spacerTextField1KeyTyped(evt);
             }
         });
 
         spacerTextField2.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.spacerTextField2.text")); // NOI18N
         spacerTextField2.setToolTipText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.spacerTextField2.toolTipText")); // NOI18N
         spacerTextField2.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                spacerTextField2KeyTyped(evt);
-            }
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 spacerTextField2KeyPressed(evt);
             }
-        });
-
-        sequenceTextField.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.sequenceTextField.text")); // NOI18N
-        sequenceTextField.setMaximumSize(new java.awt.Dimension(200, 30));
-        sequenceTextField.setMinimumSize(new java.awt.Dimension(100, 30));
-        sequenceTextField.setPreferredSize(new java.awt.Dimension(200, 30));
-        sequenceTextField.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                sequenceTextFieldMouseClicked(evt);
-            }
-        });
-        sequenceTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sequenceTextFieldActionPerformed(evt);
-            }
-        });
-        sequenceTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                sequenceTextFieldKeyTyped(evt);
-            }
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                sequenceTextFieldKeyPressed(evt);
+                spacerTextField2KeyTyped(evt);
             }
         });
-
-        navigatorPanel.setBackground(java.awt.Color.gray);
-        navigatorPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        navigatorPanel.setForeground(java.awt.Color.gray);
-        navigatorPanel.setToolTipText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.navigatorPanel.toolTipText")); // NOI18N
-        navigatorPanel.setMaximumSize(new java.awt.Dimension(200, 30));
-        navigatorPanel.setMinimumSize(new java.awt.Dimension(100, 30));
-        navigatorPanel.setPreferredSize(new java.awt.Dimension(200, 30));
-        navigatorPanel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                navigatorPanelMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                navigatorPanelMouseEntered(evt);
-            }
-        });
-        navigatorPanel.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseMoved(java.awt.event.MouseEvent evt) {
-                navigatorPanelMouseMoved(evt);
-            }
-        });
-
-        javax.swing.GroupLayout navigatorPanelLayout = new javax.swing.GroupLayout(navigatorPanel);
-        navigatorPanel.setLayout(navigatorPanelLayout);
-        navigatorPanelLayout.setHorizontalGroup(
-            navigatorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 513, Short.MAX_VALUE)
-        );
-        navigatorPanelLayout.setVerticalGroup(
-            navigatorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 26, Short.MAX_VALUE)
-        );
-
-        javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
-        backgroundPanel.setLayout(backgroundPanelLayout);
-        backgroundPanelLayout.setHorizontalGroup(
-            backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(backgroundPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(navigatorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 517, Short.MAX_VALUE)
-                    .addComponent(sequenceTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 517, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
-
-        backgroundPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {navigatorPanel, sequenceTextField});
-
-        backgroundPanelLayout.setVerticalGroup(
-            backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(backgroundPanelLayout.createSequentialGroup()
-                .addComponent(navigatorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sequenceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
-        backgroundPanelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {navigatorPanel, sequenceTextField});
 
         jLabel2.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.jLabel2.text")); // NOI18N
 
@@ -298,6 +227,108 @@ public class DesignFrame extends javax.swing.JFrame {
             }
         });
 
+        spacerTextField4.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.spacerTextField4.text")); // NOI18N
+        spacerTextField4.setToolTipText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.spacerTextField4.toolTipText")); // NOI18N
+        spacerTextField4.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                spacerTextField4KeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                spacerTextField4KeyTyped(evt);
+            }
+        });
+
+        jLabel6.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.jLabel6.text")); // NOI18N
+
+        insertComboBox4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        insertComboBox4.setToolTipText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.insertComboBox4.toolTipText")); // NOI18N
+        insertComboBox4.setMaximumSize(new java.awt.Dimension(50, 28));
+        insertComboBox4.setMinimumSize(new java.awt.Dimension(50, 28));
+        insertComboBox4.setPreferredSize(new java.awt.Dimension(50, 28));
+
+        jLabel9.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.jLabel9.text")); // NOI18N
+
+        insertComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        insertComboBox3.setToolTipText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.insertComboBox3.toolTipText")); // NOI18N
+        insertComboBox3.setMaximumSize(new java.awt.Dimension(50, 28));
+        insertComboBox3.setMinimumSize(new java.awt.Dimension(50, 28));
+        insertComboBox3.setPreferredSize(new java.awt.Dimension(50, 28));
+
+        jLabel10.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.jLabel10.text")); // NOI18N
+
+        jLabel11.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.jLabel11.text")); // NOI18N
+
+        spacerTextField3.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.spacerTextField3.text")); // NOI18N
+        spacerTextField3.setToolTipText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.spacerTextField3.toolTipText")); // NOI18N
+        spacerTextField3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                spacerTextField3MousePressed(evt);
+            }
+        });
+        spacerTextField3.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                spacerTextField3KeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                spacerTextField3KeyTyped(evt);
+            }
+        });
+
+        sequenceTextField.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.sequenceTextField.text")); // NOI18N
+        sequenceTextField.setMaximumSize(new java.awt.Dimension(200, 30));
+        sequenceTextField.setMinimumSize(new java.awt.Dimension(100, 30));
+        sequenceTextField.setPreferredSize(new java.awt.Dimension(200, 30));
+        sequenceTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                sequenceTextFieldMouseClicked(evt);
+            }
+        });
+        sequenceTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sequenceTextFieldActionPerformed(evt);
+            }
+        });
+        sequenceTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                sequenceTextFieldKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                sequenceTextFieldKeyTyped(evt);
+            }
+        });
+
+        navigatorPanel.setBackground(java.awt.Color.white);
+        navigatorPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        navigatorPanel.setForeground(java.awt.Color.white);
+        navigatorPanel.setToolTipText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.navigatorPanel.toolTipText")); // NOI18N
+        navigatorPanel.setMaximumSize(new java.awt.Dimension(200, 30));
+        navigatorPanel.setMinimumSize(new java.awt.Dimension(100, 30));
+        navigatorPanel.setPreferredSize(new java.awt.Dimension(200, 30));
+        navigatorPanel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                navigatorPanelMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                navigatorPanelMouseEntered(evt);
+            }
+        });
+        navigatorPanel.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                navigatorPanelMouseMoved(evt);
+            }
+        });
+
+        javax.swing.GroupLayout navigatorPanelLayout = new javax.swing.GroupLayout(navigatorPanel);
+        navigatorPanel.setLayout(navigatorPanelLayout);
+        navigatorPanelLayout.setHorizontalGroup(
+            navigatorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 565, Short.MAX_VALUE)
+        );
+        navigatorPanelLayout.setVerticalGroup(
+            navigatorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 26, Short.MAX_VALUE)
+        );
+
         jMenu1.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.jMenu1.text")); // NOI18N
 
         loadSequenceMenuItem.setText(org.openide.util.NbBundle.getMessage(DesignFrame.class, "DesignFrame.loadSequenceMenuItem.text")); // NOI18N
@@ -336,59 +367,80 @@ public class DesignFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(spacerTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tmTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(insertComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(insertComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel2))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(spacerTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lengthTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(reCheckButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(generateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cancelButton)))
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
-                        .addGap(497, 497, 497))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(14, 14, 14)
                         .addComponent(startLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(187, 187, 187)
+                        .addGap(225, 225, 225)
                         .addComponent(positionLabel)
-                        .addGap(199, 199, 199)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 236, Short.MAX_VALUE)
                         .addComponent(endLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(88, Short.MAX_VALUE))
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tmTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lengthTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel11)
+                                    .addComponent(spacerTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel10))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(8, 8, 8)
+                                        .addComponent(insertComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(8, 8, 8))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5)
+                                    .addComponent(spacerTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(6, 6, 6)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(insertComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(insertComboBox4, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(insertComboBox2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(6, 6, 6)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel3)
+                            .addComponent(spacerTextField2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(54, 54, 54))
+                            .addComponent(spacerTextField4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE)
+                        .addGap(123, 123, 123)
+                        .addComponent(reCheckButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(generateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cancelButton)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(navigatorPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 569, Short.MAX_VALUE)
+                            .addComponent(sequenceTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 569, Short.MAX_VALUE))
                         .addContainerGap())))
         );
 
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {spacerTextField1, spacerTextField2});
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {spacerTextField1, spacerTextField2, spacerTextField3});
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {insertComboBox1, insertComboBox2});
 
@@ -398,12 +450,14 @@ public class DesignFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(startLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(positionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(endLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(endLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(positionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(navigatorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addComponent(sequenceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
@@ -411,36 +465,55 @@ public class DesignFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(spacerTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(insertComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
+                            .addComponent(insertComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(insertComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(spacerTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(34, 34, 34)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel10))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(insertComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spacerTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel7)
                             .addComponent(tmTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel8)
-                            .addComponent(lengthTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lengthTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(statusLabel))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(reCheckButton)
-                        .addComponent(generateButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(cancelButton)))
-                .addContainerGap(24, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(insertComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spacerTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel9))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(spacerTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(insertComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(statusLabel)
+                        .addGap(35, 35, 35))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(reCheckButton)
+                            .addComponent(generateButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cancelButton))
+                        .addContainerGap())))
         );
 
         layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {insertComboBox1, insertComboBox2});
 
         layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {spacerTextField1, spacerTextField2});
+
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {navigatorPanel, sequenceTextField});
 
         layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cancelButton, generateButton, reCheckButton});
 
@@ -476,9 +549,13 @@ public class DesignFrame extends javax.swing.JFrame {
             }
             String insert1 = (String) insertComboBox1.getSelectedItem();
             String insert2 = (String) insertComboBox2.getSelectedItem();
+            String insert3 = (String) insertComboBox3.getSelectedItem();
+            String insert4 = (String) insertComboBox4.getSelectedItem();
             String spacer1 = spacerTextField1.getText().toUpperCase();
             String spacer2 = spacerTextField2.getText().toUpperCase();
-            _controller.generatePrimers(seq, tm, length, insert1, insert2, spacer1, spacer2);
+            String spacer3 = spacerTextField3.getText().toUpperCase();
+            String spacer4 = spacerTextField4.getText().toUpperCase();
+            _controller.generatePrimers(seq, tm, length, insert1, insert2, insert3, insert4, spacer1, spacer2, spacer3, spacer4);
             statusLabel.setText("Primers calculated");
         } else {
             statusLabel.setText("Restriction sites found");
@@ -729,8 +806,28 @@ positionLabel.setText("Position: "+sequenceTextField.getCaretPosition());    }//
     }//GEN-LAST:event_lengthTextFieldKeyTyped
 
     private void loadSequenceMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadSequenceMenuItemActionPerformed
-_controller.loadSequence();
+        _controller.loadSequence();
     }//GEN-LAST:event_loadSequenceMenuItemActionPerformed
+
+    private void spacerTextField4KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_spacerTextField4KeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_spacerTextField4KeyPressed
+
+    private void spacerTextField4KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_spacerTextField4KeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_spacerTextField4KeyTyped
+
+    private void spacerTextField3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_spacerTextField3MousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_spacerTextField3MousePressed
+
+    private void spacerTextField3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_spacerTextField3KeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_spacerTextField3KeyPressed
+
+    private void spacerTextField3KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_spacerTextField3KeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_spacerTextField3KeyTyped
 
     /**
      * @param args the command line arguments
@@ -750,18 +847,23 @@ _controller.loadSequence();
     private HashMap<Integer, Integer> reLocations;
     private PrimerDesignController _controller;
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;
     private javax.swing.JLabel endLabel;
     private javax.swing.JButton generateButton;
     private javax.swing.JComboBox insertComboBox1;
     private javax.swing.JComboBox insertComboBox2;
+    private javax.swing.JComboBox insertComboBox3;
+    private javax.swing.JComboBox insertComboBox4;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -774,6 +876,8 @@ _controller.loadSequence();
     private javax.swing.JTextField sequenceTextField;
     private javax.swing.JTextField spacerTextField1;
     private javax.swing.JTextField spacerTextField2;
+    private javax.swing.JTextField spacerTextField3;
+    private javax.swing.JTextField spacerTextField4;
     private javax.swing.JLabel startLabel;
     private javax.swing.JLabel statusLabel;
     private javax.swing.JMenuItem switchViewMenuItem;

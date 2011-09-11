@@ -48,6 +48,7 @@ public class PrimerDesignController {
         _frameView = d;
         _textField = d.getSequenceTextField();
         _ns = new NucSeq("");
+        _ns.setTransient();
         final JComponent guiContentPane = (JComponent) _frameView.getContentPane();
 //            JRootPane guiRootPane = _frameView.getRootPane();
         final JMenuBar menu = _frameView.getJMenuBar();
@@ -90,7 +91,7 @@ public class PrimerDesignController {
      * @param spacer1
      * @param spacer2
      */
-    public void generatePrimers(String seq, Double tm, int length, String insert1, String insert2, String spacer1, String spacer2) {
+    public void generatePrimers(String seq, Double tm, int length, String insert1, String insert2, String insert3, String insert4, String spacer1, String spacer2, String spacer3, String spacer4) {
 //        System.out.println("Sequence: " + seq);
 //        System.out.println("Target tm: " + tm);
 //        System.out.println("Target length: " + length);
@@ -135,21 +136,35 @@ public class PrimerDesignController {
         String fwdPrimer = "";
         //generates primer sequences with length +/-3 of target length excluding the insert length
         for (int i = length - 3; i <= length + 3; i++) {
-            fwdPrimer = this.complementSequence(seq.substring(0, i));
+            fwdPrimer = seq.substring(0, i);
             fwdG.add(calcDeltaG(fwdPrimer));
             if (!insert1.equalsIgnoreCase("none")) {
                 Feature afeat = Feature.retrieveByName(insert1);
-                fwdPrimer = this.complementSequence(afeat.getSeq().toString()) + fwdPrimer;
+                fwdPrimer = afeat.getSeq().toString() + fwdPrimer;
             }
             fwdPrimer = spacer1 + fwdPrimer;
+
+            if (!insert3.equalsIgnoreCase("none")) {
+                Feature afeat = Feature.retrieveByName(insert3);
+                fwdPrimer = afeat.getSeq().toString() + fwdPrimer;
+            }
+            fwdPrimer = spacer3 + fwdPrimer;
+
+
             fwdSequences.add(fwdPrimer.toUpperCase());
-            revPrimer = this.flip(seq.substring(seq.length() - i));
+            revPrimer = seq.substring(seq.length() - i);
             revG.add(calcDeltaG(revPrimer));
             if (!insert2.equalsIgnoreCase("none")) {
                 Feature afeat = Feature.retrieveByName(insert2);
-                revPrimer = this.flip(afeat.getSeq().toString()) + revPrimer;
+                revPrimer = revPrimer + afeat.getSeq().toString();
             }
-            revPrimer = spacer2 + revPrimer;
+            revPrimer = revPrimer + spacer2;
+            if (!insert4.equalsIgnoreCase("none")) {
+                Feature afeat = Feature.retrieveByName(insert4);
+                revPrimer = revPrimer + afeat.getSeq().toString();
+            }
+            revPrimer = revPrimer + spacer4;
+            revPrimer = this.flip(this.complementSequence(revPrimer));
             revSequences.add(revPrimer.toUpperCase());
         }
         PrimerResultFrame prf = new PrimerResultFrame(this, fwdSequences, revSequences, fwdG, revG);

@@ -53,7 +53,7 @@ public class Aligner {
                         (short) 3, // replace
                         (short) 2, // insert
                         (short) 2, // delete
-                        (short) 1, // gapExtend
+                        (short) -3, // gapExtend
                         matrix // SubstitutionMatrix
                         );
 //                SequenceAlignment alignment = new NeedlemanWunsch(

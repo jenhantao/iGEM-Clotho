@@ -313,6 +313,8 @@ public class PrimerResultFrame extends javax.swing.JFrame {
             dimerTextArea.setText(results);
             if (results.contains("Warning:")) {
                 dimerTextArea.setBackground(Color.pink);
+            } else {
+                dimerTextArea.setBackground(Color.white);
             }
         }
 
