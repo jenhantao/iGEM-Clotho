@@ -4,13 +4,18 @@
  */
 package org.clothocore.widget.fabdash;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.HashSet;
+import javax.swing.AbstractAction;
+import javax.swing.KeyStroke;
 import javax.swing.SwingWorker;
 import org.clothocore.api.core.Collector;
 import org.clothocore.api.data.Collection;
 import org.clothocore.api.data.Format;
+import org.clothocore.api.data.ObjBase;
 import org.clothocore.api.data.ObjLink;
 import org.clothocore.api.data.ObjType;
 import org.clothocore.api.data.Oligo;
@@ -48,8 +53,9 @@ public final class InventoryTabsTopComponent extends TopComponent {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (partsTable.getSelectedRow() > 0 && partsTable.getSelectedRow() < partsTable.getHeight()) {
+                if (partsTable.getSelectedRow() > -1 && partsTable.getSelectedRow() < partsTable.getHeight()) {
                     if (e.getButton() == MouseEvent.BUTTON1) {
+                        System.out.println("clicked in parts table");
                         _obp = new ObjBasePopup(partsTable, Part.retrieveByName((String) partsTable.getValueAt(partsTable.getSelectedRow(), 0)));
                     }
                 }
@@ -63,7 +69,7 @@ public final class InventoryTabsTopComponent extends TopComponent {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
-                    if (vectorsTable.getSelectedRow() > 0 && vectorsTable.getSelectedRow() < vectorsTable.getHeight()) {
+                    if (vectorsTable.getSelectedRow() > -1 && vectorsTable.getSelectedRow() < vectorsTable.getHeight()) {
                         _obp = new ObjBasePopup(vectorsTable, Vector.retrieveByName((String) vectorsTable.getValueAt(vectorsTable.getSelectedRow(), 0)));
                     }
                 }
@@ -76,7 +82,7 @@ public final class InventoryTabsTopComponent extends TopComponent {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (plasmidsTable.getSelectedRow() > 0 && plasmidsTable.getSelectedRow() < plasmidsTable.getHeight()) {
+                if (plasmidsTable.getSelectedRow() > -1 && plasmidsTable.getSelectedRow() < plasmidsTable.getHeight()) {
                     if (e.getButton() == MouseEvent.BUTTON1) {
                         _obp = new ObjBasePopup(plasmidsTable, Plasmid.retrieveByName((String) plasmidsTable.getValueAt(plasmidsTable.getSelectedRow(), 0)));
                     }
@@ -91,7 +97,7 @@ public final class InventoryTabsTopComponent extends TopComponent {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
-                    if (oligosTable.getSelectedRow() > 0 && oligosTable.getSelectedRow() < oligosTable.getHeight()) {
+                    if (oligosTable.getSelectedRow() > -1 && oligosTable.getSelectedRow() < oligosTable.getHeight()) {
                         _obp = new ObjBasePopup(oligosTable, Oligo.retrieveByName((String) oligosTable.getValueAt(oligosTable.getSelectedRow(), 0)));
                     }
                 }
@@ -106,6 +112,27 @@ public final class InventoryTabsTopComponent extends TopComponent {
         setName(NbBundle.getMessage(InventoryTabsTopComponent.class, "CTL_LogInTopComponent"));
         setToolTipText(NbBundle.getMessage(InventoryTabsTopComponent.class, "HINT_LogInTopComponent"));
 
+        this.getInputMap().put(KeyStroke.getKeyStroke("F5"), "refresh");
+        this.getActionMap().put("refresh",
+                new AbstractAction("refresh") {
+
+                    @Override
+                    public void actionPerformed(ActionEvent evt) {
+                        fetchInventoryInformation();
+
+                    }
+                });
+
+        this.getInputMap().put(KeyStroke.getKeyStroke("r"), "r");
+        this.getActionMap().put("r",
+                new AbstractAction("r") {
+
+                    @Override
+                    public void actionPerformed(ActionEvent evt) {
+                        fetchInventoryInformation();
+
+                    }
+                });
     }
 
     /** This method is called from within the constructor to
@@ -127,6 +154,7 @@ public final class InventoryTabsTopComponent extends TopComponent {
         oligosScrollPane = new javax.swing.JScrollPane();
         oligosTable = new javax.swing.JTable();
         refreshButton = new javax.swing.JButton();
+        restrictToUserCheckBox = new javax.swing.JCheckBox();
 
         setDisplayName(org.openide.util.NbBundle.getMessage(InventoryTabsTopComponent.class, "InventoryTabsTopComponent.displayName")); // NOI18N
 
@@ -276,13 +304,17 @@ public final class InventoryTabsTopComponent extends TopComponent {
 
         inventoryTabbedPane.addTab(org.openide.util.NbBundle.getMessage(InventoryTabsTopComponent.class, "InventoryTabsTopComponent.oligosScrollPane.TabConstraints.tabTitle"), oligosScrollPane); // NOI18N
 
-        refreshButton.setFont(new java.awt.Font("Ubuntu", 0, 10));
+        refreshButton.setFont(new java.awt.Font("Ubuntu", 0, 10)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(refreshButton, org.openide.util.NbBundle.getMessage(InventoryTabsTopComponent.class, "InventoryTabsTopComponent.refreshButton.text")); // NOI18N
         refreshButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 refreshButtonActionPerformed(evt);
             }
         });
+
+        restrictToUserCheckBox.setFont(new java.awt.Font("Ubuntu", 0, 10)); // NOI18N
+        restrictToUserCheckBox.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(restrictToUserCheckBox, org.openide.util.NbBundle.getMessage(InventoryTabsTopComponent.class, "InventoryTabsTopComponent.restrictToUserCheckBox.text")); // NOI18N
 
         javax.swing.GroupLayout inventoryPanelLayout = new javax.swing.GroupLayout(inventoryPanel);
         inventoryPanel.setLayout(inventoryPanelLayout);
@@ -291,17 +323,22 @@ public final class InventoryTabsTopComponent extends TopComponent {
             .addGroup(inventoryPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(inventoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(refreshButton, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(inventoryPanelLayout.createSequentialGroup()
-                        .addComponent(inventoryTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
-                        .addContainerGap())))
+                    .addComponent(inventoryTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, inventoryPanelLayout.createSequentialGroup()
+                        .addComponent(restrictToUserCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                        .addComponent(refreshButton)))
+                .addContainerGap())
         );
         inventoryPanelLayout.setVerticalGroup(
             inventoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(inventoryPanelLayout.createSequentialGroup()
-                .addComponent(refreshButton)
+                .addContainerGap()
+                .addGroup(inventoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(refreshButton)
+                    .addComponent(restrictToUserCheckBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(inventoryTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
+                .addComponent(inventoryTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -327,6 +364,15 @@ public final class InventoryTabsTopComponent extends TopComponent {
         super.componentShowing();
     }
 
+    private static ArrayList<ObjBase> getAllInCollection(Collection coll, ObjType type) {
+        ArrayList<ObjBase> toReturn = (ArrayList<ObjBase>) coll.getAll(type);
+        ArrayList<Collection> collections = (ArrayList<Collection>) coll.getAll(ObjType.COLLECTION);
+        for (Collection co : collections) {
+            toReturn.addAll(getAllInCollection(co, type));
+        }
+        return toReturn;
+    }
+
 private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
     fetchInventoryInformation();
 }//GEN-LAST:event_refreshButtonActionPerformed
@@ -334,7 +380,7 @@ private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private void fetchInventoryInformation() {
         new SwingWorker() {
 
-            Collection personalCollection = null;
+            Collection viewedCollection = null;
 
             @Override
             protected Object doInBackground() throws Exception {
@@ -344,17 +390,22 @@ private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                     return null;
                 }
                 try {
-//                    personalCollection = Collector.getCurrentUser().getHerCollection();
+                    if (restrictToUserCheckBox.isSelected()) {
+                        viewedCollection = Collector.getCurrentUser().getHerCollection();
+                    }
+
 
                     //Populate the Plasmid tab is below
-                    ArrayList<ObjLink> allPlasmids = Collector.getAllLinksOf(ObjType.PLASMID);
-                    Object[][] plasmidTableModel = new Object[allPlasmids.size()][2];
-                    if (allPlasmids.size() > 0) {
-                        ObjBasePopup obp = new ObjBasePopup(plasmidsTable, Collector.getPlasmid(allPlasmids.get(0).uuid));
+                    ArrayList<ObjBase> allPlasmids = null;
+                    if (restrictToUserCheckBox.isSelected()) {
+                        allPlasmids = InventoryTabsTopComponent.getAllInCollection(viewedCollection, ObjType.PLASMID);
+                    } else {
+                        allPlasmids = Collector.getAll(ObjType.PLASMID);
                     }
+                    Object[][] plasmidTableModel = new Object[allPlasmids.size()][2];
                     for (int i = 0; i < allPlasmids.size(); i++) {
-                        plasmidTableModel[i][0] = allPlasmids.get(i).name;
-                        Plasmid aplas = Collector.getPlasmid(allPlasmids.get(i).uuid);
+                        plasmidTableModel[i][0] = allPlasmids.get(i).getName();
+                        Plasmid aplas = (Plasmid) allPlasmids.get(i);
                         Format aform = aplas.getFormat(); //get the Format of aplas
                         plasmidTableModel[i][1] = aform.getName(); //based on the Format, the sequence of the region of interest is retreieved and used to populate the table
                     }
@@ -380,14 +431,16 @@ private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                         }
                     });
                     //populate the Oligo tab
-                    ArrayList<ObjLink> allOligos = Collector.getAllLinksOf(ObjType.OLIGO);
-                    Object[][] oligoTableModel = new Object[allOligos.size()][2];
-                    if (allOligos.size() > 0) {
-                        ObjBasePopup obp = new ObjBasePopup(oligosTable, Collector.getOligo(allOligos.get(0).uuid));
+                    ArrayList<ObjBase> allOligos = null;
+                    if (restrictToUserCheckBox.isSelected()) {
+                        allOligos = InventoryTabsTopComponent.getAllInCollection(viewedCollection, ObjType.OLIGO);
+                    } else {
+                        allOligos = Collector.getAll(ObjType.OLIGO);
                     }
+                    Object[][] oligoTableModel = new Object[allOligos.size()][2];
                     for (int i = 0; i < allOligos.size(); i++) {
-                        Oligo oligo = Collector.getOligo(allOligos.get(i).uuid);
-                        oligoTableModel[i][0] = allOligos.get(i).name;
+                        Oligo oligo = (Oligo) allOligos.get(i);
+                        oligoTableModel[i][0] = oligo.getName();
                         oligoTableModel[i][1] = oligo.getDescription();
                     }
                     oligosTable.setModel(new javax.swing.table.DefaultTableModel(oligoTableModel, new String[]{"Name", "Description"}) {
@@ -412,14 +465,16 @@ private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                         }
                     });
                     //populate the Vectors tab is below
-                    ArrayList<ObjLink> allVectors = Collector.getAllLinksOf(ObjType.VECTOR);
-                    Object[][] vectorTableModel = new Object[allVectors.size()][2];
-                    if (allVectors.size() > 0) {
-                        ObjBasePopup obp = new ObjBasePopup(vectorsTable, Collector.getVector(allVectors.get(0).uuid));
+                    ArrayList<ObjBase> allVectors = null;
+                    if (restrictToUserCheckBox.isSelected()) {
+                        allVectors = InventoryTabsTopComponent.getAllInCollection(viewedCollection, ObjType.VECTOR);
+                    } else {
+                        allVectors = Collector.getAll(ObjType.VECTOR);
                     }
+                    Object[][] vectorTableModel = new Object[allVectors.size()][2];
                     for (int i = 0; i < allVectors.size(); i++) {
-                        vectorTableModel[i][0] = allVectors.get(i).name;
-                        Vector avec = Collector.getVector(allVectors.get(i).uuid);
+                        vectorTableModel[i][0] = allVectors.get(i).getName();
+                        Vector avec = (Vector) allVectors.get(i);
                         vectorTableModel[i][1] = avec.getFormat().toString(); //based on the Format, the sequence of the region of interest is retreieved and used to populate the table
                     }
                     vectorsTable.setModel(new javax.swing.table.DefaultTableModel(vectorTableModel, new String[]{"Vector Name", "Format"}) {
@@ -445,13 +500,15 @@ private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                     });
 
                     //Code for populating the Parts tab is below
-                    ArrayList<ObjLink> allParts = Collector.getAllLinksOf(ObjType.PART);
-                    Object[][] partTableModel = new Object[allParts.size()][2];
-                    if (allParts.size() > 0) {
-                        ObjBasePopup obp = new ObjBasePopup(partsTable, Collector.getPart(allParts.get(0).uuid));
+                    ArrayList<ObjBase> allParts = null;
+                    if (restrictToUserCheckBox.isSelected()) {
+                        allParts = InventoryTabsTopComponent.getAllInCollection(viewedCollection, ObjType.PART);
+                    } else {
+                        allParts = Collector.getAll(ObjType.PART);
                     }
+                    Object[][] partTableModel = new Object[allParts.size()][2];
                     for (int i = 0; i < allParts.size(); i++) {
-                        Part aPart = Collector.getPart(allParts.get(i).uuid);
+                        Part aPart = (Part) allParts.get(i);
                         partTableModel[i][0] = aPart.getName();
                         partTableModel[i][1] = aPart.getFormat().toString();
                     }
@@ -509,6 +566,7 @@ private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JScrollPane plasmidsScrollPane;
     protected javax.swing.JTable plasmidsTable;
     private javax.swing.JButton refreshButton;
+    private javax.swing.JCheckBox restrictToUserCheckBox;
     private javax.swing.JScrollPane vectorsScrollPane;
     protected javax.swing.JTable vectorsTable;
     // End of variables declaration//GEN-END:variables

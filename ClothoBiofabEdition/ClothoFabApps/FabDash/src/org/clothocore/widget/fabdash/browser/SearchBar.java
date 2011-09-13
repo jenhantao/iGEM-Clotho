@@ -31,6 +31,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
+import javax.swing.JCheckBox;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -56,7 +57,7 @@ public class SearchBar extends JPanel {
         mainPane = new JTabbedPane();               // create the tabbed pane
         add(mainPane, BorderLayout.CENTER);         // add it to the center of our JPanel
         _lister = new JList();                      // create the JList to view the results
-
+        
        _lister.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -70,6 +71,8 @@ public class SearchBar extends JPanel {
                 }
             }
         });
+
+       
     }
 
     // updates the results of the search, doesn't do any filtering

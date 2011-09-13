@@ -31,6 +31,7 @@ import java.awt.event.MouseListener;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -101,6 +102,8 @@ public class SuperSearch extends JPanel {
         });
         this.add(jtf, BorderLayout.CENTER);
         this.add(searchTB, BorderLayout.EAST);
+        _restrictToUserCheckBox = new JCheckBox("Search only in current user's collection");
+        add(_restrictToUserCheckBox, BorderLayout.SOUTH);
 
         //Listen for ctrl-O
         jtf.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "search");
@@ -148,7 +151,9 @@ public class SuperSearch extends JPanel {
             return;
         }
         System.out.println("Searcher: " + saa.getDescription());
-        Actor searchActor = saa.getAlgorithm().createAlgorithm();
+        Actor searchActor = saa.getAlgorithm().createAlgorithm()
+        
+    ;
 
         //Create a Stringtoken input to the actor and put it into Inport
         String query = jtf.getText();
@@ -169,6 +174,8 @@ public class SuperSearch extends JPanel {
         outcoll = (Collection) out.getData();
         _bar.setResults(outcoll);       // updates the all tab
         _bar.createTabs(outcoll);       // creates the dynamic tabs
+        
+        
 
     }
     /*-----------------
@@ -179,4 +186,5 @@ public class SuperSearch extends JPanel {
     TransparentButton searchTB;
     Collection outcoll;
     private static final Border blackline = BorderFactory.createLineBorder(Color.BLACK);
+    private JCheckBox _restrictToUserCheckBox;
 }
