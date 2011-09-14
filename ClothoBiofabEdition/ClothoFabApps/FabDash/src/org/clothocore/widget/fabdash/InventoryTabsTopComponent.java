@@ -155,6 +155,7 @@ public final class InventoryTabsTopComponent extends TopComponent {
         oligosTable = new javax.swing.JTable();
         refreshButton = new javax.swing.JButton();
         restrictToUserCheckBox = new javax.swing.JCheckBox();
+        collectionsComboBox = new javax.swing.JComboBox();
 
         setDisplayName(org.openide.util.NbBundle.getMessage(InventoryTabsTopComponent.class, "InventoryTabsTopComponent.displayName")); // NOI18N
 
@@ -312,9 +313,12 @@ public final class InventoryTabsTopComponent extends TopComponent {
             }
         });
 
-        restrictToUserCheckBox.setFont(new java.awt.Font("Ubuntu", 0, 10)); // NOI18N
+        restrictToUserCheckBox.setFont(new java.awt.Font("Ubuntu", 0, 10));
         restrictToUserCheckBox.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(restrictToUserCheckBox, org.openide.util.NbBundle.getMessage(InventoryTabsTopComponent.class, "InventoryTabsTopComponent.restrictToUserCheckBox.text")); // NOI18N
+
+        collectionsComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        collectionsComboBox.setSelectedIndex(-1);
 
         javax.swing.GroupLayout inventoryPanelLayout = new javax.swing.GroupLayout(inventoryPanel);
         inventoryPanel.setLayout(inventoryPanelLayout);
@@ -323,10 +327,12 @@ public final class InventoryTabsTopComponent extends TopComponent {
             .addGroup(inventoryPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(inventoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(inventoryTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
+                    .addComponent(inventoryTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, inventoryPanelLayout.createSequentialGroup()
                         .addComponent(restrictToUserCheckBox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(collectionsComboBox, 0, 156, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(refreshButton)))
                 .addContainerGap())
         );
@@ -336,9 +342,10 @@ public final class InventoryTabsTopComponent extends TopComponent {
                 .addContainerGap()
                 .addGroup(inventoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(refreshButton)
-                    .addComponent(restrictToUserCheckBox))
+                    .addComponent(restrictToUserCheckBox)
+                    .addComponent(collectionsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(inventoryTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
+                .addComponent(inventoryTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -359,6 +366,7 @@ public final class InventoryTabsTopComponent extends TopComponent {
         if (!_connected) {
             fetchInventoryInformation();
             _connected = true;
+
 
         }
         super.componentShowing();
@@ -389,9 +397,25 @@ private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
                     return null;
                 }
+
                 try {
+                    String currentSelection=null;
+                    if (collectionsComboBox.getSelectedIndex()>-1) {
+                        currentSelection=(String) collectionsComboBox.getSelectedItem();
+                    }
+                    collectionsComboBox.removeAllItems();
+                    ArrayList<ObjLink> allLinksOfCollections = Collector.getAllLinksOf(ObjType.COLLECTION);
+                    for (ObjLink oj : allLinksOfCollections) {
+                        collectionsComboBox.addItem(oj.name);
+                    }
+                   if (currentSelection!=null) {
+                        collectionsComboBox.setSelectedItem(currentSelection);
+                   }
+                    if (collectionsComboBox.getSelectedIndex()<0) {
+                        collectionsComboBox.setSelectedItem(Collector.getCurrentUser().getHerCollection().getName());
+                    }
                     if (restrictToUserCheckBox.isSelected()) {
-                        viewedCollection = Collector.getCurrentUser().getHerCollection();
+                        viewedCollection = Collection.retrieveByName((String) collectionsComboBox.getSelectedItem());
                     }
 
 
@@ -537,8 +561,11 @@ private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                     partsTable.setEnabled(true);
                     plasmidsTable.setEnabled(true);
                     vectorsTable.setEnabled(true);
-
-
+System.out.println("pulling from this collection: "+viewedCollection.getName());
+System.out.println(allPlasmids.size()+" plasmids found");
+System.out.println(allParts.size()+" parts found");
+System.out.println(allOligos.size()+" oligos found");
+System.out.println(allVectors.size()+" vectors found");
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -557,6 +584,7 @@ private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox collectionsComboBox;
     private javax.swing.JPanel inventoryPanel;
     protected javax.swing.JTabbedPane inventoryTabbedPane;
     protected javax.swing.JScrollPane oligosScrollPane;
