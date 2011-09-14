@@ -26,6 +26,7 @@ import org.clothocore.api.core.Collector;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
@@ -41,20 +42,21 @@ import org.clothocore.core.Hub;
  */
 public class Plasmid extends ObjBase {
 
-    public Plasmid( PlasmidDatum d ) {
-        super( d );
+    public Plasmid(PlasmidDatum d) {
+        super(d);
         _plasDatum = d;
 
-        if ( _plasDatum._riskGroup == -1 ) {
+        if (_plasDatum._riskGroup == -1) {
             final Plasmid item = this;
             Thread bslThread = new Thread() {
+
                 @Override
                 public void run() {
                     changeRiskGroup();
                 }
             };
             bslThread.start();
-            addSaveHold( bslThread );
+            addSaveHold(bslThread);
         }
     }
 
@@ -64,7 +66,7 @@ public class Plasmid extends ObjBase {
      * @param v the Vector that's been through a Format check
      * @param author
      */
-    private Plasmid( Part p, Vector v, Person author, Format f ) {
+    private Plasmid(Part p, Vector v, Person author, Format f) {
         super();
         _plasDatum = new PlasmidDatum();
         _datum = _plasDatum;
@@ -84,18 +86,18 @@ public class Plasmid extends ObjBase {
         return ObjType.PLASMID;
     }
 
-    protected static ObjBase importFromHashMap( String uuid, HashMap<String, Object> objHash ) {
-        String name = (String) objHash.get( "name" );
-        Date dateCreated = getDateFromString( (String) objHash.get( "_dateCreated" ) );
-        Date lastModified = getDateFromString( (String) objHash.get( "_lastModified" ) );
+    protected static ObjBase importFromHashMap(String uuid, HashMap<String, Object> objHash) {
+        String name = (String) objHash.get("name");
+        Date dateCreated = getDateFromString((String) objHash.get("_dateCreated"));
+        Date lastModified = getDateFromString((String) objHash.get("_lastModified"));
 
-        String idPerson = (String) objHash.get( "_authorUUID" );
-        String sriskGroup = (String) objHash.get( "_riskGroup" );
-        short riskGroup = Short.parseShort( sriskGroup );
-        String idPart = (String) objHash.get( "_partUUID" );
-        String idVector = (String) objHash.get( "_vectorUUID" );
-        String idformat = (String) objHash.get( "_formatUUID" );
-        String constructionFile = (String) objHash.get( "_constructionFile" );
+        String idPerson = (String) objHash.get("_authorUUID");
+        String sriskGroup = (String) objHash.get("_riskGroup");
+        short riskGroup = Short.parseShort(sriskGroup);
+        String idPart = (String) objHash.get("_partUUID");
+        String idVector = (String) objHash.get("_vectorUUID");
+        String idformat = (String) objHash.get("_formatUUID");
+        String constructionFile = (String) objHash.get("_constructionFile");
 
         PlasmidDatum d = new PlasmidDatum();
 
@@ -110,38 +112,38 @@ public class Plasmid extends ObjBase {
         d._constructionFile = constructionFile;
         d._riskGroup = riskGroup;
 
-        return new Plasmid( d );
+        return new Plasmid(d);
     }
 
     @Override
-    protected HashMap<String, HashMap<String, Object>> generateXml( HashMap<String, HashMap<String, Object>> allObjects ) {
+    protected HashMap<String, HashMap<String, Object>> generateXml(HashMap<String, HashMap<String, Object>> allObjects) {
         //If the hash already has the object, skip adding anything
-        if ( allObjects.containsKey( getUUID() ) ) {
+        if (allObjects.containsKey(getUUID())) {
             return allObjects;
         }
 
         //Fill in the individual fields
         HashMap<String, Object> datahash = new HashMap<String, Object>();
-        datahash.put( "objType", getType().toString() );
-        datahash.put( "uuid", _plasDatum.uuid );
-        datahash.put( "name", _plasDatum.name );
-        datahash.put( "_dateCreated", getDateCreatedAsString() );
-        datahash.put( "_lastModified", getLastModifiedAsString() );
+        datahash.put("objType", getType().toString());
+        datahash.put("uuid", _plasDatum.uuid);
+        datahash.put("name", _plasDatum.name);
+        datahash.put("_dateCreated", getDateCreatedAsString());
+        datahash.put("_lastModified", getLastModifiedAsString());
 
-        datahash.put( "_partUUID", _plasDatum._partUUID );
-        datahash.put( "_vectorUUID", _plasDatum._vectorUUID );
-        datahash.put( "_formatUUID", _plasDatum._formatUUID );
-        datahash.put( "_authorUUID", _plasDatum._authorUUID );
-        datahash.put( "_constructionFile", _plasDatum._constructionFile );
+        datahash.put("_partUUID", _plasDatum._partUUID);
+        datahash.put("_vectorUUID", _plasDatum._vectorUUID);
+        datahash.put("_formatUUID", _plasDatum._formatUUID);
+        datahash.put("_authorUUID", _plasDatum._authorUUID);
+        datahash.put("_constructionFile", _plasDatum._constructionFile);
 
         //Add the HashMap to the list
-        allObjects.put( getUUID(), datahash );
+        allObjects.put(getUUID(), datahash);
 
         //Recursively gather the objects linked to this object
-        allObjects = getAuthor().generateXml( allObjects );
-        allObjects = getFormat().generateXml( allObjects );
-        allObjects = getPart().generateXml( allObjects );
-        allObjects = getVector().generateXml( allObjects );
+        allObjects = getAuthor().generateXml(allObjects);
+        allObjects = getFormat().generateXml(allObjects);
+        allObjects = getPart().generateXml(allObjects);
+        allObjects = getVector().generateXml(allObjects);
 
         //Return the datahash
         return allObjects;
@@ -159,27 +161,27 @@ public class Plasmid extends ObjBase {
      * @param f the Format being used to compose the Plasmid
      * @return
      */
-    public static Plasmid generatePlasmid( Part p, Vector v, Person author, Format f ) {
-        if(p==null || v==null || f == null || author==null) {
+    public static Plasmid generatePlasmid(Part p, Vector v, Person author, Format f) {
+        if (p == null || v == null || f == null || author == null) {
             return null;
-        } 
-        
+        }
+
         //Try to see if the Plasmid is already in the database
         String name = v.getName() + "-" + p.getName();
         Plasmid prexistingSeq = retrieveByName(name);
-        if ( prexistingSeq != null ) {
-            if(prexistingSeq.getPart().getUUID().equals(p.getUUID())) {
-                if(prexistingSeq.getVector().getUUID().equals(v.getUUID())) {
-                    int n = JOptionPane.showConfirmDialog( null, "A plasmid with this composition already exists.  You should try to use that plasmid.  Do you want to cancel this new Plasmid?", "Plasmid "
-                            + "already exists", JOptionPane.YES_NO_OPTION );
-                    if ( n == 0 ) {
+        if (prexistingSeq != null) {
+            if (prexistingSeq.getPart().getUUID().equals(p.getUUID())) {
+                if (prexistingSeq.getVector().getUUID().equals(v.getUUID())) {
+                    int n = JOptionPane.showConfirmDialog(null, "A plasmid with this composition already exists.  You should try to use that plasmid.  Do you want to cancel this new Plasmid?", "Plasmid "
+                            + "already exists", JOptionPane.YES_NO_OPTION);
+                    if (n == 0) {
                         return prexistingSeq;
                     }
 
                     //Do a second chance to cancel
-                    int m = JOptionPane.showConfirmDialog( null, "Are you sure you really want two copies of this composition?  It isn't recommended, can I please abort this?", "Plasmid "
-                            + "already exists", JOptionPane.YES_NO_OPTION );
-                    if ( m == 0 ) {
+                    int m = JOptionPane.showConfirmDialog(null, "Are you sure you really want two copies of this composition?  It isn't recommended, can I please abort this?", "Plasmid "
+                            + "already exists", JOptionPane.YES_NO_OPTION);
+                    if (m == 0) {
                         return prexistingSeq;
                     }
                 }
@@ -187,53 +189,53 @@ public class Plasmid extends ObjBase {
         }
 
         //At least force them to give it a different name
-        while ( prexistingSeq != null ) {
-            name = JOptionPane.showInputDialog( "A Plasmid named " + name + " already exists, please give me a new name." );
-            if(name==null) {
+        while (prexistingSeq != null) {
+            name = JOptionPane.showInputDialog("A Plasmid named " + name + " already exists, please give me a new name.");
+            if (name == null) {
                 return null;
             }
-            prexistingSeq = retrieveByName( name );
+            prexistingSeq = retrieveByName(name);
         }
 
         try {
-            if ( f.checkPlasmid( p, v, null ) ) {
-                Plasmid newplasmid = new Plasmid( p, v, author, f );
-                if ( v.isGenomic() ) {
-                    newplasmid.changeName( v.getName() + p.getName() );
+            if (f.checkPlasmid(p, v, null)) {
+                Plasmid newplasmid = new Plasmid(p, v, author, f);
+                if (v.isGenomic()) {
+                    newplasmid.changeName(v.getName() + p.getName());
                 }
-                if ( v.getSeq().getSeq().length() == 0 ) {
-                    newplasmid.changeName( v.getName() + p.getName() );
+                if (v.getSeq().getSeq().length() == 0) {
+                    newplasmid.changeName(v.getName() + p.getName());
                 }
                 //FOR A VERSION OF GENERATEPLASMID THAT INVOLVES A LIST OF OLIGOS, THIS IS WHERE YOU'D POPULATE THAT
 
                 newplasmid.changeName(name);
                 return newplasmid;
             } else {
-                JOptionPane.showMessageDialog( null, "I couldn't generate the plasmid", "Error", JOptionPane.ERROR_MESSAGE );
+                JOptionPane.showMessageDialog(null, "I couldn't generate the plasmid", "Error", JOptionPane.ERROR_MESSAGE);
                 return null;
             }
-        }catch(Exception e) {
+        } catch (Exception e) {
             return null;
         }
     }
 
-    public static Plasmid retrieveByName( String name ) {
-        if ( name.length() == 0 ) {
+    public static Plasmid retrieveByName(String name) {
+        if (name.length() == 0) {
             return null;
         }
-        ClothoQuery cq = Hub.defaultConnection.createQuery( ObjType.PLASMID );
-        cq.eq( Plasmid.Fields.NAME, name );
+        ClothoQuery cq = Hub.defaultConnection.createQuery(ObjType.PLASMID);
+        cq.eq(Plasmid.Fields.NAME, name);
         List l = cq.getResults();
-        if ( l.isEmpty() ) {
+        if (l.isEmpty()) {
             return null;
         }
-        Plasmid p = (Plasmid) l.get( 0 );
+        Plasmid p = (Plasmid) l.get(0);
         return p;
     }
 
     @Override
-    public boolean addObject( ObjBase dropObject ) {
-        switch ( dropObject.getType() ) {
+    public boolean addObject(ObjBase dropObject) {
+        switch (dropObject.getType()) {
             case PART:
                 return true;
             default:
@@ -243,59 +245,57 @@ public class Plasmid extends ObjBase {
 
     /* SETTERS
      * */
-
-
     /**
      * Recursively save all child elements and then call ObjBase to save itself.
      */
     @Override
-    public synchronized boolean save( ClothoConnection conn ) {
-        System.out.println( "============ Starting plasmid save" );
-        if ( !isChanged() ) {
-            System.out.println( "plasmid didn't require saving" );
+    public synchronized boolean save(ClothoConnection conn) {
+        System.out.println("============ Starting plasmid save");
+        if (!isChanged()) {
+            System.out.println("plasmid didn't require saving");
             return true;
         }
 
-        if ( Collector.isLocal( _plasDatum._authorUUID ) ) {
+        if (Collector.isLocal(_plasDatum._authorUUID)) {
             Person aut = getAuthor();
-            if ( !aut.isInDatabase() ) {
-                if ( !aut.save( conn ) ) {
+            if (!aut.isInDatabase()) {
+                if (!aut.save(conn)) {
                     return false;
                 }
             }
         }
 
-        if ( Collector.isLocal( _plasDatum._partUUID ) ) {
+        if (Collector.isLocal(_plasDatum._partUUID)) {
             Part seq = getPart();
-            if ( !seq.isInDatabase() ) {
-                if ( !seq.save( conn ) ) {
+            if (!seq.isInDatabase()) {
+                if (!seq.save(conn)) {
                     return false;
                 }
             }
         }
 
-        if ( Collector.isLocal( _plasDatum._vectorUUID ) ) {
+        if (Collector.isLocal(_plasDatum._vectorUUID)) {
             Vector seq = getVector();
-            if ( !seq.isInDatabase() ) {
-                if ( !seq.save( conn ) ) {
+            if (!seq.isInDatabase()) {
+                if (!seq.save(conn)) {
                     return false;
                 }
             }
         }
-        return super.save( conn );
+        return super.save(conn);
     }
 
     public void changeAuthor(Person newauthor) {
-        if(newauthor==null) {
+        if (newauthor == null) {
             fireData(new RefreshEvent(this, RefreshEvent.Condition.AUTHOR_CHANGED));
             return;
         }
-        addUndo( "_authorUUID", _plasDatum._authorUUID, newauthor.getUUID() );
+        addUndo("_authorUUID", _plasDatum._authorUUID, newauthor.getUUID());
         _plasDatum._authorUUID = newauthor.getUUID();
         fireData(new RefreshEvent(this, RefreshEvent.Condition.AUTHOR_CHANGED));
     }
 
-    public void putConstructionFileAsString( String s ) {
+    public void putConstructionFileAsString(String s) {
         _plasDatum._constructionFile = s;
         this.setChanged(org.clothocore.api.dnd.RefreshEvent.Condition.NAME_CHANGED);
     }
@@ -305,40 +305,40 @@ public class Plasmid extends ObjBase {
         Vector myvect = getVector();
 
         //If either portion's riskgroup is undetermined, keep this undetermined
-        if ( mypart.getRiskGroup() == -1 || myvect.getRiskGroup() == -1 ) {
+        if (mypart.getRiskGroup() == -1 || myvect.getRiskGroup() == -1) {
             relayRiskGroup((short) -1);
             return;
         }
 
         //If either portion's riskgroup is 5, it's 5
-        if ( mypart.getRiskGroup() == 5 || myvect.getRiskGroup() == 5 ) {
+        if (mypart.getRiskGroup() == 5 || myvect.getRiskGroup() == 5) {
             relayRiskGroup((short) 5);
             return;
         }
 
         //If both components are RG2+, ask user what to do
-        if ( mypart.getRiskGroup() > 1 && myvect.getRiskGroup() > 1 ) {
-            short currentHighest = (short) Math.max( mypart.getRiskGroup(), myvect.getRiskGroup() );
+        if (mypart.getRiskGroup() > 1 && myvect.getRiskGroup() > 1) {
+            short currentHighest = (short) Math.max(mypart.getRiskGroup(), myvect.getRiskGroup());
             //Throw a dialog asking for user to put in the new risk group
             ButtonGroup group = new javax.swing.ButtonGroup();
             String msgString = "This plasmid joins a part and vector both with risk groups of 2 or higher.  What should the new risk group be?";
             int numelements = 5 - currentHighest;
-            Object[] array = new Object[ numelements + 1 ];
-            JRadioButton[] buttons = new JRadioButton[ numelements ];
-            for ( short i = 0; i < numelements; i++ ) {
-                buttons[i] = new javax.swing.JRadioButton( "Risk Group " + (i + currentHighest) );
-                group.add( buttons[i] );
+            Object[] array = new Object[numelements + 1];
+            JRadioButton[] buttons = new JRadioButton[numelements];
+            for (short i = 0; i < numelements; i++) {
+                buttons[i] = new javax.swing.JRadioButton("Risk Group " + (i + currentHighest));
+                group.add(buttons[i]);
                 array[i + 1] = buttons[i];
             }
             array[0] = msgString;
 
             int sel = -1;
-            while ( sel != 0 ) {
-                sel = JOptionPane.showConfirmDialog( null, array, "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE );
+            while (sel != 0) {
+                sel = JOptionPane.showConfirmDialog(null, array, "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE);
             }
             scanButtons:
-            for ( short i = 1; i < numelements; i++ ) {
-                if ( buttons[i].isSelected() ) {
+            for (short i = 1; i < numelements; i++) {
+                if (buttons[i].isSelected()) {
                     relayRiskGroup((short) (currentHighest + i));
                     break scanButtons;
                 }
@@ -348,7 +348,7 @@ public class Plasmid extends ObjBase {
     }
 
     private void relayRiskGroup(short value) {
-        if(value == _plasDatum._riskGroup) {
+        if (value == _plasDatum._riskGroup) {
             fireData(new RefreshEvent(this, RefreshEvent.Condition.RISK_GROUP_CHANGED));
             return;
         }
@@ -359,28 +359,28 @@ public class Plasmid extends ObjBase {
     /* GETTERS
      * */
     public Part getPart() {
-        return Collector.getPart( _plasDatum._partUUID );
+        return Collector.getPart(_plasDatum._partUUID);
     }
 
     public Vector getVector() {
-        return Collector.getVector( _plasDatum._vectorUUID );
+        return Collector.getVector(_plasDatum._vectorUUID);
     }
 
     public Format getFormat() {
-        return Collector.getFormat( _plasDatum._formatUUID );
+        return Collector.getFormat(_plasDatum._formatUUID);
     }
 
     public NucSeq getSeq() {
-        if ( _plasDatum.tempSeq != null ) {
-            return Collector.getNucSeq( _plasDatum.tempSeq );
+        if (_plasDatum.tempSeq != null) {
+            return Collector.getNucSeq(_plasDatum.tempSeq);
         }
-        NucSeq aseq = getFormat().generatePlasmidSequence( this );
+        NucSeq aseq = getFormat().generatePlasmidSequence(this);
         _plasDatum.tempSeq = aseq.getUUID();
         return aseq;
     }
 
     public Person getAuthor() {
-        return Collector.getPerson( _plasDatum._authorUUID );
+        return Collector.getPerson(_plasDatum._authorUUID);
     }
 
     public String getAuthorUUID() {
@@ -396,15 +396,30 @@ public class Plasmid extends ObjBase {
     }
 
     public ArrayList<Sample> getSamples() {
-        System.out.println( "getSamples not implemented, need to do a database query" );
-        return null;
+        //TODO replace with clotho query
+        System.out.println("getSamples not implemented, need to do a database query");
+        ArrayList<Sample> out = new ArrayList<Sample>();
+        ArrayList<Sample> allSamp = Collector.getAll(ObjType.SAMPLE);
+        System.out.println("Found " + allSamp.size() + " samples in all");
+        Iterator<Sample> sampIter = allSamp.iterator();
+        while (sampIter.hasNext()) {
+            Sample S = sampIter.next();
+            //System.out.println("Looking at sample " + S.getUUID());
+            if (S.getSampleType() == Sample.SampleType.PLASMID_SAMPLE) {
+                PlasmidSample pS = ((PlasmidSample) S);
+                if (pS.getPlasmid().getUUID().equals(this.getUUID())) {
+                    out.add(pS);
+                }
+            }
+        }
+        return out;
+//        return null;
     }
 
     /*-----------------
     variables
     -----------------*/
     private PlasmidDatum _plasDatum;
-
 
     public static class PlasmidDatum extends ObjBaseDatum {
 
@@ -434,6 +449,6 @@ public class Plasmid extends ObjBase {
         VECTOR,
         AUTHOR,
         FORMAT,
-        RISK_GROUP 
+        RISK_GROUP
     }
 }
