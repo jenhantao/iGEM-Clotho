@@ -555,20 +555,26 @@ public class Part extends ObjBase {
 
     /* GETTERS
      * */
-    public ArrayList<Plasmid> getPlasmids() {
-        ArrayList<Plasmid> out = new ArrayList<Plasmid>();
-        ArrayList<Plasmid> allPlas = Collector.getAll(ObjType.PLASMID);
-
-        Iterator<Plasmid> plasIter = allPlas.iterator();
-        while (plasIter.hasNext()) {
-            Plasmid P = plasIter.next();
-            if (P.getPart().getUUID() == this.getUUID()) {
-                out.add(P);
-            }
-        }
-
-
-        return out;
+    public List<ObjBase> getPlasmids() {
+//        ArrayList<Plasmid> out = new ArrayList<Plasmid>();
+//        ArrayList<Plasmid> allPlas = Collector.getAll(ObjType.PLASMID);
+//
+//        Iterator<Plasmid> plasIter = allPlas.iterator();
+//        while (plasIter.hasNext()) {
+//            Plasmid P = plasIter.next();
+//            if (P.getPart().getUUID() == this.getUUID()) {
+//                out.add(P);
+//            }
+//        }
+//
+//
+//        return out;
+        ClothoConnection c =Collector.getDefaultConnection();
+        ClothoQuery mainQuery = c.createQuery(ObjType.PLASMID);
+        ClothoQuery partQuery = mainQuery.createAssociationQuery(Plasmid.Fields.PART);
+        partQuery.eq(Part.Fields.NAME, this.getName());
+        List<ObjBase> results = mainQuery.getResults();
+        return results;
     }
 
     public short getRiskGroup() {
