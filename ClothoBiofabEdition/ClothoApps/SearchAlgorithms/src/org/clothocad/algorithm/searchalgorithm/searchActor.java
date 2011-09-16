@@ -75,9 +75,9 @@ public class searchActor extends Actor {
         String ins = searchText.toUpperCase();
         if (ins.indexOf(" BY ") > -1) {
             String[] parsed = ins.split("\\s+");
-            for (String str : parsed) {
-                System.out.println("parsed str for BY " + str);
-            }
+//            for (String str : parsed) {
+//                System.out.println("parsed str for BY " + str);
+//            }
             if (parsed.length == 3) {
                 Collection out = runByQuery(parsed[0], parsed[2]);
                 if (out != null) {
@@ -89,9 +89,9 @@ public class searchActor extends Actor {
         //Try doing a SEQ search
         if (ins.indexOf(" SEQ ") > -1) {
             String[] parsed = ins.split("\\s+");
-            for (String str : parsed) {
-                System.out.println("parsed str for SEQ " + str);
-            }
+//            for (String str : parsed) {
+//                System.out.println("parsed str for SEQ " + str);
+//            }
             if (parsed.length == 3) {
                 String stype = parsed[0];
                 if (stype.equals("PART") || stype.equals("FEATURE") || stype.equals("OLIGO") || stype.equals("VECTOR")) {
@@ -99,6 +99,20 @@ public class searchActor extends Actor {
                     if (out != null) {
                         return out;
                     }
+                }
+            }
+        }
+
+        if (ins.indexOf(" WITH ") > -1) {
+            String[] parsed = ins.split("\\s+");
+            if (parsed.length == 4) {
+                String stype = parsed[0];
+                if (stype.equalsIgnoreCase("PART") || stype.equalsIgnoreCase("VECTOR")
+                        || stype.equalsIgnoreCase("PLASMID") || stype.equals("SAMPLE")) {
+                }
+                Collection out = runWithQuery(parsed[0], parsed[2], parsed[3]);
+                if (out != null) {
+                    return out;
                 }
             }
         }
@@ -330,12 +344,13 @@ public class searchActor extends Actor {
             System.out.println("WITH search enum cast error");
             return null;
         }
-
+        System.out.println("-----------------------------");
+        System.out.println(type.name());
+        System.out.println(type2.name());
         finallist = withQuery(type, type2, name);
 
-        //*******Finish it up********
         if (finallist.isEmpty()) {
-            System.out.println("BY search finallist was empty");
+            System.out.println("WITH search finallist was empty");
             return null;
         }
 
@@ -361,20 +376,21 @@ public class searchActor extends Actor {
                 } else if (type2.equals(ObjType.VECTOR)) {
                     typeQuery = mainQuery.createAssociationQuery(Plasmid.Fields.VECTOR);
                     typeQuery.eq(Vector.Fields.NAME, name);
-                }
+                } else if (type2.equals(ObjType.FORMAT)) {
+                    typeQuery = mainQuery.createAssociationQuery(Plasmid.Fields.FORMAT);
+                    typeQuery.eq(Format.Fields.NAME, name);
+                } 
                 break;
-            case SAMPLE:
-                typeQuery = mainQuery.createAssociationQuery(Factoid.Fields.AUTHOR);
-                break;
+//            case SAMPLE:
+//                typeQuery = mainQuery.createAssociationQuery(Factoid.Fields.AUTHOR);
+//                break;
             case PART:
-                typeQuery = mainQuery.createAssociationQuery(Part.Fields.AUTHOR);
+                typeQuery = mainQuery.createAssociationQuery(Part.Fields.FORMAT);
+                typeQuery.eq(Format.Fields.NAME, name);
                 break;
             case VECTOR:
-                typeQuery = mainQuery.createAssociationQuery(Vector.Fields.AUTHOR);
-                break;
-
-            case STRAIN:
-                typeQuery = mainQuery.createAssociationQuery(Strain.Fields.AUTHOR);
+                typeQuery = mainQuery.createAssociationQuery(Vector.Fields.FORMAT);
+                typeQuery.eq(Format.Fields.NAME, name);
                 break;
         }
 
