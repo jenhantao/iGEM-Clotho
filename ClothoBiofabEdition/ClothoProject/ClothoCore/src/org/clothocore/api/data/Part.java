@@ -569,10 +569,10 @@ public class Part extends ObjBase {
 //
 //
 //        return out;
-        ClothoConnection c =Collector.getDefaultConnection();
+        ClothoConnection c = Collector.getDefaultConnection();
         ClothoQuery mainQuery = c.createQuery(ObjType.PLASMID);
         ClothoQuery partQuery = mainQuery.createAssociationQuery(Plasmid.Fields.PART);
-        partQuery.eq(Part.Fields.NAME, this.getName());
+        partQuery.add(partQuery.getMatchesCrit(Part.Fields.NAME, this.getName()));
         List<ObjBase> results = mainQuery.getResults();
         return results;
     }
