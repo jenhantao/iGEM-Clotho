@@ -397,26 +397,26 @@ public class Plasmid extends ObjBase {
 
     public ArrayList<Sample> getSamples() {
         //TODO replace with clotho query
-//        System.out.println("getSamples not implemented, need to do a database query");
-//        ArrayList<Sample> out = new ArrayList<Sample>();
-//        ArrayList<Sample> allSamp = Collector.getAll(ObjType.SAMPLE);
-//        System.out.println("Found " + allSamp.size() + " samples in all");
-//        Iterator<Sample> sampIter = allSamp.iterator();
-//        while (sampIter.hasNext()) {
-//            Sample S = sampIter.next();
-//            //System.out.println("Looking at sample " + S.getUUID());
-//            if (S.getSampleType() == Sample.SampleType.PLASMID_SAMPLE) {
-//                PlasmidSample pS = ((PlasmidSample) S);
-//                if (pS.getPlasmid().getUUID().equals(this.getUUID())) {
-//                    out.add(pS);
-//                }
-//            }
-//        }
-//        return out;
-        ClothoConnection c = Collector.getDefaultConnection();
-        ClothoQuery createQuery = c.createQuery(ObjType.PLASMID);
-        
-        return null;
+        System.out.println("getSamples not implemented, need to do a database query");
+        ArrayList<Sample> out = new ArrayList<Sample>();
+        ArrayList<Sample> allSamp = Collector.getAll(ObjType.SAMPLE);
+        System.out.println("Found " + allSamp.size() + " samples in all");
+        Iterator<Sample> sampIter = allSamp.iterator();
+        while (sampIter.hasNext()) {
+            Sample S = sampIter.next();
+            //System.out.println("Looking at sample " + S.getUUID());
+            if (S.getSampleType() == Sample.SampleType.PLASMID_SAMPLE) {
+                PlasmidSample pS = ((PlasmidSample) S);
+                if (pS.getPlasmid().getUUID().equals(this.getUUID())) {
+                    out.add(pS);
+                }
+            }
+        }
+        return out;
+//        ClothoConnection c = Collector.getDefaultConnection();
+//        ClothoQuery createQuery = c.createQuery(ObjType.PLASMID);
+//        
+//        return null;
     }
 
     /*-----------------

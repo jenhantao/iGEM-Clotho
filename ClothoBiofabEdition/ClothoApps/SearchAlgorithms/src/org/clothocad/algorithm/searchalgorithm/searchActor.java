@@ -344,9 +344,6 @@ public class searchActor extends Actor {
             System.out.println("WITH search enum cast error");
             return null;
         }
-        System.out.println("-----------------------------");
-        System.out.println(type.name());
-        System.out.println(type2.name());
         finallist = withQuery(type, type2, name);
 
         if (finallist.isEmpty()) {
@@ -372,14 +369,15 @@ public class searchActor extends Actor {
             case PLASMID:
                 if (type2.equals(ObjType.PART)) {
                     typeQuery = mainQuery.createAssociationQuery(Plasmid.Fields.PART);
-                    typeQuery.eq(Part.Fields.NAME, name);
+//                    typeQuery.eq(Part.Fields.NAME, name);
+                    typeQuery.add(typeQuery.getMatchesCrit(Part.Fields.NAME, name));
                 } else if (type2.equals(ObjType.VECTOR)) {
                     typeQuery = mainQuery.createAssociationQuery(Plasmid.Fields.VECTOR);
                     typeQuery.eq(Vector.Fields.NAME, name);
                 } else if (type2.equals(ObjType.FORMAT)) {
                     typeQuery = mainQuery.createAssociationQuery(Plasmid.Fields.FORMAT);
                     typeQuery.eq(Format.Fields.NAME, name);
-                } 
+                }
                 break;
 //            case SAMPLE:
 //                typeQuery = mainQuery.createAssociationQuery(Factoid.Fields.AUTHOR);
