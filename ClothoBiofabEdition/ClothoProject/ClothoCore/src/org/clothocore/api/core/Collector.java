@@ -46,6 +46,7 @@ import javax.swing.JScrollPane;
 import org.clothocore.api.data.*;
 import org.clothocore.api.plugin.ClothoConnection;
 import org.clothocore.core.Hub;
+import org.openide.awt.StatusDisplayer;
 import org.openide.modules.ModuleInstall;
 
 /**
@@ -169,6 +170,55 @@ public class Collector {
         } else {
             inst.close();
 
+        }
+    }
+    /**
+     * Saves every non transient object in Clotho
+     */
+    
+    public static void saveAll() {
+        StatusDisplayer.getDefault().setStatusText("Saving all changed Clotho objects");
+        ArrayList<ObjBase> changedObjects = new ArrayList<ObjBase>();
+        for ( String uuid : _everything.keySet() ) {
+            ObjBase obj = _everything.get( uuid );
+            System.out.print( obj.getUUID() + "  " + obj.getName() );
+            if ( obj.isChanged() && !obj.isTransient() ) {
+                System.out.print( "  ************   isChanged" );
+                if ( obj.isInDatabase() ) {
+                    System.out.print( "  ************   and is in database" );
+                }
+                changedObjects.add( obj );
+            }
+            System.out.println();
+        }
+
+        if ( changedObjects.size() > 0 ) {
+            Object[] params = new Object[2];
+            JCheckBox[] checks = new JCheckBox[ changedObjects.size() ];
+            Box abox = new Box(BoxLayout.Y_AXIS);
+            JScrollPane scroller = new JScrollPane();
+            scroller.setViewportView(abox);
+            scroller.setPreferredSize(new Dimension(200,400));
+            for ( int i = 0; i < changedObjects.size(); i++ ) {
+                ObjBase obj = changedObjects.get( i );
+                String displaytext = obj.toString();
+                checks[i] = new JCheckBox( obj.getType().toString() + ": " + displaytext.substring( 0, Math.min( displaytext.length(), 35 ) ) );
+                checks[i].setSelected( true );
+                abox.add(checks[i]);
+            }
+
+            String message = "Do you want to save the selected items?.";
+            params[0] = message;
+            params[1] = scroller;
+            int n = JOptionPane.showConfirmDialog( null, params, "Save All Objects", JOptionPane.OK_CANCEL_OPTION );
+            if ( n == 0 ) {
+                System.out.println( "You chose to save them" );
+                for ( int i = 0; i < checks.length; i++ ) {
+                    if ( checks[i].isSelected() ) {
+                        changedObjects.get( i ).saveDefault();
+                    }
+                }
+            }
         }
     }
 
