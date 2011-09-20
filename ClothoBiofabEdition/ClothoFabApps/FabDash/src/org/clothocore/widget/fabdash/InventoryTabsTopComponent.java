@@ -4,16 +4,21 @@
  */
 package org.clothocore.widget.fabdash;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.HashSet;
 import javax.swing.AbstractAction;
+import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.SwingWorker;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableModel;
 import org.clothocore.api.core.Collector;
 import org.clothocore.api.data.Collection;
+import org.clothocore.api.data.DataListener;
 import org.clothocore.api.data.Format;
 import org.clothocore.api.data.ObjBase;
 import org.clothocore.api.data.ObjLink;
@@ -22,6 +27,7 @@ import org.clothocore.api.data.Oligo;
 import org.clothocore.api.data.Part;
 import org.clothocore.api.data.Plasmid;
 import org.clothocore.api.data.Vector;
+import org.clothocore.api.dnd.RefreshEvent;
 import org.clothocore.util.basic.ObjBasePopup;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
@@ -54,8 +60,8 @@ public final class InventoryTabsTopComponent extends TopComponent {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (partsTable.getSelectedRow() > -1 && partsTable.getSelectedRow() < partsTable.getHeight()) {
+
                     if (e.getButton() == MouseEvent.BUTTON1) {
-                        System.out.println("clicked in parts table");
                         _obp = new ObjBasePopup(partsTable, Part.retrieveByName((String) partsTable.getValueAt(partsTable.getSelectedRow(), 0)));
                     }
                 }
@@ -305,7 +311,7 @@ public final class InventoryTabsTopComponent extends TopComponent {
 
         inventoryTabbedPane.addTab(org.openide.util.NbBundle.getMessage(InventoryTabsTopComponent.class, "InventoryTabsTopComponent.oligosScrollPane.TabConstraints.tabTitle"), oligosScrollPane); // NOI18N
 
-        refreshButton.setFont(new java.awt.Font("Ubuntu", 0, 10)); // NOI18N
+        refreshButton.setFont(new java.awt.Font("Ubuntu", 0, 10));
         org.openide.awt.Mnemonics.setLocalizedText(refreshButton, org.openide.util.NbBundle.getMessage(InventoryTabsTopComponent.class, "InventoryTabsTopComponent.refreshButton.text")); // NOI18N
         refreshButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -327,7 +333,7 @@ public final class InventoryTabsTopComponent extends TopComponent {
             .addGroup(inventoryPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(inventoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(inventoryTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
+                    .addComponent(inventoryTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, inventoryPanelLayout.createSequentialGroup()
                         .addComponent(restrictToUserCheckBox)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -399,19 +405,19 @@ private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 }
 
                 try {
-                    String currentSelection=null;
-                    if (collectionsComboBox.getSelectedIndex()>-1) {
-                        currentSelection=(String) collectionsComboBox.getSelectedItem();
+                    String currentSelection = null;
+                    if (collectionsComboBox.getSelectedIndex() > -1) {
+                        currentSelection = (String) collectionsComboBox.getSelectedItem();
                     }
                     collectionsComboBox.removeAllItems();
                     ArrayList<ObjLink> allLinksOfCollections = Collector.getAllLinksOf(ObjType.COLLECTION);
                     for (ObjLink oj : allLinksOfCollections) {
                         collectionsComboBox.addItem(oj.name);
                     }
-                   if (currentSelection!=null) {
+                    if (currentSelection != null) {
                         collectionsComboBox.setSelectedItem(currentSelection);
-                   }
-                    if (collectionsComboBox.getSelectedIndex()<0) {
+                    }
+                    if (collectionsComboBox.getSelectedIndex() < 0) {
                         collectionsComboBox.setSelectedItem(Collector.getCurrentUser().getHerCollection().getName());
                     }
                     if (restrictToUserCheckBox.isSelected()) {
@@ -426,14 +432,33 @@ private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                     } else {
                         allPlasmids = Collector.getAll(ObjType.PLASMID);
                     }
-                    Object[][] plasmidTableModel = new Object[allPlasmids.size()][2];
+                    Object[][] plasmidTableModel = new Object[allPlasmids.size()][3];
                     for (int i = 0; i < allPlasmids.size(); i++) {
                         plasmidTableModel[i][0] = allPlasmids.get(i).getName();
                         Plasmid aplas = (Plasmid) allPlasmids.get(i);
+                        if (aplas.isChanged()) {
+                            plasmidTableModel[i][2] = "changed";
+                        } else {
+                            plasmidTableModel[i][2] = "saved";
+                        }
+                        aplas.addDataListener(new DataListener() {
+
+                            @Override
+                            public void objectChanged(RefreshEvent evt) {
+                                StatusDisplayer.getDefault().setStatusText(((ObjBase) evt.getSource()).getName() + " was changed");
+                                TableModel model = plasmidsTable.getModel();
+                                for (int i = 0; i < model.getRowCount(); i++) {
+                                    if (model.getValueAt(i, 0).equals(((ObjBase) evt.getSource()).getName())) {
+                                        model.setValueAt("changed", i, 2);
+                                        break;
+                                    }
+                                }
+                            }
+                        });
                         Format aform = aplas.getFormat(); //get the Format of aplas
                         plasmidTableModel[i][1] = aform.getName(); //based on the Format, the sequence of the region of interest is retreieved and used to populate the table
                     }
-                    plasmidsTable.setModel(new javax.swing.table.DefaultTableModel(plasmidTableModel, new String[]{"Plasmid Name", "Format"}) {
+                    plasmidsTable.setModel(new javax.swing.table.DefaultTableModel(plasmidTableModel, new String[]{"Plasmid Name", "Format", "Status"}) {
 
                         @Override
                         public boolean isCellEditable(int rowIndex, int mColIndex) {
@@ -461,13 +486,33 @@ private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                     } else {
                         allOligos = Collector.getAll(ObjType.OLIGO);
                     }
-                    Object[][] oligoTableModel = new Object[allOligos.size()][2];
+                    Object[][] oligoTableModel = new Object[allOligos.size()][3];
                     for (int i = 0; i < allOligos.size(); i++) {
+                        oligoTableModel[i][2] = "saved";
                         Oligo oligo = (Oligo) allOligos.get(i);
+                        if (oligo.isChanged()) {
+                            oligoTableModel[i][2] = "changed";
+                        } else {
+                            oligoTableModel[i][2] = "saved";
+                        }
+                        oligo.addDataListener(new DataListener() {
+
+                            @Override
+                            public void objectChanged(RefreshEvent evt) {
+                                StatusDisplayer.getDefault().setStatusText(((ObjBase) evt.getSource()).getName() + " was changed");
+                                TableModel model = oligosTable.getModel();
+                                for (int i = 0; i < model.getRowCount(); i++) {
+                                    if (model.getValueAt(i, 0).equals(((ObjBase) evt.getSource()).getName())) {
+                                        model.setValueAt("changed", i, 2);
+                                        break;
+                                    }
+                                }
+                            }
+                        });
                         oligoTableModel[i][0] = oligo.getName();
                         oligoTableModel[i][1] = oligo.getDescription();
                     }
-                    oligosTable.setModel(new javax.swing.table.DefaultTableModel(oligoTableModel, new String[]{"Name", "Description"}) {
+                    oligosTable.setModel(new javax.swing.table.DefaultTableModel(oligoTableModel, new String[]{"Name", "Description", "Status"}) {
 
                         @Override
                         public boolean isCellEditable(int rowIndex, int mColIndex) {
@@ -495,13 +540,33 @@ private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                     } else {
                         allVectors = Collector.getAll(ObjType.VECTOR);
                     }
-                    Object[][] vectorTableModel = new Object[allVectors.size()][2];
+                    Object[][] vectorTableModel = new Object[allVectors.size()][3];
                     for (int i = 0; i < allVectors.size(); i++) {
+                        vectorTableModel[i][2] = "saved";
                         vectorTableModel[i][0] = allVectors.get(i).getName();
                         Vector avec = (Vector) allVectors.get(i);
+                        if (avec.isChanged()) {
+                            vectorTableModel[i][2] = "changed";
+                        } else {
+                            vectorTableModel[i][2] = "saved";
+                        }
+                        avec.addDataListener(new DataListener() {
+
+                            @Override
+                            public void objectChanged(RefreshEvent evt) {
+                                StatusDisplayer.getDefault().setStatusText(((ObjBase) evt.getSource()).getName() + " was changed");
+                                TableModel model = vectorsTable.getModel();
+                                for (int i = 0; i < model.getRowCount(); i++) {
+                                    if (model.getValueAt(i, 0).equals(((ObjBase) evt.getSource()).getName())) {
+                                        model.setValueAt("changed", i, 2);
+                                        break;
+                                    }
+                                }
+                            }
+                        });
                         vectorTableModel[i][1] = avec.getFormat().toString(); //based on the Format, the sequence of the region of interest is retreieved and used to populate the table
                     }
-                    vectorsTable.setModel(new javax.swing.table.DefaultTableModel(vectorTableModel, new String[]{"Vector Name", "Format"}) {
+                    vectorsTable.setModel(new javax.swing.table.DefaultTableModel(vectorTableModel, new String[]{"Vector Name", "Format", "Status"}) {
 
                         @Override
                         public boolean isCellEditable(int rowIndex, int mColIndex) {
@@ -530,13 +595,33 @@ private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                     } else {
                         allParts = Collector.getAll(ObjType.PART);
                     }
-                    Object[][] partTableModel = new Object[allParts.size()][2];
+                    Object[][] partTableModel = new Object[allParts.size()][3];
                     for (int i = 0; i < allParts.size(); i++) {
+                        partTableModel[i][2] = "saved";
                         Part aPart = (Part) allParts.get(i);
+                        if (aPart.isChanged()) {
+                            partTableModel[i][2] = "changed";
+                        } else {
+                            partTableModel[i][2] = "saved";
+                        }
+                        aPart.addDataListener(new DataListener() {
+
+                            @Override
+                            public void objectChanged(RefreshEvent evt) {
+                                StatusDisplayer.getDefault().setStatusText(((ObjBase) evt.getSource()).getName() + " was changed");
+                                TableModel model = partsTable.getModel();
+                                for (int i = 0; i < model.getRowCount(); i++) {
+                                    if (model.getValueAt(i, 0).equals(((ObjBase) evt.getSource()).getName())) {
+                                        model.setValueAt("changed", i, 2);
+                                        break;
+                                    }
+                                }
+                            }
+                        });
                         partTableModel[i][0] = aPart.getName();
                         partTableModel[i][1] = aPart.getFormat().toString();
                     }
-                    partsTable.setModel(new javax.swing.table.DefaultTableModel(partTableModel, new String[]{"Part Name", "Format"}) {
+                    partsTable.setModel(new javax.swing.table.DefaultTableModel(partTableModel, new String[]{"Part Name", "Format", "Status"}) {
 
                         @Override
                         public boolean isCellEditable(int rowIndex, int mColIndex) {
@@ -557,16 +642,15 @@ private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                             }
                         }
                     });
+
+                    partsTable.setDefaultRenderer(Object.class, new InventoryTableCellRenderer());
+                    oligosTable.setDefaultRenderer(Object.class, new InventoryTableCellRenderer());
+                    plasmidsTable.setDefaultRenderer(Object.class, new InventoryTableCellRenderer());
+                    vectorsTable.setDefaultRenderer(Object.class, new InventoryTableCellRenderer());
                     oligosTable.setEnabled(true);
                     partsTable.setEnabled(true);
                     plasmidsTable.setEnabled(true);
                     vectorsTable.setEnabled(true);
-System.out.println("pulling from this collection: "+viewedCollection.getName());
-System.out.println(allPlasmids.size()+" plasmids found");
-System.out.println(allParts.size()+" parts found");
-System.out.println(allOligos.size()+" oligos found");
-System.out.println(allVectors.size()+" vectors found");
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -622,4 +706,30 @@ System.out.println(allVectors.size()+" vectors found");
     }
     private ObjBasePopup _obp;
     private boolean _connected;
+
+    private class InventoryTableCellRenderer extends DefaultTableCellRenderer {
+
+        public InventoryTableCellRenderer() {
+            super();
+            setOpaque(true);
+        }
+
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+            if (table.getValueAt(row, 2).equals("changed")) {
+                setForeground(Color.black);
+                setBackground(Color.green);
+            } else {
+                setForeground(table.getForeground());
+                setBackground(table.getBackground());
+            }
+            if (isSelected) {
+                setBackground(Color.lightGray);
+            }
+            this.setText((String) value);
+
+
+            return this;
+        }
+    }
 }

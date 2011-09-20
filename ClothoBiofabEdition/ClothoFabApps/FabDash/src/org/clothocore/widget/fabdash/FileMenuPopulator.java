@@ -18,6 +18,7 @@ public class FileMenuPopulator extends AbstractAction implements Presenter.Menu 
 
     @Override
     public JMenuItem getMenuPresenter() {
+        
         JMenu m = new JMenu("New") {
         };
         JMenuItem partsItem = new JMenuItem("Part");
