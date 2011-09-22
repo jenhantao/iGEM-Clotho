@@ -143,10 +143,8 @@ public class PlasmidTable implements java.io.Serializable, hibernateDatum {
             case CONSTRUCTION_FILE:
                 return "constructionFile";
             case PART:
-//                return "partId";
                 return "partTable";
             case VECTOR:
-//                return "vectorId";
                 return "vectorTable";
             case AUTHOR:
                 return "personTable";
