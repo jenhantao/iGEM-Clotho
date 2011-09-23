@@ -54,14 +54,14 @@ public class SampleTable implements java.io.Serializable, hibernateDatum {
         Sample.Fields f = (Sample.Fields) field;
 
         switch ( f ) {
-//            case AUTHOR:
-//                return ObjType.PERSON;
+            case AUTHOR:
+                return ObjType.PERSON;
             case OLIGO:
                 return ObjType.OLIGO;
             case STRAIN:
                 return ObjType.STRAIN;
             case PLASMID:
-                return ObjType.FORMAT;
+                return ObjType.PLASMID;
             default:
                 return null;
         }
@@ -238,7 +238,6 @@ public class SampleTable implements java.io.Serializable, hibernateDatum {
                 return "volume";
             case LAST_USED:
                 return "dateLastUsed";
-            //new fiels
             case OLIGO:
                 return "oligoTable";
             case PLASMID:

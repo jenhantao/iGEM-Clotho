@@ -378,9 +378,18 @@ public class searchActor extends Actor {
                     typeQuery.eq(Format.Fields.NAME, name);
                 }
                 break;
-//            case SAMPLE:
-//                typeQuery = mainQuery.createAssociationQuery(Factoid.Fields.AUTHOR);
-//                break;
+            case SAMPLE:
+                if (type2.equals(ObjType.OLIGO)) {
+                    typeQuery = mainQuery.createAssociationQuery(Sample.Fields.OLIGO);
+                    typeQuery.add(typeQuery.getMatchesCrit(Oligo.Fields.NAME, name));
+                } else if (type2.equals(ObjType.PLASMID)) {
+                    typeQuery = mainQuery.createAssociationQuery(Sample.Fields.PLASMID);
+                    typeQuery.add(typeQuery.getMatchesCrit(Plasmid.Fields.NAME, name));
+                }else if (type2.equals(ObjType.STRAIN)) {
+                    typeQuery = mainQuery.createAssociationQuery(Sample.Fields.STRAIN);
+                    typeQuery.add(typeQuery.getMatchesCrit(Strain.Fields.NAME, name));
+                }
+                break;
             case PART:
                 typeQuery = mainQuery.createAssociationQuery(Part.Fields.FORMAT);
                 typeQuery.eq(Format.Fields.NAME, name);
