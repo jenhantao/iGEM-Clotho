@@ -30,6 +30,8 @@
 package org.clothocad.tool.bulltrowell.view;
 
 import java.awt.Color;
+import java.lang.Object;
+import javax.swing.table.TableModel;
 import org.clothocad.tool.bulltrowell.interpreters.interpreter;
 import org.clothocore.util.basic.ImageSource;
 import org.jdesktop.swingx.JXTable;
@@ -319,7 +321,7 @@ public class spreadsheet extends javax.swing.JFrame {
     private void returnData() {
         for(int i=0; i< _data.length; i++) {
             for(int j=0; j<_data[0].length; j++) {
-                String cellValue = theTable.getModel().getValueAt(i, j).toString().trim();
+                Object cellValue = theTable.getModel().getValueAt(i, j);
                 _data[i][j] = cellValue;
             }
         }
@@ -336,6 +338,12 @@ public class spreadsheet extends javax.swing.JFrame {
         _data = data;
         theTable.setModel(new javax.swing.table.DefaultTableModel(_data, _title));
         theTable.repaint();
+    }
+    public void setDataModel (Object[][] data, TableModel tm) {
+        _data =data;
+        theTable.setModel(tm);
+        theTable.repaint();
+       
     }
 
 
