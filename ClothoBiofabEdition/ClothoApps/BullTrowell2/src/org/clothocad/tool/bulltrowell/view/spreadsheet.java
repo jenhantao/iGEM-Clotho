@@ -330,7 +330,7 @@ public class spreadsheet extends javax.swing.JFrame {
 
     private void cancelPerformed() {
         _interpreter = null;
-        System.out.println("Cancell button pressed");
+        System.out.println("Cancel button pressed");
         this.dispose();
     }
 

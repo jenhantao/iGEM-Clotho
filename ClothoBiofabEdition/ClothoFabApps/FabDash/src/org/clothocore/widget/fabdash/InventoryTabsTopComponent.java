@@ -636,7 +636,7 @@ private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                             if (e.getClickCount() == 2) {
                                 try {
                                     Part apart = Part.retrieveByName((String) partsTable.getValueAt(partsTable.getSelectedRow(), 0));
-                                    apart.launchDefaultViewer();
+//                                    apart.launchDefaultViewer();
                                 } catch (Exception ex) {
                                 }
                             }
