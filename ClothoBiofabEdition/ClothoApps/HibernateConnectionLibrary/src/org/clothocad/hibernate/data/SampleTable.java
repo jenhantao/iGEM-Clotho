@@ -47,7 +47,24 @@ import org.clothocad.hibernate.HibernateConnection;
 public class SampleTable implements java.io.Serializable, hibernateDatum {
 
     public static ObjType getType( Enum field ) {
-        throw new UnsupportedOperationException( "Not yet implemented" );
+        if ( field.getDeclaringClass() != Sample.Fields.class ) {
+            return null;
+        }
+
+        Sample.Fields f = (Sample.Fields) field;
+
+        switch ( f ) {
+            case AUTHOR:
+                return ObjType.PERSON;
+            case OLIGO:
+                return ObjType.OLIGO;
+            case STRAIN:
+                return ObjType.STRAIN;
+            case PLASMID:
+                return ObjType.PLASMID;
+            default:
+                return null;
+        }
     }
 
 
@@ -221,6 +238,14 @@ public class SampleTable implements java.io.Serializable, hibernateDatum {
                 return "volume";
             case LAST_USED:
                 return "dateLastUsed";
+            case OLIGO:
+                return "oligoTable";
+            case PLASMID:
+                return "plasmidTable";
+            case STRAIN:
+                return "strainTable";
+            case AUTHOR:
+                return "personTable";
             default:
                 return null;
         }

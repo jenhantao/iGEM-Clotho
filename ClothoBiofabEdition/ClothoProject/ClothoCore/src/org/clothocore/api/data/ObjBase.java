@@ -250,7 +250,9 @@ public abstract class ObjBase implements Serializable {
                 _inDatabase = true;
                 System.out.println("successful save of " + getType() + "  " + getUUID());
                 _pullTime = new Date();
-                PhagebookListener.phagebookListener(this, oldObj);
+                //TODO fix phageBookListener
+//                PhagebookListener.phagebookListener(this, oldObj);
+                ObjBase.fireSaveListeners(new RefreshEvent(this, RefreshEvent.Condition.SAVE_SUCCESSFUL));
                 return true;
             }
             System.out.println("Tried but failed to save for " + getType() + "  " + getUUID());
@@ -258,6 +260,7 @@ public abstract class ObjBase implements Serializable {
                     "Clotho tried to save " + getName() + " but it failed.",
                     "Save Error",
                     JOptionPane.ERROR_MESSAGE);
+            ObjBase.fireSaveListeners(new RefreshEvent(this, RefreshEvent.Condition.SAVE_FAILED));
             return false;
         } else {
             System.out.println("Not connected, save failed for " + getType() + "  " + getUUID());
@@ -685,8 +688,28 @@ public abstract class ObjBase implements Serializable {
         DataListeners.add(DataListener.class, listener);
     }
 
+    public static void addSaveListener(DataListener listener) {
+        SaveListeners.add(DataListener.class, listener);
+    }
+
+    public static void removeSaveListener(DataListener listener) {
+        SaveListeners.remove(DataListener.class, listener);
+    }
+
     protected void fireData(RefreshEvent DataEvent) {
         Object[] listeners = DataListeners.getListenerList();
+        // loop through each listener and pass on the event if needed
+        int numListeners = listeners.length;
+        for (int i = 0; i < numListeners; i += 2) {
+            if (listeners[i] == DataListener.class) {
+                // pass the event to the listeners event dispatch method
+                ((DataListener) listeners[i + 1]).objectChanged(DataEvent);
+            }
+        }
+    }
+
+    protected static void fireSaveListeners(RefreshEvent DataEvent) {
+        Object[] listeners = SaveListeners.getListenerList();
         // loop through each listener and pass on the event if needed
         int numListeners = listeners.length;
         for (int i = 0; i < numListeners; i += 2) {
@@ -874,6 +897,7 @@ public abstract class ObjBase implements Serializable {
     /**-----------------
     variables
     -----------------*/
+    private static EventListenerList SaveListeners = new EventListenerList();
     private EventListenerList DataListeners = new EventListenerList();
 //The three universally-shared fields
     private ClothoConnection _currentConnection;
