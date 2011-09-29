@@ -16,7 +16,7 @@
 <version>1.0</version>
 <classname>org-clothocad-tool-primerdesigner-connect</classname>
 <description>Basic primer designer</description>
-<displayname>Primer Designer</displayname>
+<displayname>Optimus Primer</displayname>
 <uuid>org.clothocad.tool.primerdesigner</uuid>
 <!--<screenshotpath>org/clothocad/tool/registryimporter/screenshot.png</screenshotpath>-->
 <author>Jenhan Tao</author>

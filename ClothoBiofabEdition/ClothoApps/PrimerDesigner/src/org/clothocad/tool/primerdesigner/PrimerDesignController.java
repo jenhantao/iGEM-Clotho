@@ -153,18 +153,25 @@ public class PrimerDesignController {
 
             fwdSequences.add(fwdPrimer.toUpperCase());
             revPrimer = seq.substring(seq.length() - i);
+            System.out.println("Annealing region: " + revPrimer);
             revG.add(calcDeltaG(revPrimer));
             if (!insert2.equalsIgnoreCase("none")) {
                 Feature afeat = Feature.retrieveByName(insert2);
                 revPrimer = revPrimer + afeat.getSeq().toString();
             }
             revPrimer = revPrimer + spacer2;
+            System.out.println("After spacer2: " + revPrimer);
+
             if (!insert4.equalsIgnoreCase("none")) {
                 Feature afeat = Feature.retrieveByName(insert4);
                 revPrimer = revPrimer + afeat.getSeq().toString();
             }
             revPrimer = revPrimer + spacer4;
-            revPrimer = this.flip(this.complementSequence(revPrimer));
+            System.out.println("After spacer 4: " + revPrimer);
+
+            revPrimer = revComp(revPrimer);
+            System.out.println("revcomp: " + revPrimer);
+
             revSequences.add(revPrimer.toUpperCase());
         }
         PrimerResultFrame prf = new PrimerResultFrame(this, fwdSequences, revSequences, fwdG, revG);
@@ -194,38 +201,23 @@ public class PrimerDesignController {
         }
     }
 
-    /**
-     * Complents input string
-     * @param s
-     * @return
-     */
-    public String complementSequence(String s) {
-        if (s != null) {
-            _ns.changeSeq(s);
-            String seq = _ns.revComp();
-            String temp = "";
-            for (int j = seq.length() - 1; j > -1; j--) {
-                temp = temp + seq.charAt(j);
+    public String revComp(String s) {
+        s = s.toUpperCase();
+        String toReturn = "";
+        for (int i = 0; i < s.length(); i++) {
+            if (s.substring(i, i + 1).equals("A")) {
+                toReturn = "T" + toReturn;
+            } else if (s.substring(i, i + 1).equals("G")) {
+                toReturn = "C" + toReturn;
+            } else if (s.substring(i, i + 1).equals("C")) {
+                toReturn = "G" + toReturn;
+            } else if (s.substring(i, i + 1).equals("T")) {
+                toReturn = "A" + toReturn;
+            } else {
+                toReturn = "!" + toReturn;
             }
-            return temp;
         }
-        return null;
-    }
-
-    /**
-     * flips input string
-     * @param s
-     * @return
-     */
-    public String flip(String s) {
-        if (s != null) {
-            String temp = "";
-            for (int j = s.length() - 1; j > -1; j--) {
-                temp = temp + s.charAt(j);
-            }
-            return temp;
-        }
-        return null;
+return toReturn;
     }
 
     /**
@@ -322,6 +314,7 @@ public class PrimerDesignController {
         Double dG = 0.0;
         //check for self dimers
         result = result + "SELF DIMERS\nfwd primer:";
+
         alignString = Aligner.align(fwdSeq, fwdSeq);
         p = Pattern.compile("[|]+");
         m = p.matcher(dimerCheckHelper(alignString));
@@ -411,7 +404,7 @@ public class PrimerDesignController {
         //check against template for portential match
         result = result + "\nMISMATCH AGAINST TEMPLATE:\nfwd primer:";
         dG = 0.0;
-        alignString = Aligner.align(fwdSeq, _sequence);
+        alignString = Aligner.align(fwdSeq, revComp(_sequence));
         p = Pattern.compile("[|]+");
         m = p.matcher(dimerCheckHelper(alignString));
         while (m.find()) {
@@ -425,7 +418,7 @@ public class PrimerDesignController {
         result = result + "\nDelta G: " + dG;
         result = result + "\nrev primer:";
         dG = 0.0;
-        alignString = Aligner.align(revSeq, _sequence);
+        alignString = Aligner.align(revSeq, revComp(_sequence));
         p = Pattern.compile("[|]+");
         m = p.matcher(dimerCheckHelper(alignString));
         while (m.find()) {

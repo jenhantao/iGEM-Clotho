@@ -1,24 +1,24 @@
 /*
- Copyright (c) 2009 The Regents of the University of California.
- All rights reserved.
- Permission is hereby granted, without written agreement and without
- license or royalty fees, to use, copy, modify, and distribute this
- software and its documentation for any purpose, provided that the above
- copyright notice and the following two paragraphs appear in all copies
- of this software.
+Copyright (c) 2009 The Regents of the University of California.
+All rights reserved.
+Permission is hereby granted, without written agreement and without
+license or royalty fees, to use, copy, modify, and distribute this
+software and its documentation for any purpose, provided that the above
+copyright notice and the following two paragraphs appear in all copies
+of this software.
 
- IN NO EVENT SHALL THE UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY
- FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES
- ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
- THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
- SUCH DAMAGE.
+IN NO EVENT SHALL THE UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY
+FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES
+ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.
 
- THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY WARRANTIES,
- INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
- PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
- CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
- ENHANCEMENTS, OR MODIFICATIONS..
+THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
+PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
+CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
+ENHANCEMENTS, OR MODIFICATIONS..
  */
 
 /*
@@ -26,7 +26,6 @@
  *
  * Created on Apr 2, 2010, 8:14:43 PM
  */
-
 package org.clothocad.tool.bulltrowell.view;
 
 import java.net.MalformedURLException;
@@ -38,6 +37,8 @@ import org.clothocad.tool.bulltrowell.interpreters.addFeature;
 import org.clothocad.tool.bulltrowell.interpreters.addOligos;
 import org.clothocad.tool.bulltrowell.interpreters.addPart;
 import org.clothocad.tool.bulltrowell.interpreters.addPlasmid;
+import org.clothocad.tool.bulltrowell.interpreters.addPlate;
+import org.clothocad.tool.bulltrowell.interpreters.addSample;
 import org.clothocad.tool.bulltrowell.interpreters.addVector;
 import org.clothocore.util.basic.ImageSource;
 import org.clothocore.util.misc.BareBonesBrowserLaunch;
@@ -53,11 +54,11 @@ public class hub extends javax.swing.JFrame {
         super("Bull Trowell");
         setIconImage(ImageSource.getTinyLogo());
         initComponents();
-        if(!connect.playBullSound) {
+        if (!connect.playBullSound) {
             bullSounds.setVisible(false);
         }
         setVisible(true);
-        _prefs = Preferences.userNodeForPackage( hub.class );
+        _prefs = Preferences.userNodeForPackage(hub.class);
     }
 
     /** This method is called from within the constructor to
@@ -79,6 +80,8 @@ public class hub extends javax.swing.JFrame {
         addFeatures = new javax.swing.JButton();
         helpButton = new javax.swing.JButton();
         numRowField = new javax.swing.JTextField();
+        addSampleButton = new javax.swing.JButton();
+        addPlateButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -142,6 +145,20 @@ public class hub extends javax.swing.JFrame {
 
         numRowField.setText("50");
 
+        addSampleButton.setText("Sample");
+        addSampleButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addSampleButtonActionPerformed(evt);
+            }
+        });
+
+        addPlateButton.setText("Plate");
+        addPlateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addPlateButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -151,10 +168,9 @@ public class hub extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(bullSounds, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
                             .addComponent(addOligosButton)
                             .addComponent(addFeatures))
-                        .addContainerGap())
+                        .addContainerGap(128, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(addParts)
@@ -168,7 +184,16 @@ public class hub extends javax.swing.JFrame {
                                 .addComponent(compositeButton, javax.swing.GroupLayout.Alignment.LEADING)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(helpButton)
-                        .addGap(18, 18, 18))))
+                        .addGap(18, 18, 18))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(addSampleButton)
+                        .addContainerGap(139, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(addPlateButton)
+                        .addContainerGap(154, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(bullSounds, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -190,7 +215,11 @@ public class hub extends javax.swing.JFrame {
                 .addComponent(addOligosButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(addFeatures)
-                .addGap(11, 11, 11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(addSampleButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(addPlateButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bullSounds)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -242,21 +271,33 @@ public class hub extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_helpButtonActionPerformed
 
+    private void addSampleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSampleButtonActionPerformed
+        calcNumRows();
+        new addSample();
+    }//GEN-LAST:event_addSampleButtonActionPerformed
+
+    private void addPlateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPlateButtonActionPerformed
+        calcNumRows();
+        new addPlate();
+    }//GEN-LAST:event_addPlateButtonActionPerformed
+
     private void calcNumRows() {
         try {
             String sval = numRowField.getText().trim();
             int rows = Integer.parseInt(sval);
             numrows = rows;
-        } catch(Exception e) {
+        } catch (Exception e) {
             numrows = 50;
         }
         numRowField.setText(Integer.toString(numrows));
     }
+
     /**
-    * @param args the command line arguments
-    */
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             @Override
             public void run() {
                 new hub();
@@ -265,21 +306,22 @@ public class hub extends javax.swing.JFrame {
     }
 
     public static void putPreference(String tag, String value) {
-        _prefs.put( tag, value );
+        _prefs.put(tag, value);
     }
 
     public static String getPreference(String tag) {
         return _prefs.get(tag, "-1");
     }
-
-/**-----------------
-     variables
- -----------------*/
+    /**-----------------
+    variables
+    -----------------*/
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFeatures;
     private javax.swing.JButton addOligosButton;
     private javax.swing.JButton addParts;
     private javax.swing.JButton addPlasmidButton;
+    private javax.swing.JButton addPlateButton;
+    private javax.swing.JButton addSampleButton;
     private javax.swing.JButton addVectorsButton;
     private javax.swing.JButton bullSounds;
     private javax.swing.JButton compositeButton;
