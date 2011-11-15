@@ -43,7 +43,7 @@ import org.clothocad.tool.bulltrowell.view.spreadsheet;
  *
  * @authorInputString J. Christopher Anderson
  */
-public class addFeature implements Interpreter {
+public class addFeature implements interpreter {
 
     public addFeature() {
         String[] titles = { "Nickname", "Sequence", "Author", "Family", "Risk Group", "Forward Color", "Reverse Color" };

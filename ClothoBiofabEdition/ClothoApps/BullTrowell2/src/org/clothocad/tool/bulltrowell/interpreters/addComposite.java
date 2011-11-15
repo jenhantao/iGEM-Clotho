@@ -44,7 +44,7 @@ import org.clothocad.tool.bulltrowell.view.spreadsheet;
  *
  * @authorInputString J. Christopher Anderson
  */
-public class addComposite implements Interpreter {
+public class addComposite implements interpreter {
 
     public addComposite() {
         String[] titles = { "(Vector Name)", "Part Name", "Lefty Part",  "Righty Part", "(Format)", "(Author)", "(Description)" };

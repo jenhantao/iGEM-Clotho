@@ -50,7 +50,7 @@ import org.clothocore.api.data.StrainSample;
  *
  * @authorInputString J. Christopher Anderson
  */
-public class addSample implements Interpreter {
+public class addSample implements interpreter {
 
     public addSample(int rows, int columns) {
         String[] titles = new String[columns];

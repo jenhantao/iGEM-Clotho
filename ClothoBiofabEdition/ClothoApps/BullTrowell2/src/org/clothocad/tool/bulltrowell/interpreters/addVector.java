@@ -42,7 +42,7 @@ import org.clothocad.tool.bulltrowell.view.spreadsheet;
  *
  * @authorInputString J. Christopher Anderson
  */
-public class addVector implements Interpreter {
+public class addVector implements interpreter {
 
     public addVector() {
         String[] titles = { "Nickname", "Short Description", "Sequence", "Format", "Author" };

@@ -27,7 +27,7 @@ package org.clothocad.tool.bulltrowell.interpreters;
  *
  * @author jcanderson
  */
-public interface Interpreter {
+public interface interpreter {
 
     void receiveData(Object[][] data);
 

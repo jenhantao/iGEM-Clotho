@@ -48,7 +48,7 @@ import org.clothocore.api.data.PlateType;
  *
  * @authorInputString Jenhan Tao
  */
-public class addPlate implements Interpreter {
+public class addPlate implements interpreter {
 
     public addPlate() {
         String[] titles = {"Name", "Author", "Type", "Rows", "Columns", "Fixed"};

@@ -44,7 +44,7 @@ import org.clothocad.tool.bulltrowell.view.spreadsheet;
  *
  * @authorInputString J. Christopher Anderson
  */
-public class addOligos implements Interpreter {
+public class addOligos implements interpreter {
 
     public addOligos() {
         String[] titles = { "Nickname", "Description", "Sequence", "Author"};

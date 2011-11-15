@@ -32,7 +32,7 @@ package org.clothocad.tool.bulltrowell.view;
 import java.awt.Color;
 import java.lang.Object;
 import javax.swing.table.TableModel;
-import org.clothocad.tool.bulltrowell.interpreters.Interpreter;
+import org.clothocad.tool.bulltrowell.interpreters.interpreter;
 import org.clothocore.util.basic.ImageSource;
 import org.jdesktop.swingx.JXTable;
 
@@ -43,7 +43,7 @@ import org.jdesktop.swingx.JXTable;
 public class spreadsheet extends javax.swing.JFrame {
 
     /** Creates new form spreadsheet */
-    public spreadsheet(Object[][] data, String[] title, Interpreter interpret) {
+    public spreadsheet(Object[][] data, String[] title, interpreter interpret) {
         super("BullTrowell Importer");
         setIconImage(ImageSource.getTinyLogo());
         _data = data;
@@ -428,7 +428,7 @@ public class spreadsheet extends javax.swing.JFrame {
     private javax.swing.JEditorPane titleArea;
     private Object[][] _data;
     private String [] _title;
-    private Interpreter _interpreter;
+    private interpreter _interpreter;
     // End of variables declaration
 
 }

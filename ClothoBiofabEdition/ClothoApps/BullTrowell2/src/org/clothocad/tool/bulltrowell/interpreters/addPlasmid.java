@@ -41,7 +41,7 @@ import org.clothocad.tool.bulltrowell.view.spreadsheet;
  *
  * @authorInputString J. Christopher Anderson
  */
-public class addPlasmid implements Interpreter {
+public class addPlasmid implements interpreter {
 
     public addPlasmid() {
         String[] titles = { "Vector Name", "Part Name",  "Plasmid Name", "Format", "Author" };
