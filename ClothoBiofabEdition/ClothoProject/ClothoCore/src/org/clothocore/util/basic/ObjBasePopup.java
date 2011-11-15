@@ -149,7 +149,7 @@ public class ObjBasePopup {
          //Add Delete menu option
          JMenuItem delMenu = new JMenuItem( "Delete" );
          menuOptions.add(delMenu);
-      //   pooper.add( delMenu );   //since method isn't implemented, this is currently silenced
+         pooper.add( delMenu );   //since method isn't implemented, this is currently silenced
          delMenu.addActionListener( handler );
 
          //Add Update menu option

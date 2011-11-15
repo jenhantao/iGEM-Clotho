@@ -398,7 +398,7 @@ public class Part extends ObjBase {
     public boolean deleteFromDatabase() {
         if (!Collector.getCurrentUser().getUUID().equals(this.getAuthor().getUUID())) {
             if (!Collector.getCurrentUser().isAdmin()) {
-                System.out.println("Current user " + this.getAuthor().getDisplayName() + " does not have permission to modify " + this.getName());
+                System.out.println("Current user " + Collector.getCurrentUser().getDisplayName() + " does not have permission to modify " + this.getName());
                 return false;
             }
         }
@@ -457,6 +457,7 @@ public class Part extends ObjBase {
             //if conflicts are resolved delete the part and it's nucseq
             this._inDatabase = false;
             this.setTransient();
+            System.out.println("part is transient now: "+this.isTransient());
             NucSeq nseq = this.getSeq();
             nseq.deleteFromDatabase();
             nseq.setTransient();
