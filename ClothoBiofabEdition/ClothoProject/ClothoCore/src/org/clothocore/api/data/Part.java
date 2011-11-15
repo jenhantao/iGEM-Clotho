@@ -402,20 +402,20 @@ public class Part extends ObjBase {
                 return false;
             }
         }
-
-        ClothoConnection c = Collector.getDefaultConnection();
-        ClothoQuery mainQuery = c.createQuery(ObjType.PART);
-
+//
+//        ClothoConnection c = Collector.getDefaultConnection();
+//        ClothoQuery mainQuery = c.createQuery(ObjType.PART);
+//
         ArrayList<ObjBase> conflictList = new ArrayList<ObjBase>();
-
-        //perform a sequence query for this part's sequence
-        //Any part containing the sequence of this part may be a compositie containing this part
-        List results = mainQuery.getResults();
-        for (Object obj : results) {
-            Part apart = (Part) obj;
-            if (apart.getComposition().contains(this.getUUID()));
-            conflictList.add(apart);
-        }
+//
+//        //perform a sequence query for this part's sequence
+//        //Any part containing the sequence of this part may be a compositie containing this part
+//        List results = mainQuery.getResults();
+//        for (Object obj : results) {
+//            Part apart = (Part) obj;
+//            if (apart.getComposition().contains(this.getUUID()));
+//            conflictList.add(apart);
+//        }
         List<ObjBase> plasmids = this.getPlasmids();
         conflictList.addAll(plasmids);
         //If the list of conflicts isn't empty, throw up a list of objects that depend on this part and offer to delete those objects
